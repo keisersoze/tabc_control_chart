@@ -1,5 +1,3 @@
-#Computes the p-value of Tabc test
-#Marco Marozzi
 
 Tabc=function(x1,x2,alt,B=1000){
   x=c(x1,x2)
@@ -47,7 +45,15 @@ Tabc=function(x1,x2,alt,B=1000){
   tabc.perm=rep(NA, B)
   
   # O (Blog(B))
-  if (alt=="less" || alt=="greater") {
+  if (alt == "less"){
+    ta.perm.order = order(ta.perm, decreasing = FALSE)
+    tb.perm.order = order(tb.perm, decreasing = FALSE)
+    tc.perm.order = order(tc.perm, decreasing = FALSE)
+    ta.perm.sorted = ta.perm [ta.perm.order]
+    tb.perm.sorted = tb.perm [tb.perm.order]
+    tc.perm.sorted = tc.perm [tc.perm.order]
+  }
+  if (alt=="greater") {
     ta.perm.order = order(ta.perm, decreasing = TRUE)
     tb.perm.order = order(tb.perm, decreasing = TRUE)
     tc.perm.order = order(tc.perm, decreasing = TRUE)
