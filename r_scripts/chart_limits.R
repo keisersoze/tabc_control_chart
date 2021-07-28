@@ -44,23 +44,44 @@ Tabc=function(x1,x2,alt,B=1000){
   return (tabc.ob)
 }
 
+
+lepage.stat=function(x1,x2){
+  enne1=length(x1)
+  enne2=length(x2)
+  enne=enne1+enne2
+  e.w=enne1*(enne+1)/2
+  v.w=enne1*enne2*(enne+1)/12
+  e.a=enne1*(enne+2)/4
+  v.a=enne1*enne2*(enne+2)*(enne-2)/48/(enne-1)
+  w.o=as.numeric(wilcox.test(x1,x2,exact=FALSE)[1])+enne1*(enne1+1)/2
+  a.o=as.numeric(ansari.test(x1,x2,exact=FALSE,alternative="two.sided")[1])
+  wp.o=(w.o-e.w)^2/v.w
+  ap.o=(a.o-e.a)^2/v.a
+  lepage=wp.o+ap.o
+}  
+
+
+
+
 # Fix the reference sample of size m=100
-m = 300
+m = 100
 X = rnorm(m)
 
 # Monte carlo simulation with n = 10
-n = 80
-nsim = 2000
-nperm = 1000
+n = 5
+nsim = 50000
+nperm = 500
 statistics = c()
 for (i in 1:nsim){
   Y = rnorm(n)
-  s = Tabc (X,Y,"two.sided", nperm)
+  # s = Tabc (X,Y,"two.sided", nperm)
+  s = lepage.stat (X,Y)
   statistics = append(statistics, s)
 }
 
 plot(hist(statistics))
 plot(density(statistics))
+print(sprintf("Distinct: %d",  length(unique(statistics))))
 
 # Find quantile corresponding to desired ARL
 
@@ -70,7 +91,7 @@ my_quantile <- function(x, prob) {
   approx(seq(0, 1, length = n), x, prob)$y
 }
 
-ARL = 200
+ARL = 50
 prob = 1/ARL
 
 UCL = my_quantile(statistics, 1 - prob)
@@ -82,7 +103,7 @@ rl.sample = c()
 rl = 0
 for (i in 1:nsim){
   Y = rnorm(n)
-  st = Tabc (X,Y,"two.sided", nperm)
+  st = lepage.stat (X,Y)
   if (st < UCL ){
     rl = rl + 1
   } else {
