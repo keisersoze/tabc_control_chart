@@ -63,13 +63,14 @@ lepage.stat=function(x1,x2){
 
 
 
+
 # Fix the reference sample of size m=100
 m = 100
 X = rnorm(m)
 
 # Monte carlo simulation with n = 10
 n = 5
-nsim = 50000
+nsim = 5000
 nperm = 500
 statistics = c()
 for (i in 1:nsim){
@@ -91,7 +92,7 @@ my_quantile <- function(x, prob) {
   approx(seq(0, 1, length = n), x, prob)$y
 }
 
-ARL = 50
+ARL = 90
 prob = 1/ARL
 
 UCL = my_quantile(statistics, 1 - prob)
@@ -115,4 +116,18 @@ for (i in 1:nsim){
 print(mean(rl.sample))
 plot(hist(rl.sample))
 
+#Simulate shift in the mean
+points = c()
+for (i in 1:5){
+  Y = rnorm(n, mean = 0 )
+  st = lepage.stat (X,Y)
+  points = append(points, st)
+}
+for (i in 1:5){
+  Y = rnorm(n, mean = 3 )
+  st = lepage.stat (X,Y)
+  points = append(points, st)
+}
+plot(seq(1,10),points)
+abline(h = UCL)
 
