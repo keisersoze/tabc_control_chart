@@ -1,5 +1,50 @@
-
 Tabc=function(x1,x2,alt,B=1000){
+  x=c(x1,x2)
+  n1=length(x1)
+  n2=length(x2)
+  n=n1+n2
+  mediana=median(x) 
+  ranghi=rank(x)
+  ta.ob=sum(x1)-sum(x2)
+  tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
+  tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
+  ta.perm=vector(,B)
+  tb.perm=vector(,B)
+  tc.perm=vector(,B)
+  tabc.perm=vector(,B)
+  
+  for (b in 1:B){
+    x.perm=sample(x)
+    x1.perm=x.perm[1:n1]
+    x2.perm=x.perm[(n1+1):(n1+n2)]
+    ranghi.perm=rank(x.perm)
+    ta.perm[b]=sum(x1.perm)-sum(x2.perm)
+    tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
+    tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
+  }
+  
+  if (alt=="greater") {
+    pv.ta.ob=length(ta.perm[ta.perm>=ta.ob])/B
+    pv.tb.ob=length(tb.perm[tb.perm>=tb.ob])/B
+    pv.tc.ob=length(tc.perm[tc.perm>=tc.ob])/B
+  }
+  if (alt=="less") {
+    pv.ta.ob=length(ta.perm[ta.perm<=ta.ob])/B
+    pv.tb.ob=length(tb.perm[tb.perm<=tb.ob])/B
+    pv.tc.ob=length(tc.perm[tc.perm<=tc.ob])/B
+  }
+  if (alt=="two.sided") {
+    pv.ta.ob=length(abs(ta.perm)[abs(ta.perm)>=abs(ta.ob)])/B
+    pv.tb.ob=length(abs(tb.perm)[abs(tb.perm)>=abs(tb.ob)])/B
+    pv.tc.ob=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.ob)])/B
+  }
+  
+  tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
+  
+  return (tabc.ob)
+}
+
+Tabc.pvalue=function(x1,x2,alt,B=1000){
   x=c(x1,x2)
   n1=length(x1)
   n2=length(x2)
@@ -125,19 +170,30 @@ Tabc=function(x1,x2,alt,B=1000){
 }
 
 
-# set.seed(3)
-# x1=rnorm(30)
-# x2=rnorm(5)
+load("shared_data/first-test.RData")
+
+# m = 100
 # 
-# start.time = proc.time()
-# Tabc(x1,x2,"two.sided", 10000)
-# duration = proc.time() - start.time
+# X = rnorm (100, mean = 0)
 # 
-# print (duration)
+# n = 50
 
+nperm2 = 1000
 
-x1=rnorm(100, mean = 0)
-x2=rnorm(100, mean = 1)
+#Simulate shift in the mean
 
-p = Tabc(x1,x2,"two.sided", 10000)
-print (p)
+points = c()
+for (i in 1:5){
+  Y = rnorm(n, mean = 0 )
+  st = Tabc (X,Y,"two.sided", nperm2)
+  # st = lepage.stat (X,Y)
+  points = append(points, st)
+}
+for (i in 1:5){
+  Y = rnorm(n, mean = 0.5 )
+  st = Tabc (X,Y,"two.sided", nperm2)
+  # st = lepage.stat (X,Y)
+  points = append(points, st)
+}
+plot(seq(1,length(points)),points, ylim = (range(0,1)))
+abline(h = LCL)

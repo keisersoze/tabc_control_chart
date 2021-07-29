@@ -1,6 +1,3 @@
-#Computes the p-value of Tabc test
-#Marco Marozzi
-
 Tabc=function(x1,x2,alt,B=1000){
   x=c(x1,x2)
   n1=length(x1)
@@ -44,46 +41,21 @@ Tabc=function(x1,x2,alt,B=1000){
   
   tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
   
-  for (b in 1:B){
-    if (alt=="greater") {
-      pv.ta.perm=length(ta.perm[ta.perm>=ta.perm[b]])/B
-      pv.tb.perm=length(tb.perm[tb.perm>=tb.perm[b]])/B
-      pv.tc.perm=length(tc.perm[tc.perm>=tc.perm[b]])/B
-    }
-    if (alt=="less") {
-      pv.ta.perm=length(ta.perm[ta.perm<=ta.perm[b]])/B
-      pv.tb.perm=length(tb.perm[tb.perm<=tb.perm[b]])/B
-      pv.tc.perm=length(tc.perm[tc.perm<=tc.perm[b]])/B
-    }
-    if (alt=="two.sided") {
-      pv.ta.perm=length(abs(ta.perm)[abs(ta.perm)>=abs(ta.perm[b])])/B
-      pv.tb.perm=length(abs(tb.perm)[abs(tb.perm)>=abs(tb.perm[b])])/B
-      pv.tc.perm=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.perm[b])])/B
-    }
-    
-    tabc.perm[b]=min(pv.ta.perm,pv.tb.perm,pv.tc.perm)
-  }
-  
-  pv.tabc=length(tabc.perm[tabc.perm<=tabc.ob])/B
-  print(pv.tabc)
+  return (tabc.ob)
 }
 
 
-# set.seed(3)
-# x1=rnorm(30)
-# x2=rnorm(5)
-# start.time = proc.time()
-# Tabc(x1,x2,"two.sided",10000)
-# duration = proc.time() - start.time
-# 
-# print (duration)
-
-set.seed(3)
-
-x1=rnorm(100, mean = 0)
-x2=rnorm(11, mean = 10)
-
-p = Tabc(x1,x2,"two.sided", 10000)
-print (p)
-
-
+lepage.stat=function(x1,x2){
+  enne1=length(x1)
+  enne2=length(x2)
+  enne=enne1+enne2
+  e.w=enne1*(enne+1)/2
+  v.w=enne1*enne2*(enne+1)/12
+  e.a=enne1*(enne+2)/4
+  v.a=enne1*enne2*(enne+2)*(enne-2)/48/(enne-1)
+  w.o=as.numeric(wilcox.test(x1,x2,exact=FALSE)[1])+enne1*(enne1+1)/2
+  a.o=as.numeric(ansari.test(x1,x2,exact=FALSE,alternative="two.sided")[1])
+  wp.o=(w.o-e.w)^2/v.w
+  ap.o=(a.o-e.a)^2/v.a
+  lepage=wp.o+ap.o
+}  
