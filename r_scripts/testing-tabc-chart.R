@@ -176,7 +176,8 @@ load("shared_data/first-test.RData")
 # 
 # X = rnorm (100, mean = 0)
 # 
-# n = 50
+
+n = 50
 
 nperm2 = 1000
 
@@ -184,15 +185,14 @@ nperm2 = 1000
 
 points = c()
 for (i in 1:5){
+  #   Y = rexp(n, rate = 10 )
   Y = rnorm(n, mean = 0 )
   st = Tabc (X,Y,"two.sided", nperm2)
-  # st = lepage.stat (X,Y)
   points = append(points, st)
 }
 for (i in 1:5){
   Y = rnorm(n, mean = 0.5 )
   st = Tabc (X,Y,"two.sided", nperm2)
-  # st = lepage.stat (X,Y)
   points = append(points, st)
 }
 plot(seq(1,length(points)),points, ylim = (range(0,1)))

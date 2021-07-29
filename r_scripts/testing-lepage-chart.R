@@ -11,14 +11,11 @@ for (i in 1:10){
   Y = Ys[i,]
   st = lepage.stat (X,Y)
   points = append(points, st)
-  phase2.data = append(phase2.data, c(Y))
-  
 }
 for (i in 11:20){
   Y = Ys[i,]
   st = lepage.stat (X,Y)
   points = append(points, st)
-  phase2.data = append(phase2.data, c(Y))
 }
 
 plot(seq(1,length(points)),points, ylim = (range(0,20)))
