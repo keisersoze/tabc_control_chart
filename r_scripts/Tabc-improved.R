@@ -137,7 +137,7 @@ Tabc=function(x1,x2,alt,B=1000){
 
 
 x1=rnorm(100, mean = 0)
-x2=rnorm(100, mean = 1)
+x2=rnorm(5, mean = 100)
 
 p = Tabc(x1,x2,"two.sided", 10000)
 print (p)
