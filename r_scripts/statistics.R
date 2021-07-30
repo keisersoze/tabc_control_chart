@@ -169,6 +169,48 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
   return(pv.tabc)
 }
 
+Tabc.unbalanced=function(x1,x2,alt,B=1000){
+  x=c(x1,x2)
+  n1=length(x1)
+  n2=length(x2)
+  n=n1+n2
+  mediana=median(x) 
+  ranghi=rank(x)
+  ta.ob=sum(x1)-sum(x2)
+  tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
+  tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
+  ta.perm=vector(,B)
+  tb.perm=vector(,B)
+  tc.perm=vector(,B)
+  tabc.perm=vector(,B)
+  
+  for (b in 1:B){
+    x.perm=sample(x)
+    x1.perm=x.perm[1:n1]
+    x2.perm=x.perm[(n1+1):(n1+n2)]
+    ranghi.perm=rank(x.perm)
+    ta.perm[b]=sum(x1.perm)-sum(x2.perm)
+    tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
+    tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
+  }
+  
+  pv.ta.ob.r=length(ta.perm[ta.perm>=ta.ob])/B
+  pv.tb.ob.r=length(tb.perm[tb.perm>=tb.ob])/B
+  pv.tc.ob.r=length(tc.perm[tc.perm>=tc.ob])/B
+  
+  pv.ta.ob.l=length(ta.perm[ta.perm<=ta.ob])/B
+  pv.tb.ob.l=length(tb.perm[tb.perm<=tb.ob])/B
+  pv.tc.ob.l=length(tc.perm[tc.perm<=tc.ob])/B
+  
+  pv.ta.ob=min(pv.ta.ob.r,pv.ta.ob.l)
+  pv.tb.ob=min(pv.tb.ob.r,pv.tb.ob.l)
+  pv.tc.ob=min(pv.tc.ob.r,pv.tc.ob.l)
+  
+  tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
+  
+  return (tabc.ob)
+}
+
 
 
 lepage.stat=function(x1,x2){
