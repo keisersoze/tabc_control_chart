@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 hello <- function() {
-    .Call(`_cucconi_hello`)
+    .Call(`_turbostat_hello`)
 }
 
 bigSum <- function(x) {
-    .Call(`_cucconi_bigSum`, x)
+    .Call(`_turbostat_bigSum`, x)
 }
 
-multisampleCucconiTest <- function(samples, B) {
-    .Call(`_cucconi_multisampleCucconiTest`, samples, B)
+sumOfRanks <- function(sample_R) {
+    .Call(`_turbostat_sumOfRanks`, sample_R)
 }
 

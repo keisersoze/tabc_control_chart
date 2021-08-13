@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // hello
 std::string hello();
-RcppExport SEXP _faststat_hello() {
+RcppExport SEXP _turbostat_hello() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // bigSum
 double bigSum(List x);
-RcppExport SEXP _faststat_bigSum(SEXP xSEXP) {
+RcppExport SEXP _turbostat_bigSum(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -31,21 +31,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// multisampleCucconiTest
-NumericVector multisampleCucconiTest(List samples, int B);
-RcppExport SEXP _faststat_multisampleCucconiTest(SEXP samplesSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type samples(samplesSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(multisampleCucconiTest(samples, B));
-    return rcpp_result_gen;
-END_RCPP
-}
 // sumOfRanks
 double sumOfRanks(NumericVector sample_R);
-RcppExport SEXP _faststat_sumOfRanks(SEXP sample_RSEXP) {
+RcppExport SEXP _turbostat_sumOfRanks(SEXP sample_RSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -56,14 +44,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_faststat_hello", (DL_FUNC) &_faststat_hello, 0},
-    {"_faststat_bigSum", (DL_FUNC) &_faststat_bigSum, 1},
-    {"_faststat_multisampleCucconiTest", (DL_FUNC) &_faststat_multisampleCucconiTest, 2},
-    {"_faststat_sumOfRanks", (DL_FUNC) &_faststat_sumOfRanks, 1},
+    {"_turbostat_hello", (DL_FUNC) &_turbostat_hello, 0},
+    {"_turbostat_bigSum", (DL_FUNC) &_turbostat_bigSum, 1},
+    {"_turbostat_sumOfRanks", (DL_FUNC) &_turbostat_sumOfRanks, 1},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_faststat(DllInfo *dll) {
+RcppExport void R_init_turbostat(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

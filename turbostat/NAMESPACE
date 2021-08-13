@@ -1,3 +1,3 @@
-useDynLib(cucconi, .registration=TRUE)
+useDynLib(turbostat, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)

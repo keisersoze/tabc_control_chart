@@ -33,7 +33,6 @@ double bigSum(List x) {
     return sum;
 }
 
-// [[Rcpp::export]]
 NumericVector multisampleCucconiTest(List samples, int B) {
     vector<vector<double>> samples_c(0);
     for (int i = 0; i < samples.size(); ++i) {
