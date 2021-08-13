@@ -3,7 +3,7 @@ Tabc=function(x1,x2,alt,B=1000){
   n1=length(x1)
   n2=length(x2)
   n=n1+n2
-  mediana=median(x) 
+  mediana=median(x)
   ranghi=rank(x)
   ta.ob=sum(x1)-sum(x2)
   tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
@@ -12,7 +12,7 @@ Tabc=function(x1,x2,alt,B=1000){
   tb.perm=vector(,B)
   tc.perm=vector(,B)
   tabc.perm=vector(,B)
-  
+
   for (b in 1:B){
     x.perm=sample(x)
     x1.perm=x.perm[1:n1]
@@ -22,7 +22,7 @@ Tabc=function(x1,x2,alt,B=1000){
     tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
     tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
   }
-  
+
   if (alt=="greater") {
     pv.ta.ob=length(ta.perm[ta.perm>=ta.ob])/B
     pv.tb.ob=length(tb.perm[tb.perm>=tb.ob])/B
@@ -38,9 +38,9 @@ Tabc=function(x1,x2,alt,B=1000){
     pv.tb.ob=length(abs(tb.perm)[abs(tb.perm)>=abs(tb.ob)])/B
     pv.tc.ob=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.ob)])/B
   }
-  
+
   tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
-  
+
   return (tabc.ob)
 }
 
@@ -49,16 +49,16 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
   n1=length(x1)
   n2=length(x2)
   n=n1+n2
-  mediana=median(x) 
+  mediana=median(x)
   ranghi=rank(x)
   ta.ob=sum(x1)-sum(x2)
   tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
   tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
-  
+
   ta.perm=vector(,B)
   tb.perm=vector(,B)
   tc.perm=vector(,B)
-  
+
   # O(B * n)
   for (b in 1:B){
     x.perm=sample(x)
@@ -69,7 +69,7 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
     tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
     tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
   }
-  
+
   if (alt=="greater") {
     pv.ta.ob=length(ta.perm[ta.perm>=ta.ob])/B
     pv.tb.ob=length(tb.perm[tb.perm>=tb.ob])/B
@@ -86,9 +86,9 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
     pv.tc.ob=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.ob)])/B
   }
   tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
-  
+
   tabc.perm=rep(NA, B)
-  
+
   # O (Blog(B))
   if (alt == "less"){
     ta.perm.order = order(ta.perm, decreasing = FALSE)
@@ -105,7 +105,7 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
     ta.perm.sorted = ta.perm [ta.perm.order]
     tb.perm.sorted = tb.perm [tb.perm.order]
     tc.perm.sorted = tc.perm [tc.perm.order]
-  } 
+  }
   if (alt=="two.sided"){
     ta.perm = abs(ta.perm)
     tb.perm = abs(tb.perm)
@@ -117,14 +117,14 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
     tb.perm.sorted = tb.perm [tb.perm.order]
     tc.perm.sorted = tc.perm [tc.perm.order]
   }
-  
+
   a.tides = 0
   b.tides = 0
   c.tides = 0
-  
+
   # O (B)
   for (cp in 1:B){
-    
+
     if (cp != B && ta.perm.sorted[cp] == ta.perm.sorted[cp+1] ){
       a.tides = a.tides + 1
     } else {
@@ -137,7 +137,7 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
       }
       a.tides = 0
     }
-    
+
     if (cp != B && tb.perm.sorted[cp] == tb.perm.sorted[cp+1] ){
       b.tides = b.tides + 1
     } else {
@@ -150,7 +150,7 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
       }
       b.tides = 0
     }
-    
+
     if (cp != B && tc.perm.sorted[cp] == tc.perm.sorted[cp+1] ){
       c.tides = c.tides + 1
     } else {
@@ -164,7 +164,7 @@ Tabc.pvalue=function(x1,x2,alt,B=1000){
       c.tides = 0
     }
   }
-  
+
   pv.tabc=length(tabc.perm[tabc.perm<=tabc.ob])/B
   return(pv.tabc)
 }
@@ -174,7 +174,7 @@ Tabc.unbalanced=function(x1,x2,alt,B=1000){
   n1=length(x1)
   n2=length(x2)
   n=n1+n2
-  mediana=median(x) 
+  mediana=median(x)
   ranghi=rank(x)
   ta.ob=sum(x1)-sum(x2)
   tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
@@ -183,7 +183,7 @@ Tabc.unbalanced=function(x1,x2,alt,B=1000){
   tb.perm=vector(,B)
   tc.perm=vector(,B)
   tabc.perm=vector(,B)
-  
+
   for (b in 1:B){
     x.perm=sample(x)
     x1.perm=x.perm[1:n1]
@@ -193,21 +193,21 @@ Tabc.unbalanced=function(x1,x2,alt,B=1000){
     tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
     tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
   }
-  
+
   pv.ta.ob.r=length(ta.perm[ta.perm>=ta.ob])/B
   pv.tb.ob.r=length(tb.perm[tb.perm>=tb.ob])/B
   pv.tc.ob.r=length(tc.perm[tc.perm>=tc.ob])/B
-  
+
   pv.ta.ob.l=length(ta.perm[ta.perm<=ta.ob])/B
   pv.tb.ob.l=length(tb.perm[tb.perm<=tb.ob])/B
   pv.tc.ob.l=length(tc.perm[tc.perm<=tc.ob])/B
-  
+
   pv.ta.ob=min(pv.ta.ob.r,pv.ta.ob.l)
   pv.tb.ob=min(pv.tb.ob.r,pv.tb.ob.l)
   pv.tc.ob=min(pv.tc.ob.r,pv.tc.ob.l)
-  
+
   tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
-  
+
   return (tabc.ob)
 }
 
@@ -234,16 +234,16 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
   n1=length(x1)
   n2=length(x2)
   n=n1+n2
-  mediana=median(x) 
+  mediana=median(x)
   ranghi=rank(x)
   ta.ob=sum(x1)-sum(x2)
   tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
   tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
-  
+
   ta.perm=vector(,B)
   tb.perm=vector(,B)
   tc.perm=vector(,B)
-  
+
   # O(B * n)
   for (b in 1:B){
     x.perm=sample(x)
@@ -254,7 +254,7 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
     tb.perm[b]=length(x1.perm[x1.perm>=mediana])-length(x2.perm[x2.perm>=mediana])
     tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
   }
-  
+
   if (alt=="greater") {
     pv.ta.ob=length(ta.perm[ta.perm>=ta.ob])/B
     pv.tb.ob=length(tb.perm[tb.perm>=tb.ob])/B
@@ -271,9 +271,9 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
     pv.tc.ob=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.ob)])/B
   }
   tabc.ob=min(pv.ta.ob,pv.tb.ob,pv.tc.ob)
-  
+
   tabc.perm=rep(NA, B)
-  
+
   # O (Blog(B))
   if (alt == "less"){
     ta.perm.order = order(ta.perm, decreasing = FALSE)
@@ -290,7 +290,7 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
     ta.perm.sorted = ta.perm [ta.perm.order]
     tb.perm.sorted = tb.perm [tb.perm.order]
     tc.perm.sorted = tc.perm [tc.perm.order]
-  } 
+  }
   if (alt=="two.sided"){
     ta.perm = abs(ta.perm)
     tb.perm = abs(tb.perm)
@@ -302,14 +302,14 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
     tb.perm.sorted = tb.perm [tb.perm.order]
     tc.perm.sorted = tc.perm [tc.perm.order]
   }
-  
+
   a.tides = 0
   b.tides = 0
   c.tides = 0
-  
+
   # O (B)
   for (cp in 1:B){
-    
+
     if (cp != B && ta.perm.sorted[cp] == ta.perm.sorted[cp+1] ){
       a.tides = a.tides + 1
     } else {
@@ -322,7 +322,7 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
       }
       a.tides = 0
     }
-    
+
     if (cp != B && tb.perm.sorted[cp] == tb.perm.sorted[cp+1] ){
       b.tides = b.tides + 1
     } else {
@@ -335,7 +335,7 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
       }
       b.tides = 0
     }
-    
+
     if (cp != B && tc.perm.sorted[cp] == tc.perm.sorted[cp+1] ){
       c.tides = c.tides + 1
     } else {
@@ -349,7 +349,7 @@ Tabc.pvalue.log=function(x1,x2,alt,B=1000){
       c.tides = 0
     }
   }
-  
+
   pv.tabc=length(tabc.perm[tabc.perm<=tabc.ob])/B
   return(-log(pv.tabc + 0.01))
 }
@@ -359,11 +359,15 @@ Tc.stat = function(x, y){
   m = length(x)
   n = length(y)
   N = m + n
-  C.Rank = rank(c(x, y))  
+  C.Rank = rank(c(x, y))
   S1 = sum(C.Rank[(m+1):N])
   S1.mean = n*(N+1)/2
   S1.var = (m*n*(N+1)/12)
   S1.standard = (S1-S1.mean)^2/ S1.var
   return(S1.standard)
+}
+
+Tc.pvalue = function(x, y){
+  return (wilcox.test(x, y, alternative = "t")$p.value)
 }
 
