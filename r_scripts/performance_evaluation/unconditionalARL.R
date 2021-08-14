@@ -7,7 +7,7 @@ m = 100
 
 shift.seq = seq(0, 2, 0.5)
 
-nSim = 100
+nSim = 1000
 
 getsample = function(n, shift){
   scale = 1
@@ -28,7 +28,7 @@ run.lengths = vector(,length(shift.seq))
 for (shift.index in seq_along(shift.seq) ){
   shift.value = shift.seq[shift.index]
   run.lengths.cond = vector(,nSim)
-  for (sim in nSim){
+  for (sim in seq(1, nSim)){
     sample.ref = getsample(m, 0)
     run.length = 0
     repeat{
