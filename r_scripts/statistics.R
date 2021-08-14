@@ -368,6 +368,7 @@ Tc.stat = function(x, y){
 }
 
 Tc.pvalue = function(x, y){
-  return (wilcox.test(x, y, alternative = "t")$p.value)
+  p = wilcox.test(x, y, alternative = "t")$p.value
+  return (-log(p))
 }
 
