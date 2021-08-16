@@ -4,13 +4,13 @@ source("statistics.R")
 # set.seed(42)
 
 sam = function(n, location, scale){
-  return (rLaplace(n, mu = location, b = scale))
+  return (rnorm(n, mean = location, sd = scale))
 }
 
 n = 5
 m = 100
 location = 1
-location.shift = -2
+location.shift = -5
 scale = 1
 X = sam(m, location = location , scale = scale)
 nperm2 =  3000
@@ -19,16 +19,16 @@ points = c()
 Ys = matrix(data = c(sam(10* n , location = location, scale = scale), sam (10 * n, location = location + location.shift , scale = scale)), nrow = 20, ncol = n, byrow=TRUE)
 for (i in 1:10){
   Y = Ys[i,]
-  st = Tc.pvalue (X,Y)
+  st = testA (X,Y, 1000)
   points = append(points, st)
 }
 for (i in 11:20){
   Y = Ys[i,]
-  st = Tc.pvalue(X,Y)
+  st = testA(X,Y, 1000)
   points = append(points, st)
 }
 
-plot(seq(1,length(points)),points, ylim = (range(0,10)))
+plot(seq(1,length(points)),points, ylim = (range(0,1)))
 abline(h = 8.57 )
 
 

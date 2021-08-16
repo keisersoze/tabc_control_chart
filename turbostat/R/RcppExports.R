@@ -13,3 +13,11 @@ sumOfRanks <- function(sample_R) {
     .Call(`_turbostat_sumOfRanks`, sample_R)
 }
 
+testA <- function(x1, x2, B) {
+    .Call(`_turbostat_testA`, x1, x2, B)
+}
+
+testC <- function(x1, x2, B) {
+    .Call(`_turbostat_testC`, x1, x2, B)
+}
+

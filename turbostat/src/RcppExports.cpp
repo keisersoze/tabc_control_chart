@@ -42,11 +42,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// testA
+NumericVector testA(NumericVector x1, NumericVector x2, int B);
+RcppExport SEXP _turbostat_testA(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(testA(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// testC
+NumericVector testC(NumericVector x1, NumericVector x2, int B);
+RcppExport SEXP _turbostat_testC(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(testC(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_hello", (DL_FUNC) &_turbostat_hello, 0},
     {"_turbostat_bigSum", (DL_FUNC) &_turbostat_bigSum, 1},
     {"_turbostat_sumOfRanks", (DL_FUNC) &_turbostat_sumOfRanks, 1},
+    {"_turbostat_testA", (DL_FUNC) &_turbostat_testA, 3},
+    {"_turbostat_testC", (DL_FUNC) &_turbostat_testC, 3},
     {NULL, NULL, 0}
 };
 

@@ -56,4 +56,32 @@ double sumOfRanks(NumericVector sample_R) {
     return sum_of_ranks(sample_c);
 }
 
+// [[Rcpp::export]]
+NumericVector testA(NumericVector x1, NumericVector x2, int B) {
+    vector<double> x1_c(x1.size());
+    for (int j = 0; j < x1.size(); ++j) {
+        x1_c[j] = x1[j];
+    }
+    vector<double> x2_c(x2.size());
+    for (int j = 0; j < x2.size(); ++j) {
+        x2_c[j] = x2[j];
+    }
+    pair<double, double> pair = test_A(x1_c, x2_c, B);
+    return NumericVector::create(pair.second ,pair.first);
+}
+
+// [[Rcpp::export]]
+NumericVector testC(NumericVector x1, NumericVector x2, int B) {
+    vector<double> x1_c(x1.size());
+    for (int j = 0; j < x1.size(); ++j) {
+        x1_c[j] = x1[j];
+    }
+    vector<double> x2_c(x2.size());
+    for (int j = 0; j < x2.size(); ++j) {
+        x2_c[j] = x2[j];
+    }
+    pair<double, double> pair = test_C(x1_c, x2_c, B);
+    return NumericVector::create(pair.second ,pair.first);
+}
+
 

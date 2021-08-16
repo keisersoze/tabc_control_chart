@@ -367,8 +367,43 @@ Tc.stat = function(x, y){
   return(S1.standard)
 }
 
-Tc.pvalue = function(x, y){
-  p = wilcox.test(x, y, alternative = "t")$p.value
-  return (-log(p))
+Tc.pvalue = function(x, y, alternative = "t"){
+  p = wilcox.test(x, y, alternative = alternative)$p.value
+  return (p)
+}
+
+Tc.pvalue2 = function(x1, x2, B= 1000){
+  x=c(x1,x2)
+  ranghi=rank(x)
+  n1=length(x1)
+  n2=length(x2)
+  n=n1+n2
+  tc.ob=sum(ranghi[(n1+1):n])
+  tc.perm=vector(,B)
+  # O(B * n)
+  for (b in 1:B){
+    x.perm=sample(x)
+    ranghi.perm=rank(x.perm)
+    tc.perm[b]=sum(ranghi.perm[(n1+1):n])
+  }
+  pvalue=length(tc.perm[tc.perm<=tc.ob])/B
+  return (c(tc.ob,pvalue))
+}
+
+Ta.pvalue = function(x1, x2, B=1000){
+  x=c(x1,x2)
+  n1=length(x1)
+  n2=length(x2)
+  n=n1+n2
+  ta.ob=sum(x2)
+  ta.perm=vector(,B)
+  # O(B * n)
+  for (b in 1:B){
+    x.perm=sample(x)
+    x2.perm=x.perm[(n1+1):(n)]
+    ta.perm[b]=sum(x2.perm)
+  }
+  pvalue=length(ta.perm[ta.perm<=ta.ob])/B
+  return (c(ta.ob,pvalue))
 }
 
