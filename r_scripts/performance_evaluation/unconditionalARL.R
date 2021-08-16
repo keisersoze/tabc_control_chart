@@ -20,6 +20,8 @@ chart.plotting.stat = function(sample.ref, sample.test){
 }
 
 chart.UCL = 4.891907
+# chart.LCL = 1/300
+chart.LCL = NULL
 
 
 ##
@@ -34,7 +36,8 @@ for (shift.index in seq_along(shift.seq) ){
     repeat{
       sample.test =  getsample(n, shift.value)
       stat = chart.plotting.stat(sample.ref, sample.test)
-      if(stat > chart.UCL ){
+      if((!is.null(chart.UCL) && stat > chart.UCL) ||
+         (!is.null(chart.LCL) && stat < chart.LCL)){
         break
       } else{
         run.length = run.length +1
