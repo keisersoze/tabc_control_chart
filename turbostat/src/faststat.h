@@ -7,13 +7,11 @@
 
 #include <vector>
 
-using namespace std;
+double sum_of_ranks (const std::vector<double> &sample);
 
-double sum_of_ranks (const vector<double> &sample);
+std::pair<double, double> test_A (const std::vector<double> &x1, const std::vector<double> &x2, unsigned B);
 
-pair<double, double> test_A (const vector<double> &x1, const vector<double> &x2, unsigned B);
-
-pair<double, double> test_C (const vector<double> &x1, const vector<double> &x2, unsigned B);
+std::pair<double, double> test_C (const std::vector<double> &x1, const std::vector<double> &x2, unsigned B);
 
 /*vector<double> uncoditional_RL (unsigned n,
                                 unsigned m,

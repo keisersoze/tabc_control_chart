@@ -10,38 +10,10 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// testA
-NumericVector testA(NumericVector x1, NumericVector x2, int B);
-RcppExport SEXP _turbostat_testA(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(testA(x1, x2, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// testC
-NumericVector testC(NumericVector x1, NumericVector x2, int B);
-RcppExport SEXP _turbostat_testC(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(testC(x1, x2, B));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP _rcpp_module_boot_test_module();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_turbostat_testA", (DL_FUNC) &_turbostat_testA, 3},
-    {"_turbostat_testC", (DL_FUNC) &_turbostat_testC, 3},
     {"_rcpp_module_boot_test_module", (DL_FUNC) &_rcpp_module_boot_test_module, 0},
     {NULL, NULL, 0}
 };

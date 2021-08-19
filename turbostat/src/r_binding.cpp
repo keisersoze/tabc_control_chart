@@ -9,7 +9,6 @@
 #include <Rcpp.h>
 
 #include "faststat.h"
-#include "stat/Ta.h"
 #include "TestClass.h"
 
 
@@ -19,7 +18,6 @@ std::string hello() {
     return "Hello world";
 }
 
-// [[Rcpp::export]]
 NumericVector testA(NumericVector x1, NumericVector x2, int B) {
     std::vector<double> x1_c(x1.size());
     for (int j = 0; j < x1.size(); ++j) {
@@ -33,7 +31,6 @@ NumericVector testA(NumericVector x1, NumericVector x2, int B) {
     return NumericVector::create(pair.second ,pair.first);
 }
 
-// [[Rcpp::export]]
 NumericVector testC(NumericVector x1, NumericVector x2, int B) {
     std::vector<double> x1_c(x1.size());
     for (int j = 0; j < x1.size(); ++j) {
@@ -52,6 +49,8 @@ RCPP_MODULE(test_module) {
                 .constructor<int>()
                 .method( "returnA", &TestClass::returnA )
         ;
+        function("hello" , &hello);
+        function("testC", &testC);
 }
 
 /*

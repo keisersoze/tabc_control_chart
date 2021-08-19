@@ -6,6 +6,7 @@
 #include "utils.h"
 #include <random>
 
+using namespace std;
 
 double sum_of_ranks (const vector<double> &sample){
     vector<double> ranks = ranks_with_mean_strategy_for_tides(sample);
