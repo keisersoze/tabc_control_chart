@@ -19,6 +19,6 @@ int main() {
     pair<double,double> pair = multisample_cucconi_test(groups, 100000);
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[milliseconds]" << std::endl;
-    std::cout << "P-value:"<< pair.first << " Observed MC stat:" << pair.second << std::endl;
+    std::cout << "P-value:"<< pair.first << " Observed MC compute_stat:" << pair.second << std::endl;
     return 0;
 }

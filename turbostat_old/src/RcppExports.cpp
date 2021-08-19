@@ -10,6 +10,38 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// hello
+std::string hello();
+RcppExport SEXP _turbostat_hello() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(hello());
+    return rcpp_result_gen;
+END_RCPP
+}
+// bigSum
+double bigSum(List x);
+RcppExport SEXP _turbostat_bigSum(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(bigSum(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sumOfRanks
+double sumOfRanks(NumericVector sample_R);
+RcppExport SEXP _turbostat_sumOfRanks(SEXP sample_RSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type sample_R(sample_RSEXP);
+    rcpp_result_gen = Rcpp::wrap(sumOfRanks(sample_R));
+    return rcpp_result_gen;
+END_RCPP
+}
 // testA
 NumericVector testA(NumericVector x1, NumericVector x2, int B);
 RcppExport SEXP _turbostat_testA(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
@@ -37,12 +69,12 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _rcpp_module_boot_test_module();
-
 static const R_CallMethodDef CallEntries[] = {
+    {"_turbostat_hello", (DL_FUNC) &_turbostat_hello, 0},
+    {"_turbostat_bigSum", (DL_FUNC) &_turbostat_bigSum, 1},
+    {"_turbostat_sumOfRanks", (DL_FUNC) &_turbostat_sumOfRanks, 1},
     {"_turbostat_testA", (DL_FUNC) &_turbostat_testA, 3},
     {"_turbostat_testC", (DL_FUNC) &_turbostat_testC, 3},
-    {"_rcpp_module_boot_test_module", (DL_FUNC) &_rcpp_module_boot_test_module, 0},
     {NULL, NULL, 0}
 };
 

@@ -20,7 +20,7 @@ chart.plotting.stat = function(sample.ref, sample.test){
 }
 
 # chart.UCL = 4.891907
-chart.LCL = 1/70
+chart.LCL = 1/40
 chart.UCL = NULL
 
 cap = 5000
