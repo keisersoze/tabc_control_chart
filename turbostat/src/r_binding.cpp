@@ -10,7 +10,7 @@
 
 #include "faststat.h"
 #include "TestClass.h"
-
+#include "TaRBinding.h"
 
 using namespace Rcpp;
 
@@ -44,13 +44,33 @@ NumericVector testC(NumericVector x1, NumericVector x2, int B) {
     return NumericVector::create(pair.second ,pair.first);
 }
 
+double sumcpp(const std::vector<double>& x) {
+    return accumulate(x.begin() , x.end(), 0.0);
+}
+
+
+//vector<double> toStdDoubleVector (NumericVector x){
+//    std::vector<double> x_c(x.size());
+//    for (int j = 0; j < x.size(); ++j) {
+//        x_c[j] = x[j];
+//    }
+//    return x;
+//}
+
+
 RCPP_MODULE(test_module) {
         class_<TestClass>( "TestClass" )
                 .constructor<int>()
                 .method( "returnA", &TestClass::returnA )
         ;
-        function("hello" , &hello);
-        function("testC", &testC);
+        class_<TaRBinding>( "TaRBinding" )
+                .constructor<unsigned ,unsigned >()
+                .method( "stat", &TaRBinding::stat )
+        ;
+        Rcpp::function("hello" , &hello);
+        Rcpp::function("testC", &testC);
+        Rcpp::function("sumcpp", &sumcpp);
+
 }
 
 /*
