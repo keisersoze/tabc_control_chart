@@ -63,7 +63,7 @@ double testCRcpp(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
     // Rcpp::print(ranks);
     unsigned sum_of_x2_ranks = std::accumulate(ranks.begin(), ranks.begin() + m, 0.0);
     double obs_stat = sum_of_x2_ranks - m * (m + 1)/2;
-    Rcpp::Rcout << obs_stat << std::endl;
+    // Rcpp::Rcout << obs_stat << std::endl;
     return R::pwilcox( obs_stat, m, n, true, false);
 
 }
@@ -78,7 +78,7 @@ unconditional_run_length_distribution(unsigned int n,
     unsigned m = phaseI_sample.size();
     Rcpp::NumericVector run_lengths(nsim);
     for (unsigned i = 0; i < nsim; ++i) {
-        Rcpp::NumericVector phaseI_sample_boot = Rcpp::sample(phaseI_sample, m);
+        Rcpp::NumericVector phaseI_sample_boot = Rcpp::sample(phaseI_sample, m, true);
         unsigned run_length = 0;
         for (;;) {
             Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
