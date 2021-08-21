@@ -49,18 +49,22 @@ Rcpp::NumericVector avg_rank(Rcpp::NumericVector x)
 }
 
 double testCRcpp(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
+    const unsigned m = x1.size();
+    const unsigned n = x2.size();
     Rcpp::NumericVector pooled_sample(x1.size() + x2.size());
-    for (int i = 0; i < x1.size(); ++i) {
+    for (int i = 0; i < m; ++i) {
         pooled_sample[i] = x1[i];
     }
-    for (int i = 0; i < x2.size() ; ++i) {
+    for (int i = 0; i < n ; ++i) {
         pooled_sample[x1.size() + i] = x2[i];
     }
-    Rcpp::print(pooled_sample);
+    // Rcpp::print(pooled_sample);
     Rcpp::NumericVector ranks = avg_rank(pooled_sample);
-    Rcpp::NumericVector x2_ranks = ranks[Rcpp::Range(x1.size(), ranks.size())];
-    unsigned sum_of_x2_ranks = Rcpp::sum(x2_ranks);
-    return R::pwilcox( sum_of_x2_ranks, x2.size(), x1.size(), false, false);
+    // Rcpp::print(ranks);
+    unsigned sum_of_x2_ranks = std::accumulate(ranks.begin(), ranks.begin() + m, 0.0);
+    double obs_stat = sum_of_x2_ranks - m * (m + 1)/2;
+    Rcpp::Rcout << obs_stat << std::endl;
+    return R::pwilcox( obs_stat, m, n, true, false);
 
 }
 
