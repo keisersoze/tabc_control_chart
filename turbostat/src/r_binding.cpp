@@ -11,6 +11,8 @@
 #include "faststat.h"
 #include "TestClass.h"
 #include "TaRBinding.h"
+#include "chart/runlength.h"
+
 
 using namespace Rcpp;
 
@@ -48,6 +50,10 @@ double sumcpp(const std::vector<double>& x) {
     return accumulate(x.begin() , x.end(), 0.0);
 }
 
+NumericVector rnormcpp(int i) {
+    return Rcpp::rnorm(i);
+}
+
 
 //vector<double> toStdDoubleVector (NumericVector x){
 //    std::vector<double> x_c(x.size());
@@ -70,6 +76,12 @@ RCPP_MODULE(test_module) {
         Rcpp::function("hello" , &hello);
         Rcpp::function("testC", &testC);
         Rcpp::function("sumcpp", &sumcpp);
+        Rcpp::function("rnormcpp", &rnormcpp);
+        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
+        Rcpp::function("testCrcpp", &testCRcpp);
+
+
+
 
 }
 
