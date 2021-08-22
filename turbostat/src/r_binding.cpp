@@ -78,7 +78,9 @@ RCPP_MODULE(test_module) {
         Rcpp::function("sumcpp", &sumcpp);
         Rcpp::function("rnormcpp", &rnormcpp);
         Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
-        Rcpp::function("testCrcpp", &testCRcpp);
+        Rcpp::function("testCrcpp", &testCExact);
+        Rcpp::function("turbotabc", &turbotabc);
+
 
 
 
