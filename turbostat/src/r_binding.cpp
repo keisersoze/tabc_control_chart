@@ -12,6 +12,8 @@
 #include "TestClass.h"
 #include "TaRBinding.h"
 #include "chart/runlength.h"
+#include "chart/turbotabc.h"
+
 
 
 using namespace Rcpp;
