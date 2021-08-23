@@ -146,17 +146,17 @@ Tabc=function(x1,x2,alt,B=1000){
 
 
 x1=rnorm(100, mean = 0)
-x2=rnorm(100, mean = 0.01)
+x2=rnorm(100, mean = 0.2)
 
 set.seed(42)
 start.time = proc.time()
-p = Tabc(x1,x2,"less", 100000)
+p = Tabc(x1,x2,"less", 10000)
 duration.time = proc.time() - start.time
 print (duration.time)
 print (sprintf("pvalue %f",p))
 set.seed(42)
 start.time = proc.time()
-p = permtest.tabc(x1,x2, 100000)
+p = permtest.tabc(x1,x2, 10000)
 duration.time = proc.time() - start.time
 print (duration.time)
 print (sprintf("pvalue %f",p))

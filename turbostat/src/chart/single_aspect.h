@@ -36,6 +36,9 @@ Rcpp::NumericVector single_aspect (Rcpp::NumericVector x1,
     }
 
     Rcpp::NumericVector transformed_pooled_sample = aspect(pooled_sample);
+
+    // Rcpp::Rcout << "transformed_pooled_sample " << transformed_pooled_sample << std::endl;
+
     double obs_stat = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
                       std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 

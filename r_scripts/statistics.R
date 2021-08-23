@@ -390,6 +390,23 @@ Tc.pvalue2 = function(x1, x2, B= 1000){
   return (c(tc.ob,pvalue))
 }
 
+Tc.pvalue3 = function(x1, x2, B= 1000){
+  x=c(x1,x2)
+  ranghi=rank(x)
+  n1=length(x1)
+  n2=length(x2)
+  n=n1+n2
+  tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
+  tc.perm=vector(,B)
+  # O(B * n)
+  for (b in 1:B){
+    x.perm=sample(ranghi)
+    tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
+  }
+  pvalue=length(tc.perm[tc.perm<=tc.ob])/B
+  return (c(tc.ob,pvalue))
+}
+
 Ta.pvalue = function(x1, x2, B=1000){
   x=c(x1,x2)
   n1=length(x1)
