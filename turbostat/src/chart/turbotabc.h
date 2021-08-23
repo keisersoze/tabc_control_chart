@@ -53,9 +53,9 @@ double turbotabc (Rcpp::NumericVector x1,
     double tc_obs = std::accumulate(ranks.begin() , ranks.begin() + n1 , 0.0)-
                     std::accumulate(ranks.begin() + n1 , ranks.end() , 0.0);
 
-    Rcpp::Rcout << "Ta_obs " << ta_obs << std::endl;
-    Rcpp::Rcout << "Tb_obs " << tb_obs << std::endl;
-    Rcpp::Rcout << "Tc_obs " << tc_obs << std::endl;
+//    Rcpp::Rcout << "Ta_obs " << ta_obs << std::endl;
+//    Rcpp::Rcout << "Tb_obs " << tb_obs << std::endl;
+//    Rcpp::Rcout << "Tc_obs " << tc_obs << std::endl;
 
     Rcpp::NumericVector ta_perm (B);
     Rcpp::IntegerVector tb_perm (B);
@@ -110,11 +110,10 @@ double turbotabc (Rcpp::NumericVector x1,
     double pc = (double)Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0))/(double)B;
     double tabc_obs = std::min({pa, pb, pc});
 
-    Rcpp::Rcout << "pa " << pa << std::endl;
-    Rcpp::Rcout << "pb " << pb << std::endl;
-    Rcpp::Rcout << "pc " << pc << std::endl;
-    Rcpp::Rcout << "Tabc " << tabc_obs << std::endl;
-
+//    Rcpp::Rcout << "pa " << pa << std::endl;
+//    Rcpp::Rcout << "pb " << pb << std::endl;
+//    Rcpp::Rcout << "pc " << pc << std::endl;
+//    Rcpp::Rcout << "Tabc " << tabc_obs << std::endl;
 
     Rcpp::IntegerVector ta_perm_order = order(ta_perm);
     Rcpp::IntegerVector tb_perm_order = order(tb_perm);
@@ -177,7 +176,7 @@ double turbotabc (Rcpp::NumericVector x1,
 
     }
 
-    // Rcpp::Rcout << "Tabc perm" << tabc_perm << std::endl;
+    // Rcpp::Rcout << "Tabc perm " << tabc_perm << std::endl;
 
     double pvalue = (double)Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0))/(double)B;
 
