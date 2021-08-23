@@ -13,11 +13,5 @@ std::pair<double, double> test_A (const std::vector<double> &x1, const std::vect
 
 std::pair<double, double> test_C (const std::vector<double> &x1, const std::vector<double> &x2, unsigned B);
 
-/*vector<double> uncoditional_RL (unsigned n,
-                                unsigned m,
-                                const vector<double> &shift_seq,
-                                unsigned nsim,
-                                double LCL,
-                                double UCL)*/
 
 #endif //RACE_FASTSTAT_H

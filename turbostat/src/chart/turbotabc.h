@@ -13,7 +13,6 @@ double T_a (Rcpp::NumericVector pooled_sample, unsigned n1){
            std::accumulate(pooled_sample.begin() + n1 , pooled_sample.end() , 0.0);
 }
 
-
 double T_b (Rcpp::NumericVector pooled_sample, unsigned n1, double median){
     Rcpp::IntegerVector categorical_aspect = Rcpp::ifelse( pooled_sample >= median, 1, 0);
     return std::accumulate(categorical_aspect.begin() , categorical_aspect.begin() + n1 , 0.0)-
@@ -29,7 +28,7 @@ double T_c (Rcpp::NumericVector pooled_sample, unsigned n1){
     return a-b;
 }
 
-double turbotabc (Rcpp::NumericVector x1,
+double t_abc_permtest (Rcpp::NumericVector x1,
                   Rcpp::NumericVector x2,
                   unsigned B){
     unsigned n1 = x1.size();
