@@ -9,9 +9,9 @@ Tabc=function(x1,x2,alt,B=1000){
   ta.ob=sum(x1)-sum(x2)
   tb.ob=length(x1[x1>=mediana])-length(x2[x2>=mediana])
   tc.ob=sum(ranghi[1:n1])-sum(ranghi[(n1+1):n])
-  # print(ta.ob)
-  # print(tb.ob)
-  # print(tc.ob)
+  print(ta.ob)
+  print(tb.ob)
+  print(tc.ob)
 
   ta.perm=vector(,B)
   tb.perm=vector(,B)
@@ -43,6 +43,9 @@ Tabc=function(x1,x2,alt,B=1000){
     pv.tb.ob=length(abs(tb.perm)[abs(tb.perm)>=abs(tb.ob)])/B
     pv.tc.ob=length(abs(tc.perm)[abs(tc.perm)>=abs(tc.ob)])/B
   }
+  # print( ta.perm)
+  # print( tb.perm)
+  # print( tc.perm)
   print( pv.ta.ob)
   print( pv.tb.ob)
   print( pv.tc.ob)
@@ -146,8 +149,14 @@ x1=rnorm(100, mean = 0)
 x2=rnorm(100, mean = 0.1)
 
 set.seed(42)
-p = Tabc(x1,x2,"less", 10000)
+start.time = proc.time()
+p = Tabc(x1,x2,"less", 10)
+duration.time = proc.time() - start.time
+print (duration.time)
 print (sprintf("pvalue %f",p))
 set.seed(42)
-p = turbotabc(x1,x2, 10000)
+start.time = proc.time()
+p = turbotabc(x1,x2, 10)
+duration.time = proc.time() - start.time
+print (duration.time)
 print (sprintf("pvalue %f",p))

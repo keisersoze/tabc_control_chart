@@ -65,4 +65,19 @@ Rcpp::IntegerVector order(Rcpp::NumericVector v) {
     return idx;
 }
 
+Rcpp::IntegerVector order(Rcpp::IntegerVector v) {
+
+    // initialize original index locations
+    Rcpp::IntegerVector idx = Rcpp::seq(0, v.size()-1);
+
+    // sort indexes based on comparing values in v
+    // using std::stable_sort instead of std::sort
+    // to avoid unnecessary index re-orderings
+    // when v contains elements of equal values
+    stable_sort(idx.begin(), idx.end(),
+                [&v](int i1, int i2) {return v[i1] < v[i2];});
+
+    return idx;
+}
+
 #endif //RACE_UTILS_H

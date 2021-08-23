@@ -43,8 +43,8 @@ double turbotabc (Rcpp::NumericVector x1,
     }
 
     double median = Rcpp::median(pooled_sample);
+    Rcpp::IntegerVector categorical_aspect = Rcpp::ifelse( pooled_sample >= median, 1, 0);
     Rcpp::NumericVector ranks = avg_rank(pooled_sample);
-    Rcpp::IntegerVector categorical_aspect = Rcpp::ifelse( pooled_sample > median, 1, 0);
 
     double ta_obs = std::accumulate(pooled_sample.begin() , pooled_sample.begin() + n1 , 0.0)-
                     std::accumulate(pooled_sample.begin() + n1 , pooled_sample.end() , 0.0);
@@ -53,75 +53,82 @@ double turbotabc (Rcpp::NumericVector x1,
     double tc_obs = std::accumulate(ranks.begin() , ranks.begin() + n1 , 0.0)-
                     std::accumulate(ranks.begin() + n1 , ranks.end() , 0.0);
 
-//    Rcpp::Rcout << ta_obs << std::endl;
-//    Rcpp::Rcout << tb_obs << std::endl;
-//    Rcpp::Rcout << tc_obs << std::endl;
+    Rcpp::Rcout << "Ta_obs " << ta_obs << std::endl;
+    Rcpp::Rcout << "Tb_obs " << tb_obs << std::endl;
+    Rcpp::Rcout << "Tc_obs " << tc_obs << std::endl;
 
     Rcpp::NumericVector ta_perm (B);
-    Rcpp::NumericVector tb_perm (B);
+    Rcpp::IntegerVector tb_perm (B);
     Rcpp::NumericVector tc_perm (B);
 
     // Rcpp::Rcout.precision(10);
 
-    // Rcpp::IntegerVector p = Rcpp::seq(0, pooled_sample.size()-1);
+    Rcpp::IntegerVector p = Rcpp::seq(0, pooled_sample.size()-1);
     for (unsigned i = 0; i < B ; ++i) {
-        Rcpp::NumericVector permuted_pooled_sample = Rcpp::sample(pooled_sample, pooled_sample.size());
-        // Rcpp::Rcout << permuted_pooled_sample << std::endl;
-        ta_perm[i] = T_a(permuted_pooled_sample, n1);
-        tb_perm[i] = T_b(permuted_pooled_sample, n1, median);
-        tc_perm[i] = T_c(permuted_pooled_sample, n1);
-//        p = Rcpp::sample(p, pooled_sample.size());
-//        double  sum_of_x1_numerical = 0;
-//        double  sum_of_x2_numerical = 0;
-//        for (unsigned j = 0; j < n1; ++j) {
-//            sum_of_x1_numerical = sum_of_x1_numerical + pooled_sample[p[j]];
-//        }
-//        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
-//            sum_of_x2_numerical = sum_of_x2_numerical + pooled_sample[p[j]];
-//        }
-//        ta_perm[i] = sum_of_x1_numerical - sum_of_x2_numerical;
-//        unsigned  sum_of_x1_categorical = 0;
-//        unsigned  sum_of_x2_categorical = 0;
-//        for (unsigned j = 0; j < n1; ++j) {
-//            sum_of_x1_categorical = sum_of_x1_categorical + categorical_aspect[p[j]];
-//        }
-//        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
-//            sum_of_x2_categorical = sum_of_x2_categorical + categorical_aspect[p[j]];
-//        }
-//        tb_perm[i] = sum_of_x1_categorical - sum_of_x2_categorical;
-//        double sum_of_x1_ranks = 0;
-//        double sum_of_x2_ranks = 0;
-//        for (unsigned j = 0; j < n1; ++j) {
-//            sum_of_x1_ranks = sum_of_x1_ranks + ranks[p[j]];
-//        }
-//        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
-//            sum_of_x2_ranks = sum_of_x2_ranks + ranks[p[j]];
-//        }
-//        tc_perm[i] = sum_of_x1_ranks - sum_of_x2_ranks;
+        p = Rcpp::sample(p, pooled_sample.size());
+
+//        ta_perm[i] = T_a(permuted_pooled_sample, n1);
+//        tb_perm[i] = T_b(permuted_pooled_sample, n1, median);
+//        tc_perm[i] = T_c(permuted_pooled_sample, n1);
+
+        double  sum_of_x1_numerical = 0;
+        double  sum_of_x2_numerical = 0;
+        for (unsigned j = 0; j < n1; ++j) {
+            sum_of_x1_numerical = sum_of_x1_numerical + pooled_sample[p[j]];
+        }
+        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
+            sum_of_x2_numerical = sum_of_x2_numerical + pooled_sample[p[j]];
+        }
+        ta_perm[i] = sum_of_x1_numerical - sum_of_x2_numerical;
+
+        unsigned  sum_of_x1_categorical = 0;
+        unsigned  sum_of_x2_categorical = 0;
+        for (unsigned j = 0; j < n1; ++j) {
+            sum_of_x1_categorical = sum_of_x1_categorical + categorical_aspect[p[j]];
+        }
+        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
+            sum_of_x2_categorical = sum_of_x2_categorical + categorical_aspect[p[j]];
+        }
+        tb_perm[i] = sum_of_x1_categorical - sum_of_x2_categorical;
+
+        double sum_of_x1_ranks = 0;
+        double sum_of_x2_ranks = 0;
+        for (unsigned j = 0; j < n1; ++j) {
+            sum_of_x1_ranks = sum_of_x1_ranks + ranks[p[j]];
+        }
+        for (unsigned j = n1; j < pooled_sample.size(); ++j) {
+            sum_of_x2_ranks = sum_of_x2_ranks + ranks[p[j]];
+        }
+        tc_perm[i] = sum_of_x1_ranks - sum_of_x2_ranks;
     }
-    Rcpp::Rcout << Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0)) << std::endl;
-//    Rcpp::Rcout << tb_perm << std::endl;
-//    Rcpp::Rcout << tc_perm << std::endl;
+//    Rcpp::Rcout << "Ta " << ta_perm << std::endl;
+//    Rcpp::Rcout << "Tb " << tb_perm << std::endl;
+//    Rcpp::Rcout << "Tc " << tc_perm << std::endl;
 
     double pa_obs = (double)Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0))/(double)B;
     double pb_obs = (double)Rcpp::sum(Rcpp::ifelse( tb_perm <= tb_obs, 1, 0))/(double)B;
     double pc_obs = (double)Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0))/(double)B;
     double tabc_obs = std::min({ta_obs, tb_obs, tc_obs});
-    Rcpp::Rcout << pa_obs << std::endl;
-    Rcpp::Rcout << pb_obs << std::endl;
-    Rcpp::Rcout << pc_obs << std::endl;
 
-//    Rcpp::IntegerVector ta_perm_order = order(ta_perm);
-//    Rcpp::IntegerVector tb_perm_order = order(tb_perm);
-//    Rcpp::IntegerVector tc_perm_order = order(tc_perm);
-//
-//    Rcpp::NumericVector ta_perm_sorted = ta_perm[ta_perm_order];
-//    Rcpp::NumericVector tb_perm_sorted = tb_perm[tb_perm_order];
-//    Rcpp::NumericVector tc_perm_sorted = tc_perm[tc_perm_order];
-//
-//    int ta_tides = 0;
-//    int tb_tides = 0;
-//    int tc_tides = 0;
+    Rcpp::Rcout << "pa " << pa_obs << std::endl;
+    Rcpp::Rcout << "pb " << pb_obs << std::endl;
+    Rcpp::Rcout << "pc " << pc_obs << std::endl;
+
+    Rcpp::IntegerVector ta_perm_order = order(ta_perm);
+    Rcpp::IntegerVector tb_perm_order = order(tb_perm);
+    Rcpp::IntegerVector tc_perm_order = order(tc_perm);
+
+    Rcpp::NumericVector ta_perm_sorted = ta_perm[ta_perm_order];
+    Rcpp::IntegerVector tb_perm_sorted = tb_perm[tb_perm_order];
+    Rcpp::NumericVector tc_perm_sorted = tc_perm[tc_perm_order];
+
+//    Rcpp::Rcout << "Ta " << ta_perm_sorted << std::endl;
+//    Rcpp::Rcout << "Tb " << tb_perm_sorted << std::endl;
+//    Rcpp::Rcout << "Tc " << tc_perm_sorted << std::endl;
+
+    int ta_tides = 0;
+    int tb_tides = 0;
+    int tc_tides = 0;
 //
 //    Rcpp::NumericVector tabc_perm(B, -1);
 //
