@@ -105,14 +105,16 @@ double turbotabc (Rcpp::NumericVector x1,
 //    Rcpp::Rcout << "Tb " << tb_perm << std::endl;
 //    Rcpp::Rcout << "Tc " << tc_perm << std::endl;
 
-    double pa_obs = (double)Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0))/(double)B;
-    double pb_obs = (double)Rcpp::sum(Rcpp::ifelse( tb_perm <= tb_obs, 1, 0))/(double)B;
-    double pc_obs = (double)Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0))/(double)B;
-    double tabc_obs = std::min({ta_obs, tb_obs, tc_obs});
+    double pa = (double)Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0))/(double)B;
+    double pb = (double)Rcpp::sum(Rcpp::ifelse( tb_perm <= tb_obs, 1, 0))/(double)B;
+    double pc = (double)Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0))/(double)B;
+    double tabc_obs = std::min({pa, pb, pc});
 
-    Rcpp::Rcout << "pa " << pa_obs << std::endl;
-    Rcpp::Rcout << "pb " << pb_obs << std::endl;
-    Rcpp::Rcout << "pc " << pc_obs << std::endl;
+    Rcpp::Rcout << "pa " << pa << std::endl;
+    Rcpp::Rcout << "pb " << pb << std::endl;
+    Rcpp::Rcout << "pc " << pc << std::endl;
+    Rcpp::Rcout << "Tabc " << tabc_obs << std::endl;
+
 
     Rcpp::IntegerVector ta_perm_order = order(ta_perm);
     Rcpp::IntegerVector tb_perm_order = order(tb_perm);
@@ -129,59 +131,57 @@ double turbotabc (Rcpp::NumericVector x1,
     int ta_tides = 0;
     int tb_tides = 0;
     int tc_tides = 0;
-//
-//    Rcpp::NumericVector tabc_perm(B, -1);
-//
-//    for (unsigned i = 0; i < B ; ++i) {
-//
-//        if (i != B and ta_perm_sorted[i] ==  ta_perm_sorted[i + 1]){
-//            ta_tides ++;
-//        } else{
-//            while (ta_tides > - 1){
-//                unsigned j = ta_perm_order[ i - ta_tides];
-//                if (tabc_perm[j] == -1){
-//                    tabc_perm[j] = i / B;
-//                }
-//                ta_tides --;
-//            }
-//            ta_tides =  0;
-//        }
-//
-//        if (i != B and tb_perm_sorted[i] ==  ta_perm_sorted[i + 1]){
-//            tb_tides ++;
-//        } else{
-//            while (tb_tides > - 1){
-//                unsigned j = tb_perm_order[ i - tb_tides];
-//                if (tabc_perm[j] == -1){
-//                    tabc_perm[j] = i / B;
-//                }
-//                tb_tides --;
-//            }
-//            tb_tides =  0;
-//        }
-//
-//        if (i != B and tc_perm_sorted[i] ==  tc_perm_sorted[i + 1]){
-//            tc_tides ++;
-//        } else{
-//            while (tc_tides >= - 1){
-//                unsigned j = tc_perm_order[ i - tc_tides];
-//                if (tabc_perm[j] == -1){
-//                    tabc_perm[j] = i / B;
-//                }
-//                tc_tides --;
-//            }
-//            tc_tides =  0;
-//        }
-//    }
-//
-//    unsigned count = 0;
-//    for (auto elem: tabc_perm){
-//        if (elem <= tabc_obs ){
-//            count ++;
-//        }
-//    }
 
-    return 0 ;
+    Rcpp::NumericVector tabc_perm(B, -1);
+
+    for (unsigned i = 0; i < B ; ++i) {
+
+        if (i != B - 1 and ta_perm_sorted[i] ==  ta_perm_sorted[i + 1]){
+            ta_tides ++;
+        } else{
+            while (ta_tides > - 1){
+                unsigned j = ta_perm_order[ i - ta_tides];
+                if (tabc_perm[j] == -1){
+                    tabc_perm[j] = (double) i / (double) B;
+                }
+                ta_tides --;
+            }
+            ta_tides =  0;
+        }
+
+        if (i != B - 1 and tb_perm_sorted[i] ==  tb_perm_sorted[i + 1]){
+            tb_tides ++;
+        } else{
+            while (tb_tides > - 1){
+                unsigned j = tb_perm_order[ i - tb_tides];
+                if (tabc_perm[j] == -1){
+                    tabc_perm[j] = (double) i / (double) B;
+                }
+                tb_tides --;
+            }
+            tb_tides =  0;
+        }
+
+        if (i != B - 1 and tc_perm_sorted[i] ==  tc_perm_sorted[i + 1]){
+            tc_tides ++;
+        } else{
+            while (tc_tides > - 1){
+                unsigned j = tc_perm_order[ i - tc_tides];
+                if (tabc_perm[j] == -1){
+                    tabc_perm[j] = (double) i / (double) B;
+                }
+                tc_tides --;
+            }
+            tc_tides =  0;
+        }
+
+    }
+
+    // Rcpp::Rcout << "Tabc perm" << tabc_perm << std::endl;
+
+    double pvalue = (double)Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0))/(double)B;
+
+    return pvalue ;
 }
 
 #endif //RACE_TURBOTABC_H
