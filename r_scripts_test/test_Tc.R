@@ -3,7 +3,7 @@ source("statistics.R")
 x1 = rnorm(50, mean = 0)
 x2 = rnorm(50, mean = 0)
 
-print (Tc.pvalue4(x1,x2,100000))
+print (Tc.pvalue3(x1,x2,100000))
 start.time = proc.time()
 print (permtest.tc(x1,x2, 100000))
 duration.time = proc.time() - start.time

@@ -400,7 +400,7 @@ Tc.pvalue3 = function(x1, x2, B= 1000){
   tc.perm=vector(,B)
   # O(B * n)
   for (b in 1:B){
-    x.perm=sample(ranghi)
+    ranghi.perm=sample(ranghi)
     tc.perm[b]=sum(ranghi.perm[1:n1])-sum(ranghi.perm[(n1+1):n])
   }
   pvalue=length(tc.perm[tc.perm<=tc.ob])/B
