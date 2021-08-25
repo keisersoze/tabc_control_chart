@@ -5,18 +5,25 @@ source("statistics.R")
 n = 10
 m = 100
 
-shift.seq = seq(0, 0, 0)
+shift.seq = c(0)
 
-nSim = 1000
+nSim = 10000
+
+# getsample = function(n, shift){
+#   scale = 1
+#   location = 0
+#   return (rnorm(n, mean = location + shift, sd = scale))
+# }
 
 getsample = function(n, shift){
-  scale = 10
-  location = 5
-  return (rnorm(n, mean = location, sd = scale))
+  scale = 5
+  location = 2
+  return (rLaplace(n, mu = location + shift, b = scale))
 }
 
+
 chart.plotting.stat = function(sample.ref, sample.test){
-  return (permtest.ta(sample.ref,sample.test,1000)[2])
+  return (permtest.tb(sample.ref,sample.test,1000)[2])
 }
 
 # chart.UCL = 4.891907
@@ -32,7 +39,7 @@ run.lengths = vector(,length(shift.seq))
 for (shift.index in seq_along(shift.seq) ){
   shift.value = shift.seq[shift.index]
   run.lengths.cond = vector(,nSim)
-  print(sprintf("Elaboration shift: %d", shift.value))
+  print(sprintf("Elaboration shift: %f", shift.value))
   for (sim in seq(1, nSim)){
     # print(sim)
     sample.ref = getsample(m, 0)
