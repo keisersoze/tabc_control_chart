@@ -4,8 +4,7 @@
 \name{turbostat-package}
 \alias{turbostat}
 \alias{turbostat-package}
-\title{turbostat: What the Package Does (Title Case)}
+\title{turbostat: Tabc charts}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+TODO
 }

@@ -7,14 +7,41 @@
 
 #include <Rcpp.h>
 
+//' Ta permutation test
+//'
+//' Compute approximated pvalue for the Ta test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.ta)]]
 Rcpp::NumericVector t_a_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
                                   unsigned B);
 
+//' Tb permutation test
+//'
+//' Compute approximated pvalue for the Tb test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.tb)]]
 Rcpp::NumericVector t_b_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
                                   unsigned B);
 
+//' Tc permutation test
+//'
+//' Compute approximated pvalue for the Tc test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.tc)]]
 Rcpp::NumericVector t_c_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
                                   unsigned B);

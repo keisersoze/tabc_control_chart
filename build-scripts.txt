@@ -1,0 +1,1 @@
+roxygen2::roxygenize(roclets="rd") generate doc in man folder

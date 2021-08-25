@@ -68,16 +68,16 @@ std::string hello() {
 //        Rcpp::function("turbotabc", &T_abc_permtest);
 //}
 
-RCPP_MODULE(test_module) {
-        Rcpp::function("hello" , &hello);
-        // Rcpp::function("testC", &testC);
-        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
-        Rcpp::function("exact.tc", &testCExact);
-
-        Rcpp::function("permtest.ta", &t_a_permtest);
-        Rcpp::function("permtest.tb", &t_b_permtest);
-        Rcpp::function("permtest.tc", &t_c_permtest);
-        Rcpp::function("permtest.tabc", &t_abc_permtest);
-}
+//RCPP_MODULE(test_module) {
+//        Rcpp::function("hello" , &hello);
+//        // Rcpp::function("testC", &testC);
+//        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
+//        Rcpp::function("exact.tc", &testCExact);
+//
+//        Rcpp::function("permtest.ta", &t_a_permtest);
+//        Rcpp::function("permtest.tb", &t_b_permtest);
+//        Rcpp::function("permtest.tc", &t_c_permtest);
+//        Rcpp::function("permtest.tabc", &t_abc_permtest);
+//}
 
 

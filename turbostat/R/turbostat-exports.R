@@ -1,5 +1,3 @@
-# Export the "BankAccount" C++ class by explicitly requesting BankAccount be
-# exported via roxygen2's export tag.
+# Export every c++ function inside /src marked with Rcpp::export tag
+# and starting with a letter
 #' @exportPattern "^[[:alpha:]]+"
-
-loadModule(module = "test_module", TRUE)
