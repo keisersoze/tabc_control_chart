@@ -8,44 +8,39 @@
 
 #include <Rcpp.h>
 
-#include "faststat.h"
-#include "TestClass.h"
-#include "TaRBinding.h"
-#include "chart/runlength.h"
-#include "chart/turbotabc.h"
-#include "chart/single_aspect.h"
-
-using namespace Rcpp;
+#include "runlength.h"
+#include "turbotabc.h"
+#include "single_aspect.h"
 
 std::string hello() {
     return "Hello world";
 }
 
-NumericVector testA(NumericVector x1, NumericVector x2, int B) {
-    std::vector<double> x1_c(x1.size());
-    for (int j = 0; j < x1.size(); ++j) {
-        x1_c[j] = x1[j];
-    }
-    std::vector<double> x2_c(x2.size());
-    for (int j = 0; j < x2.size(); ++j) {
-        x2_c[j] = x2[j];
-    }
-    std::pair<double, double> pair = test_A(x1_c, x2_c, B);
-    return NumericVector::create(pair.second ,pair.first);
-}
-
-NumericVector testC(NumericVector x1, NumericVector x2, int B) {
-    std::vector<double> x1_c(x1.size());
-    for (int j = 0; j < x1.size(); ++j) {
-        x1_c[j] = x1[j];
-    }
-    std::vector<double> x2_c(x2.size());
-    for (int j = 0; j < x2.size(); ++j) {
-        x2_c[j] = x2[j];
-    }
-    std::pair<double, double> pair = test_C(x1_c, x2_c, B);
-    return NumericVector::create(pair.second ,pair.first);
-}
+//NumericVector testA(NumericVector x1, NumericVector x2, int B) {
+//    std::vector<double> x1_c(x1.size());
+//    for (int j = 0; j < x1.size(); ++j) {
+//        x1_c[j] = x1[j];
+//    }
+//    std::vector<double> x2_c(x2.size());
+//    for (int j = 0; j < x2.size(); ++j) {
+//        x2_c[j] = x2[j];
+//    }
+//    std::pair<double, double> pair = test_A(x1_c, x2_c, B);
+//    return NumericVector::create(pair.second ,pair.first);
+//}
+//
+//NumericVector testC(NumericVector x1, NumericVector x2, int B) {
+//    std::vector<double> x1_c(x1.size());
+//    for (int j = 0; j < x1.size(); ++j) {
+//        x1_c[j] = x1[j];
+//    }
+//    std::vector<double> x2_c(x2.size());
+//    for (int j = 0; j < x2.size(); ++j) {
+//        x2_c[j] = x2[j];
+//    }
+//    std::pair<double, double> pair = test_C(x1_c, x2_c, B);
+//    return NumericVector::create(pair.second ,pair.first);
+//}
 
 //double sumcpp(const std::vector<double>& x) {
 //    return accumulate(x.begin() , x.end(), 0.0);
@@ -75,7 +70,7 @@ NumericVector testC(NumericVector x1, NumericVector x2, int B) {
 
 RCPP_MODULE(test_module) {
         Rcpp::function("hello" , &hello);
-        Rcpp::function("testC", &testC);
+        // Rcpp::function("testC", &testC);
         Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
         Rcpp::function("exact.tc", &testCExact);
 

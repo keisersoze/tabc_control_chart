@@ -1,11 +1,8 @@
 //
-// Created by filip on 22/08/2021.
+// Created by filip on 25/08/2021.
 //
 
-#ifndef RACE_UTILS_H
-#define RACE_UTILS_H
-
-#include <Rcpp.h>
+#include "utils.h"
 
 // https://stackoverflow.com/questions/39153082/rcpp-rank-function-that-does-average-ties
 
@@ -59,8 +56,8 @@ Rcpp::IntegerVector order(Rcpp::NumericVector v) {
     // using std::stable_sort instead of std::sort
     // to avoid unnecessary index re-orderings
     // when v contains elements of equal values
-    stable_sort(idx.begin(), idx.end(),
-                [&v](int i1, int i2) {return v[i1] < v[i2];});
+    std::stable_sort(idx.begin(), idx.end(),
+                     [&v](int i1, int i2) {return v[i1] < v[i2];});
 
     return idx;
 }
@@ -74,10 +71,8 @@ Rcpp::IntegerVector order(Rcpp::IntegerVector v) {
     // using std::stable_sort instead of std::sort
     // to avoid unnecessary index re-orderings
     // when v contains elements of equal values
-    stable_sort(idx.begin(), idx.end(),
-                [&v](int i1, int i2) {return v[i1] < v[i2];});
+    std::stable_sort(idx.begin(), idx.end(),
+                     [&v](int i1, int i2) {return v[i1] < v[i2];});
 
     return idx;
 }
-
-#endif //RACE_UTILS_H

@@ -6,7 +6,7 @@
 #include <vector>
 #include <chrono>
 
-#include "../faststat.h"
+#include "../old/faststat.h"
 
 int main() {
 

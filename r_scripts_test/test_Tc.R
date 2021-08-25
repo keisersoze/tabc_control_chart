@@ -9,11 +9,11 @@ print (permtest.tc(x1,x2, 100000))
 duration.time = proc.time() - start.time
 print(duration.time)
 
-print (Tc.pvalue2(x1,x2,100000))
-start.time = proc.time()
-print (testC(x1,x2,100000))
-duration.time = proc.time() - start.time
-print(duration.time)
+# print (Tc.pvalue2(x1,x2,100000))
+# start.time = proc.time()
+# print (testC(x1,x2,100000))
+# duration.time = proc.time() - start.time
+# print(duration.time)
 
 print (exact.tc(x1,x2))
 print (wilcox.test(x1,x2, alternative = "l" )$p.value)

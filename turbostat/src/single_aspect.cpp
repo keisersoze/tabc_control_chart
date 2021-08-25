@@ -1,12 +1,9 @@
 //
-// Created by filip on 23/08/2021.
+// Created by filip on 25/08/2021.
 //
 
-#ifndef RACE_SINGLE_ASPECT_H
-#define RACE_SINGLE_ASPECT_H
-
-#include <Rcpp.h>
 #include "utils.h"
+#include "single_aspect.h"
 
 Rcpp::NumericVector a_aspect(Rcpp::NumericVector pooled_sample){
     return pooled_sample;
@@ -70,5 +67,3 @@ Rcpp::NumericVector t_c_permtest (Rcpp::NumericVector x1,
                                   unsigned B){
     return single_aspect(x1, x2, B, c_aspect);
 }
-
-#endif //RACE_SINGLE_ASPECT_H

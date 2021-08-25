@@ -1,11 +1,8 @@
 //
-// Created by filip on 20/08/2021.
+// Created by filip on 25/08/2021.
 //
 
-#ifndef RACE_RUNLENGTH_H
-#define RACE_RUNLENGTH_H
-
-#include <Rcpp.h>
+#include "runlength.h"
 #include "utils.h"
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
@@ -34,7 +31,6 @@ unconditional_run_length_distribution(unsigned int n,
                                       unsigned int nsim,
                                       double LCL,
                                       unsigned run_length_cap) {
-    Ta ta (1000, 42);
     unsigned m = phaseI_sample.size();
     Rcpp::NumericVector run_lengths(nsim);
     for (unsigned i = 0; i < nsim; ++i) {
@@ -54,4 +50,28 @@ unconditional_run_length_distribution(unsigned int n,
     return Rcpp::mean(run_lengths);
 }
 
-#endif //RACE_RUNLENGTH_H
+//double
+//unconditional_arl_distribution_free_charts(unsigned int n,
+//                                           unsigned int m,
+//                                           unsigned int nsim,
+//                                           double LCL,
+//                                           unsigned run_length_cap) {
+//    Rcpp::NumericVector run_lengths(nsim);
+//    for (unsigned i = 0; i < nsim; ++i) {
+//        Rcpp::NumericVector phaseI_sample_boot = Rcpp::rnorm(phaseI_sample, m, true);
+//        unsigned run_length = 0;
+//        for (;;) {
+//            Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
+//            double plotting_stat = testCExact(phaseI_sample_boot, test_sample);
+//            if (plotting_stat > LCL and run_length <= run_length_cap){
+//                run_length ++;
+//            } else{
+//                break;
+//            }
+//        }
+//        run_lengths[i]= run_length;
+//    }
+//    return Rcpp::mean(run_lengths);
+//}
+
+

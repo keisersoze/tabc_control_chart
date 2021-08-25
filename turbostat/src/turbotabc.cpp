@@ -1,12 +1,9 @@
 //
-// Created by filip on 22/08/2021.
+// Created by filip on 25/08/2021.
 //
 
-#ifndef RACE_TURBOTABC_H
-#define RACE_TURBOTABC_H
-
-#include <Rcpp.h>
 #include "utils.h"
+#include "turbotabc.h"
 
 double T_a (Rcpp::NumericVector pooled_sample, unsigned n1){
     return std::accumulate(pooled_sample.begin() , pooled_sample.begin() + n1 , 0.0)-
@@ -29,8 +26,8 @@ double T_c (Rcpp::NumericVector pooled_sample, unsigned n1){
 }
 
 double t_abc_permtest (Rcpp::NumericVector x1,
-                  Rcpp::NumericVector x2,
-                  unsigned B){
+                       Rcpp::NumericVector x2,
+                       unsigned B){
     unsigned n1 = x1.size();
     unsigned n2 = x2.size();
     Rcpp::NumericVector pooled_sample(x1.size() + x2.size());
@@ -181,5 +178,3 @@ double t_abc_permtest (Rcpp::NumericVector x1,
 
     return pvalue ;
 }
-
-#endif //RACE_TURBOTABC_H
