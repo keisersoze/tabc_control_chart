@@ -133,17 +133,6 @@ Tabc=function(x1,x2,alt,B=1000){
   return(pv.tabc)
 }
 
-
-# set.seed(3)
-# x1=rnorm(30)
-# x2=rnorm(5)
-#
-# start.time = proc.time()
-# Tabc(x1,x2,"two.sided", 10000)
-# duration = proc.time() - start.time
-#
-# print (duration)
-
 set.seed(42)
 x1=rnorm(100, mean = 0)
 x2=rnorm(100, mean = 0.2)

@@ -16,7 +16,7 @@
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(permtest.tabc)]]
-double t_abc_permtest (Rcpp::NumericVector x1,
+Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
                        Rcpp::NumericVector x2,
                        unsigned B);
 

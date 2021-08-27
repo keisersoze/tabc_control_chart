@@ -10,6 +10,22 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// find_UCL
+double find_UCL(Rcpp::NumericVector reference_sample, unsigned n, double target_ARL, unsigned nsim, unsigned nperm, const std::string& test);
+RcppExport SEXP _turbostat_find_UCL(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP target_ARLSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP testSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type reference_sample(reference_sampleSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type target_ARL(target_ARLSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_UCL(reference_sample, n, target_ARL, nsim, nperm, test));
+    return rcpp_result_gen;
+END_RCPP
+}
 // t_a_permtest
 Rcpp::NumericVector t_a_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B);
 RcppExport SEXP _turbostat_t_a_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
@@ -50,7 +66,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // t_abc_permtest
-double t_abc_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B);
+Rcpp::NumericVector t_abc_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B);
 RcppExport SEXP _turbostat_t_abc_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -64,6 +80,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_turbostat_find_UCL", (DL_FUNC) &_turbostat_find_UCL, 6},
     {"_turbostat_t_a_permtest", (DL_FUNC) &_turbostat_t_a_permtest, 3},
     {"_turbostat_t_b_permtest", (DL_FUNC) &_turbostat_t_b_permtest, 3},
     {"_turbostat_t_c_permtest", (DL_FUNC) &_turbostat_t_c_permtest, 3},

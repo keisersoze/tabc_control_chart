@@ -25,9 +25,9 @@ double T_c (Rcpp::NumericVector pooled_sample, unsigned n1){
     return a-b;
 }
 
-double t_abc_permtest (Rcpp::NumericVector x1,
-                       Rcpp::NumericVector x2,
-                       unsigned B){
+Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
+                                    Rcpp::NumericVector x2,
+                                    unsigned B){
     unsigned n1 = x1.size();
     unsigned n2 = x2.size();
     Rcpp::NumericVector pooled_sample(x1.size() + x2.size());
@@ -174,7 +174,7 @@ double t_abc_permtest (Rcpp::NumericVector x1,
 
     // Rcpp::Rcout << "Tabc perm " << tabc_perm << std::endl;
 
-    double pvalue = (double)Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0))/(double)B;
+    double p_value = (double)Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0))/(double)B;
 
-    return pvalue ;
+    return Rcpp::NumericVector::create(tabc_obs,p_value);
 }
