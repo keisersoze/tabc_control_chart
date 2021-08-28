@@ -11,7 +11,6 @@ double find_UCL(Rcpp::NumericVector reference_sample,
                 unsigned nsim,
                 unsigned nperm,
                 const std::string &test){
-    unsigned m = reference_sample.size();
     test_fun_ptr test_f = dispatch_from_string(test);
     double type_1_error_prob = 1/target_ARL;
     unsigned n_iterations = target_ARL * nsim;

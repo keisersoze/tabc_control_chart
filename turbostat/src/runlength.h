@@ -17,4 +17,22 @@ unconditional_run_length_distribution(unsigned int n,
                                       unsigned run_length_cap);
 
 
+//' Test UCL
+//'
+//' Compute approximated pvalue for the Tb test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(rl.conditional)]]
+double conditional_run_length_distribution(Rcpp::NumericVector reference_sample,
+                                           unsigned n,
+                                           double target_ARL,
+                                           unsigned nsim,
+                                           unsigned nperm,
+                                           double LCL,
+                                           const std::string &test);
+
+
 #endif //RACE_RUNLENGTH_H

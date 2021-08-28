@@ -4,15 +4,17 @@
 
 #include "runlength.h"
 #include "utils.h"
+#include "test_dispatching.h"
+
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
     const unsigned m = x1.size();
     const unsigned n = x2.size();
     Rcpp::NumericVector pooled_sample(x1.size() + x2.size());
-    for (int i = 0; i < m; ++i) {
+    for (unsigned i = 0; i < m; ++i) {
         pooled_sample[i] = x1[i];
     }
-    for (int i = 0; i < n ; ++i) {
+    for (unsigned i = 0; i < n ; ++i) {
         pooled_sample[x1.size() + i] = x2[i];
     }
     // Rcpp::print(pooled_sample);
@@ -73,5 +75,38 @@ unconditional_run_length_distribution(unsigned int n,
 //    }
 //    return Rcpp::mean(run_lengths);
 //}
+
+double conditional_run_length_distribution(Rcpp::NumericVector reference_sample,
+                unsigned n,
+                double target_ARL,
+                unsigned nsim,
+                unsigned nperm,
+                double LCL,
+                const std::string &test){
+    test_fun_ptr test_f = dispatch_from_string(test);
+    unsigned n_iterations = target_ARL * nsim;
+    std::list<unsigned> rl_list;
+    unsigned rl_counter = 0;
+    double stat;
+    for (unsigned i = 0; i < n_iterations; ++i) {
+        Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
+        stat = test_f(reference_sample,test_sample_boot, nperm)[1];
+        if (stat > LCL ){
+            rl_counter = rl_counter + 1;
+        } else {
+            rl_list.push_back(rl_counter);
+            rl_counter = 0;
+        }
+    }
+    // TODO: ugly conversion from std::list to Rcpp::NumericVector
+    Rcpp::NumericVector rl_vector(rl_list.size());
+    unsigned i = 0;
+    for (auto const &rl: rl_list){
+        rl_vector[i] =rl;
+        i++;
+    }
+    return Rcpp::mean(rl_vector);
+}
+
 
 

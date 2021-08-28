@@ -13,6 +13,18 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
     .Call(`_turbostat_find_UCL`, reference_sample, n, target_ARL, nsim, nperm, test)
 }
 
+#' Test UCL
+#'
+#' Compute approximated pvalue for the Tb test using a finite number of permutations.
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+rl.conditional <- function(reference_sample, n, target_ARL, nsim, nperm, LCL, test) {
+    .Call(`_turbostat_conditional_run_length_distribution`, reference_sample, n, target_ARL, nsim, nperm, LCL, test)
+}
+
 #' Ta permutation test
 #'
 #' Compute approximated pvalue for the Ta test using a finite number of permutations.

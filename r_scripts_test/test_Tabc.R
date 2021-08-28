@@ -144,7 +144,7 @@ print (duration.time)
 print (sprintf("pvalue %f",p))
 
 start.time = proc.time()
-p = permtest.tabc(x1,x2, 100000)
+p = permtest.tabc(x1,x2, 100000)[2]
 duration.time = proc.time() - start.time
 print (duration.time)
 print (sprintf("pvalue %f",p))
