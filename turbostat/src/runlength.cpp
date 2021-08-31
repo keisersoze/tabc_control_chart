@@ -76,37 +76,71 @@ unconditional_run_length_distribution(unsigned int n,
 //    return Rcpp::mean(run_lengths);
 //}
 
-double conditional_run_length_distribution(Rcpp::NumericVector reference_sample,
+double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
                 unsigned n,
-                double target_ARL,
                 unsigned nsim,
                 unsigned nperm,
                 double LCL,
-                const std::string &test){
+                const std::string &test,
+                unsigned run_length_cap) {
     test_fun_ptr test_f = dispatch_from_string(test);
-    unsigned n_iterations = target_ARL * nsim;
-    std::list<unsigned> rl_list;
-    unsigned rl_counter = 0;
-    double stat;
-    for (unsigned i = 0; i < n_iterations; ++i) {
-        Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
-        stat = test_f(reference_sample,test_sample_boot, nperm)[1];
-        if (stat > LCL ){
-            rl_counter = rl_counter + 1;
-        } else {
-            rl_list.push_back(rl_counter);
-            rl_counter = 0;
-        }
+    Rcpp::NumericVector run_lengths(nsim);
+    for (unsigned i = 0; i < nsim; ++i) {
+        unsigned run_length = 0;
+        double stat;
+        do {
+            run_length ++;
+            Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
+            stat = test_f(reference_sample, test_sample_boot, nperm)[1];
+        } while (stat > LCL and run_length <= run_length_cap );
+        run_lengths[i] = run_length;
     }
-    // TODO: ugly conversion from std::list to Rcpp::NumericVector
-    Rcpp::NumericVector rl_vector(rl_list.size());
-    unsigned i = 0;
-    for (auto const &rl: rl_list){
-        rl_vector[i] =rl;
-        i++;
-    }
-    return Rcpp::mean(rl_vector);
+    return Rcpp::mean(run_lengths);
 }
 
+//double conditional_run_length_distribution_bootstrap2(Rcpp::NumericVector reference_sample,
+//                                                     unsigned n,
+//                                                     double target_ARL,
+//                                                     unsigned nsim,
+//                                                     unsigned nperm,
+//                                                     double LCL,
+//                                                     const std::string &test,
+//                                                     unsigned run_length_cap) {
+//    test_fun_ptr test_f = dispatch_from_string(test);
+//    unsigned n_iterations = target_ARL * nsim;
+//    std::list<unsigned> rl_list;
+//    unsigned rl_counter = 0;
+//    double stat;
+//    for (unsigned i = 0; i < n_iterations; ++i) {
+//        Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
+//        stat = test_f(reference_sample,test_sample_boot, nperm)[1];
+//        if (stat > LCL ){
+//            rl_counter = rl_counter + 1;
+//        } else {
+//            rl_list.push_back(rl_counter);
+//            rl_counter = 0;
+//        }
+//    }
+//    // TODO: ugly conversion from std::list to Rcpp::NumericVector
+//    Rcpp::NumericVector rl_vector(rl_list.size());
+//    unsigned i = 0;
+//    for (auto const &rl: rl_list){
+//        rl_vector[i] =rl;
+//        i++;
+//    }
+//    return Rcpp::mean(rl_vector);
+//}
+
+//Rcpp::NumericVector uncoditional_find_UCL (unsigned m,
+//                              unsigned n,
+//                              Rcpp::NumericVector UCLs,
+//                              unsigned w ,
+//                              Rcpp::NumericVector (*sampling_func)(unsigned )){
+//    Rcpp::NumericVector reference_sample = sampling_func(m);
+//
+//
+//
+//}
+//
 
 

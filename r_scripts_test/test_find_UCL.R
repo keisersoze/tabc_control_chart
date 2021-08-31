@@ -1,10 +1,10 @@
 n = 10
 m = 100
 X = rnorm(m)
-ARL.target = 50
-nsim = 10000
+ARL.target = 100
+nsim = 100
 nperm = 1000
-plotting.stat = "a"
+plotting.stat = "abc"
 
 LCL = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat)
 print (LCL)
@@ -24,6 +24,10 @@ print (LCL)
 #   }
 # }
 
-ARL.test = rl.conditional(X,n,ARL.target,nsim,nperm,LCL,plotting.stat)
+ARL.test = rl.conditional(X,n,nsim,nperm,LCL,plotting.stat, 5000)
 print(ARL.test)
+
+# ARL.test2 = rl.conditional2(X,n,ARL.target,nsim,nperm,LCL,plotting.stat, 5000)
+# print(ARL.test2)
+
 
