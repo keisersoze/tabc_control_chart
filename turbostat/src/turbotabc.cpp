@@ -101,10 +101,10 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
 //    Rcpp::Rcout << "Tb " << tb_perm << std::endl;
 //    Rcpp::Rcout << "Tc " << tc_perm << std::endl;
 
-    double pa = (double)Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0))/(double)B;
-    double pb = (double)Rcpp::sum(Rcpp::ifelse( tb_perm <= tb_obs, 1, 0))/(double)B;
-    double pc = (double)Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0))/(double)B;
-    double tabc_obs = std::min({pa, pb, pc});
+    unsigned pa = Rcpp::sum(Rcpp::ifelse( ta_perm <= ta_obs, 1, 0));
+    unsigned pb = Rcpp::sum(Rcpp::ifelse( tb_perm <= tb_obs, 1, 0));
+    unsigned pc = Rcpp::sum(Rcpp::ifelse( tc_perm <= tc_obs, 1, 0));
+    unsigned tabc_obs = std::min({pa, pb, pc});
 
 //    Rcpp::Rcout << "pa " << pa << std::endl;
 //    Rcpp::Rcout << "pb " << pb << std::endl;
@@ -127,7 +127,7 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
     int tb_tides = 0;
     int tc_tides = 0;
 
-    Rcpp::NumericVector tabc_perm(B, -1);
+    Rcpp::IntegerVector tabc_perm(B, -1);
 
     for (unsigned i = 0; i < B ; ++i) {
 
@@ -137,7 +137,7 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
             while (ta_tides > - 1){
                 unsigned j = ta_perm_order[ i - ta_tides];
                 if (tabc_perm[j] == -1){
-                    tabc_perm[j] = (double) i / (double) B;
+                    tabc_perm[j] = i ;
                 }
                 ta_tides --;
             }
@@ -150,7 +150,7 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
             while (tb_tides > - 1){
                 unsigned j = tb_perm_order[ i - tb_tides];
                 if (tabc_perm[j] == -1){
-                    tabc_perm[j] = (double) i / (double) B;
+                    tabc_perm[j] = i;
                 }
                 tb_tides --;
             }
@@ -163,7 +163,7 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
             while (tc_tides > - 1){
                 unsigned j = tc_perm_order[ i - tc_tides];
                 if (tabc_perm[j] == -1){
-                    tabc_perm[j] = (double) i / (double) B;
+                    tabc_perm[j] = i ;
                 }
                 tc_tides --;
             }
