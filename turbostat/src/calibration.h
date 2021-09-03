@@ -15,7 +15,7 @@
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(find_UCL)]]
-double find_UCL(Rcpp::NumericVector reference_sample,
+Rcpp::List find_UCL(Rcpp::NumericVector reference_sample,
                 unsigned n,
                 double target_ARL,
                 unsigned nsim,

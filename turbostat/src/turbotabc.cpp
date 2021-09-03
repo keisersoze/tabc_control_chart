@@ -174,7 +174,9 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
 
     // Rcpp::Rcout << "Tabc perm " << tabc_perm << std::endl;
 
-    double p_value = (double)Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0))/(double)B;
+    unsigned position = Rcpp::sum(Rcpp::ifelse( tabc_perm <= tabc_obs, 1, 0));
 
-    return Rcpp::NumericVector::create(tabc_obs,p_value);
+    double p_value = (double) position /(double)B;
+
+    return Rcpp::NumericVector::create(tabc_obs,p_value,position);
 }

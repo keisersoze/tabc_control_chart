@@ -2,11 +2,13 @@ n = 10
 m = 100
 X = rnorm(m)
 ARL.target = 100
-nsim = 100
+nsim = 1000
 nperm = 1000
 plotting.stat = "abc"
 
-LCL = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat)
+result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat)
+LCL = result[["LCL"]]
+distribution = result[["distribution"]]
 print (LCL)
 
 # ntests = nsim * ARL.target

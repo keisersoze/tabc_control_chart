@@ -5,21 +5,29 @@
 #include "calibration.h"
 #include "test_dispatching.h"
 
-double find_UCL(Rcpp::NumericVector reference_sample,
+Rcpp::List find_UCL(Rcpp::NumericVector reference_sample,
                 unsigned n,
                 double target_ARL,
                 unsigned nsim,
                 unsigned nperm,
                 const std::string &test){
     test_fun_ptr test_f = dispatch_from_string(test);
-    double type_1_error_prob = 1/target_ARL;
+    // double type_1_error_prob = 1.0 / (double) target_ARL;
     unsigned n_iterations = target_ARL * nsim;
-    Rcpp::NumericVector stats(n_iterations);
+    Rcpp::NumericVector counts(nperm + 1);
     for (unsigned i = 0; i < n_iterations; ++i) {
         Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
-        stats[i] = test_f(reference_sample,test_sample_boot, nperm)[1];
+        unsigned position = test_f(reference_sample,test_sample_boot, nperm)[2];
+        counts[position] ++ ;
     }
-    stats.sort();
-    double LCL = stats[(int)round(stats.size() * type_1_error_prob)];
-    return LCL;
+    unsigned tot_count = 0;
+    unsigned i = 0;
+    unsigned max_type_1_error_counts = nsim; // (double) target_ARL * nsim * type_1_error_prob; (equal to nsim)
+    while (tot_count <= max_type_1_error_counts) {
+        tot_count += counts[i];
+        i++;
+    }
+    double LCL = (double) (i - 1) / (double) nperm;
+    return Rcpp::List::create(Rcpp::Named("LCL") = LCL,
+                              Rcpp::Named("distribution") = counts );
 }
