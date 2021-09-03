@@ -133,9 +133,10 @@ Tabc=function(x1,x2,alt,B=1000){
   return(pv.tabc)
 }
 
-set.seed(42)
+seed = 4
+set.seed(seed)
 x1=rnorm(100, mean = 0)
-x2=rnorm(100, mean = 0.2)
+x2=rnorm(100, mean = 0.1)
 
 start.time = proc.time()
 p = Tabc(x1,x2,"less", 100000)
@@ -144,7 +145,7 @@ print (duration.time)
 print (sprintf("pvalue %f",p))
 
 start.time = proc.time()
-p = permtest.tabc(x1,x2, 100000)[2]
+p = permtest.tabc(x1,x2, 100000, seed)[2]
 duration.time = proc.time() - start.time
 print (duration.time)
 print (sprintf("pvalue %f",p))

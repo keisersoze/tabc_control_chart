@@ -6,6 +6,8 @@
 #include "utils.h"
 #include "test_dispatching.h"
 
+#include <xoshiro.h>
+
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
     const unsigned m = x1.size();
@@ -27,30 +29,30 @@ double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
 
 }
 
-double
-unconditional_run_length_distribution(unsigned int n,
-                                      Rcpp::NumericVector phaseI_sample,
-                                      unsigned int nsim,
-                                      double LCL,
-                                      unsigned run_length_cap) {
-    unsigned m = phaseI_sample.size();
-    Rcpp::NumericVector run_lengths(nsim);
-    for (unsigned i = 0; i < nsim; ++i) {
-        Rcpp::NumericVector phaseI_sample_boot = Rcpp::sample(phaseI_sample, m, true);
-        unsigned run_length = 0;
-        for (;;) {
-            Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
-            double plotting_stat = testCExact(phaseI_sample_boot, test_sample);
-            if (plotting_stat > LCL and run_length <= run_length_cap){
-                run_length ++;
-            } else{
-                break;
-            }
-        }
-        run_lengths[i]= run_length;
-    }
-    return Rcpp::mean(run_lengths);
-}
+//double
+//unconditional_run_length_distribution(unsigned int n,
+//                                      Rcpp::NumericVector phaseI_sample,
+//                                      unsigned int nsim,
+//                                      double LCL,
+//                                      unsigned run_length_cap) {
+//    unsigned m = phaseI_sample.size();
+//    Rcpp::NumericVector run_lengths(nsim);
+//    for (unsigned i = 0; i < nsim; ++i) {
+//        Rcpp::NumericVector phaseI_sample_boot = Rcpp::sample(phaseI_sample, m, true);
+//        unsigned run_length = 0;
+//        for (;;) {
+//            Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
+//            double plotting_stat = testCExact(phaseI_sample_boot, test_sample);
+//            if (plotting_stat > LCL and run_length <= run_length_cap){
+//                run_length ++;
+//            } else{
+//                break;
+//            }
+//        }
+//        run_lengths[i]= run_length;
+//    }
+//    return Rcpp::mean(run_lengths);
+//}
 
 //double
 //unconditional_arl_distribution_free_charts(unsigned int n,
@@ -82,16 +84,18 @@ double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector referen
                 unsigned nperm,
                 double LCL,
                 const std::string &test,
-                unsigned run_length_cap) {
+                unsigned run_length_cap,
+                unsigned seed) {
     test_fun_ptr test_f = dispatch_from_string(test);
     Rcpp::NumericVector run_lengths(nsim);
+    dqrng::xoroshiro128plus rng(seed);
     for (unsigned i = 0; i < nsim; ++i) {
         unsigned run_length = 0;
         double stat;
         do {
             run_length ++;
             Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
-            stat = test_f(reference_sample, test_sample_boot, nperm)[1];
+            stat = test_f(reference_sample, test_sample_boot, nperm, rng)[1];
         } while (stat > LCL and run_length <= run_length_cap );
         run_lengths[i] = run_length;
     }

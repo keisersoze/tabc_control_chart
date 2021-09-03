@@ -5,19 +5,23 @@
 #include "calibration.h"
 #include "test_dispatching.h"
 
+#include <xoshiro.h>
+
 Rcpp::List find_UCL(Rcpp::NumericVector reference_sample,
                 unsigned n,
                 double target_ARL,
                 unsigned nsim,
                 unsigned nperm,
-                const std::string &test){
+                const std::string &test,
+                unsigned seed){
     test_fun_ptr test_f = dispatch_from_string(test);
     // double type_1_error_prob = 1.0 / (double) target_ARL;
     unsigned n_iterations = target_ARL * nsim;
     Rcpp::NumericVector counts(nperm + 1);
+    dqrng::xoroshiro128plus rng(seed);
     for (unsigned i = 0; i < n_iterations; ++i) {
         Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
-        unsigned position = test_f(reference_sample,test_sample_boot, nperm)[2];
+        unsigned position = test_f(reference_sample,test_sample_boot, nperm, rng)[2];
         counts[position] ++ ;
     }
     unsigned tot_count = 0;

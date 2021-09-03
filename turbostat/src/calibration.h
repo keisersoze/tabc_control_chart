@@ -20,6 +20,7 @@ Rcpp::List find_UCL(Rcpp::NumericVector reference_sample,
                 double target_ARL,
                 unsigned nsim,
                 unsigned nperm,
-                const std::string &test);
+                const std::string &test,
+                unsigned seed);
 
 #endif //RACE_CALIBRATION_H

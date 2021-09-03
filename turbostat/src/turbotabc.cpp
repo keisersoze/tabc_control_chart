@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "turbotabc.h"
 
+#include <random>
+
 double T_a (Rcpp::NumericVector pooled_sample, unsigned n1){
     return std::accumulate(pooled_sample.begin() , pooled_sample.begin() + n1 , 0.0)-
            std::accumulate(pooled_sample.begin() + n1 , pooled_sample.end() , 0.0);
@@ -25,9 +27,10 @@ double T_c (Rcpp::NumericVector pooled_sample, unsigned n1){
     return a-b;
 }
 
-Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
+Rcpp::NumericVector t_abc_permtest_impl (Rcpp::NumericVector x1,
                                     Rcpp::NumericVector x2,
-                                    unsigned B){
+                                    unsigned B,
+                                    dqrng::xoroshiro128plus &rng){
     unsigned n1 = x1.size();
     unsigned n2 = x2.size();
     Rcpp::NumericVector pooled_sample(x1.size() + x2.size());
@@ -61,7 +64,7 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
 
     Rcpp::IntegerVector p = Rcpp::seq(0, pooled_sample.size()-1);
     for (unsigned i = 0; i < B ; ++i) {
-        p = Rcpp::sample(p, pooled_sample.size());
+        std::shuffle(p.begin(), p.end(), rng);
 
 //        ta_perm[i] = T_a(permuted_pooled_sample, n1);
 //        tb_perm[i] = T_b(permuted_pooled_sample, n1, median);
@@ -179,4 +182,12 @@ Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
     double p_value = (double) position /(double)B;
 
     return Rcpp::NumericVector::create(tabc_obs,p_value,position);
+}
+
+Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
+                                    Rcpp::NumericVector x2,
+                                    unsigned B,
+                                    unsigned seed){
+    dqrng::xoroshiro128plus rng(seed);
+    return t_abc_permtest_impl(x1, x2, B, rng);
 }

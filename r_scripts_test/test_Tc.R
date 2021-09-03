@@ -1,11 +1,16 @@
 source("statistics.R")
-
+seed = 42
+set.seed(seed)
 x1 = rnorm(50, mean = 0)
 x2 = rnorm(50, mean = 0)
 
-print (Tc.pvalue3(x1,x2,100000))
 start.time = proc.time()
-print (permtest.tc(x1,x2, 100000))
+print (Tc.pvalue3(x1,x2,100000))
+duration.time = proc.time() - start.time
+print(duration.time)
+
+start.time = proc.time()
+print (permtest.tc(x1,x2, 100000, 42))
 duration.time = proc.time() - start.time
 print(duration.time)
 
@@ -15,8 +20,8 @@ print(duration.time)
 # duration.time = proc.time() - start.time
 # print(duration.time)
 
-print (exact.tc(x1,x2))
-print (wilcox.test(x1,x2, alternative = "l" )$p.value)
+# print (exact.tc(x1,x2))
+# print (wilcox.test(x1,x2, alternative = "l" )$p.value)
 
 # nsim = 5000
 # alpha = 0.05

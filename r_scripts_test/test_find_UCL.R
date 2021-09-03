@@ -1,12 +1,17 @@
+seed = 42
 n = 10
 m = 100
 X = rnorm(m)
 ARL.target = 100
-nsim = 1000
-nperm = 1000
+nsim = 100
+nperm = 10000
 plotting.stat = "abc"
 
-result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat)
+start.time = proc.time()
+result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat, seed)
+duration.time = proc.time() - start.time
+print (duration.time)
+
 LCL = result[["LCL"]]
 distribution = result[["distribution"]]
 print (LCL)
@@ -26,7 +31,11 @@ print (LCL)
 #   }
 # }
 
-ARL.test = rl.conditional(X,n,nsim,nperm,LCL,plotting.stat, 5000)
+start.time = proc.time()
+ARL.test = rl.conditional(X,n,nsim,nperm,LCL,plotting.stat, 5000, seed)
+duration.time = proc.time() - start.time
+print (duration.time)
+
 print(ARL.test)
 
 # ARL.test2 = rl.conditional2(X,n,ARL.target,nsim,nperm,LCL,plotting.stat, 5000)

@@ -6,6 +6,8 @@
 #define RACE_SINGLE_ASPECT_H
 
 #include <Rcpp.h>
+#include <xoshiro.h>
+
 
 //' Ta permutation test
 //'
@@ -18,7 +20,8 @@
 // [[Rcpp::export(permtest.ta)]]
 Rcpp::NumericVector t_a_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
-                                  unsigned B);
+                                  unsigned B,
+                                  unsigned seed);
 
 //' Tb permutation test
 //'
@@ -31,7 +34,8 @@ Rcpp::NumericVector t_a_permtest (Rcpp::NumericVector x1,
 // [[Rcpp::export(permtest.tb)]]
 Rcpp::NumericVector t_b_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
-                                  unsigned B);
+                                  unsigned B,
+                                  unsigned seed);
 
 //' Tc permutation test
 //'
@@ -44,5 +48,22 @@ Rcpp::NumericVector t_b_permtest (Rcpp::NumericVector x1,
 // [[Rcpp::export(permtest.tc)]]
 Rcpp::NumericVector t_c_permtest (Rcpp::NumericVector x1,
                                   Rcpp::NumericVector x2,
-                                  unsigned B);
+                                  unsigned B,
+                                  unsigned seed);
+
+Rcpp::NumericVector t_a_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
+                                       unsigned B,
+                                       dqrng::xoroshiro128plus &rng);
+
+Rcpp::NumericVector t_b_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
+                                       unsigned B,
+                                       dqrng::xoroshiro128plus &rng);
+
+Rcpp::NumericVector t_c_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
+                                       unsigned B,
+                                       dqrng::xoroshiro128plus &rng);
+
 #endif //RACE_SINGLE_ASPECT_H

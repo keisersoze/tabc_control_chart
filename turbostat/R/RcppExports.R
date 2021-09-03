@@ -9,8 +9,8 @@
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
-    .Call(`_turbostat_find_UCL`, reference_sample, n, target_ARL, nsim, nperm, test)
+find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test, seed) {
+    .Call(`_turbostat_find_UCL`, reference_sample, n, target_ARL, nsim, nperm, test, seed)
 }
 
 #' Test UCL
@@ -21,8 +21,8 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-rl.conditional <- function(reference_sample, n, target_ARL, nsim, nperm, LCL, test) {
-    .Call(`_turbostat_conditional_run_length_distribution`, reference_sample, n, target_ARL, nsim, nperm, LCL, test)
+rl.conditional <- function(reference_sample, n, nsim, nperm, LCL, test, run_length_cap, seed) {
+    .Call(`_turbostat_conditional_run_length_distribution_bootstrap`, reference_sample, n, nsim, nperm, LCL, test, run_length_cap, seed)
 }
 
 #' Ta permutation test
@@ -33,8 +33,8 @@ rl.conditional <- function(reference_sample, n, target_ARL, nsim, nperm, LCL, te
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.ta <- function(x1, x2, B) {
-    .Call(`_turbostat_t_a_permtest`, x1, x2, B)
+permtest.ta <- function(x1, x2, B, seed) {
+    .Call(`_turbostat_t_a_permtest`, x1, x2, B, seed)
 }
 
 #' Tb permutation test
@@ -45,8 +45,8 @@ permtest.ta <- function(x1, x2, B) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tb <- function(x1, x2, B) {
-    .Call(`_turbostat_t_b_permtest`, x1, x2, B)
+permtest.tb <- function(x1, x2, B, seed) {
+    .Call(`_turbostat_t_b_permtest`, x1, x2, B, seed)
 }
 
 #' Tc permutation test
@@ -57,8 +57,8 @@ permtest.tb <- function(x1, x2, B) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tc <- function(x1, x2, B) {
-    .Call(`_turbostat_t_c_permtest`, x1, x2, B)
+permtest.tc <- function(x1, x2, B, seed) {
+    .Call(`_turbostat_t_c_permtest`, x1, x2, B, seed)
 }
 
 #' Tabc permutation test
@@ -69,7 +69,7 @@ permtest.tc <- function(x1, x2, B) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tabc <- function(x1, x2, B) {
-    .Call(`_turbostat_t_abc_permtest`, x1, x2, B)
+permtest.tabc <- function(x1, x2, B, seed) {
+    .Call(`_turbostat_t_abc_permtest`, x1, x2, B, seed)
 }
 

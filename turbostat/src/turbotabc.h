@@ -6,6 +6,8 @@
 #define RACE_TURBOTABC_H
 
 #include <Rcpp.h>
+#include <xoshiro.h>
+
 
 //' Tabc permutation test
 //'
@@ -17,7 +19,13 @@
 //' @export
 // [[Rcpp::export(permtest.tabc)]]
 Rcpp::NumericVector t_abc_permtest (Rcpp::NumericVector x1,
-                       Rcpp::NumericVector x2,
-                       unsigned B);
+                                    Rcpp::NumericVector x2,
+                                    unsigned B,
+                                    unsigned seed);
+
+Rcpp::NumericVector t_abc_permtest_impl (Rcpp::NumericVector x1,
+                                         Rcpp::NumericVector x2,
+                                         unsigned B,
+                                         dqrng::xoroshiro128plus &rng);
 
 #endif //RACE_TURBOTABC_H

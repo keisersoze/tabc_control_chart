@@ -9,13 +9,6 @@
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2);
 
-double
-unconditional_run_length_distribution(unsigned int n,
-                                      Rcpp::NumericVector phaseI_sample,
-                                      unsigned int nsim,
-                                      double LCL,
-                                      unsigned run_length_cap);
-
 
 //' Test UCL
 //'
@@ -32,7 +25,8 @@ double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector referen
                                                      unsigned nperm,
                                                      double LCL,
                                                      const std::string &test,
-                                                     unsigned run_length_cap);
+                                                     unsigned run_length_cap,
+                                                     unsigned seed);
 
 
 #endif //RACE_RUNLENGTH_H
