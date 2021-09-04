@@ -76,3 +76,13 @@ Rcpp::IntegerVector order(Rcpp::IntegerVector v) {
 
     return idx;
 }
+
+Rcpp::NumericVector sample_with_replacement(Rcpp::NumericVector v, unsigned sample_size, dqrng::xoroshiro128plus &rng){
+    std::uniform_int_distribution<> dist(0, v.size()-1);
+    Rcpp::NumericVector res (sample_size);
+    for (unsigned i = 0; i < sample_size; ++i) {
+        unsigned rn = dist(rng);
+        res[i] = v[rn];
+    }
+    return res;
+}

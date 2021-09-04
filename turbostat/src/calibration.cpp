@@ -4,6 +4,7 @@
 
 #include "calibration.h"
 #include "test_dispatching.h"
+#include "utils.h"
 
 #include <xoshiro.h>
 
@@ -20,7 +21,7 @@ Rcpp::List find_UCL(Rcpp::NumericVector reference_sample,
     Rcpp::NumericVector counts(nperm + 1);
     dqrng::xoroshiro128plus rng(seed);
     for (unsigned i = 0; i < n_iterations; ++i) {
-        Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
+        Rcpp::NumericVector test_sample_boot = sample_with_replacement(reference_sample, n, rng);
         unsigned position = test_f(reference_sample,test_sample_boot, nperm, rng)[2];
         counts[position] ++ ;
     }

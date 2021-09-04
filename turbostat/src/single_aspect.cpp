@@ -4,19 +4,7 @@
 
 #include "utils.h"
 #include "single_aspect.h"
-
-Rcpp::NumericVector a_aspect(Rcpp::NumericVector pooled_sample){
-    return pooled_sample;
-}
-
-Rcpp::NumericVector b_aspect(Rcpp::NumericVector pooled_sample){
-    double median = Rcpp::median(pooled_sample);
-    return Rcpp::ifelse( pooled_sample >= median, 1.0, 0.0);
-}
-
-Rcpp::NumericVector c_aspect(Rcpp::NumericVector pooled_sample){
-    return avg_rank(pooled_sample);
-}
+#include "data_aspects.h"
 
 Rcpp::NumericVector single_aspect (Rcpp::NumericVector x1,
                                    Rcpp::NumericVector x2,

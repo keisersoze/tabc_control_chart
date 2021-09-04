@@ -5,6 +5,7 @@
 #include "runlength.h"
 #include "utils.h"
 #include "test_dispatching.h"
+#include "utils.h"
 
 #include <xoshiro.h>
 
@@ -79,13 +80,13 @@ double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
 //}
 
 double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
-                unsigned n,
-                unsigned nsim,
-                unsigned nperm,
-                double LCL,
-                const std::string &test,
-                unsigned run_length_cap,
-                unsigned seed) {
+                                                     unsigned n,
+                                                     unsigned nsim,
+                                                     unsigned nperm,
+                                                     double LCL,
+                                                     const std::string &test,
+                                                     unsigned run_length_cap,
+                                                     unsigned seed) {
     test_fun_ptr test_f = dispatch_from_string(test);
     Rcpp::NumericVector run_lengths(nsim);
     dqrng::xoroshiro128plus rng(seed);
@@ -94,7 +95,7 @@ double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector referen
         double stat;
         do {
             run_length ++;
-            Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
+            Rcpp::NumericVector test_sample_boot = sample_with_replacement(reference_sample, n, rng);
             stat = test_f(reference_sample, test_sample_boot, nperm, rng)[1];
         } while (stat > LCL and run_length <= run_length_cap );
         run_lengths[i] = run_length;
@@ -102,38 +103,6 @@ double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector referen
     return Rcpp::mean(run_lengths);
 }
 
-//double conditional_run_length_distribution_bootstrap2(Rcpp::NumericVector reference_sample,
-//                                                     unsigned n,
-//                                                     double target_ARL,
-//                                                     unsigned nsim,
-//                                                     unsigned nperm,
-//                                                     double LCL,
-//                                                     const std::string &test,
-//                                                     unsigned run_length_cap) {
-//    test_fun_ptr test_f = dispatch_from_string(test);
-//    unsigned n_iterations = target_ARL * nsim;
-//    std::list<unsigned> rl_list;
-//    unsigned rl_counter = 0;
-//    double stat;
-//    for (unsigned i = 0; i < n_iterations; ++i) {
-//        Rcpp::NumericVector test_sample_boot = Rcpp::sample(reference_sample, n, true);
-//        stat = test_f(reference_sample,test_sample_boot, nperm)[1];
-//        if (stat > LCL ){
-//            rl_counter = rl_counter + 1;
-//        } else {
-//            rl_list.push_back(rl_counter);
-//            rl_counter = 0;
-//        }
-//    }
-//    // TODO: ugly conversion from std::list to Rcpp::NumericVector
-//    Rcpp::NumericVector rl_vector(rl_list.size());
-//    unsigned i = 0;
-//    for (auto const &rl: rl_list){
-//        rl_vector[i] =rl;
-//        i++;
-//    }
-//    return Rcpp::mean(rl_vector);
-//}
 
 //Rcpp::NumericVector uncoditional_find_UCL (unsigned m,
 //                              unsigned n,
