@@ -1,11 +1,12 @@
 seed = 42
 n = 10
 m = 100
+shifts = c(0, 1)
 X = rnorm(m)
 ARL.target = 100
-nsim = 100
-nperm = 10000
-plotting.stat = "abc"
+nsim = 10
+nperm = 1000
+plotting.stat = "a"
 
 start.time = proc.time()
 result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat, seed)
@@ -32,11 +33,11 @@ print (LCL)
 # }
 
 start.time = proc.time()
-ARL.test = rl.conditional(X,n,nsim,nperm,LCL,plotting.stat, 5000, seed)
+result2 = rl.conditional(X,n,nsim,nperm,shifts, LCL,plotting.stat, 5000, seed)
 duration.time = proc.time() - start.time
-print (duration.time)
+print(duration.time)
+print (result2)
 
-print(ARL.test)
 
 # ARL.test2 = rl.conditional2(X,n,ARL.target,nsim,nperm,LCL,plotting.stat, 5000)
 # print(ARL.test2)

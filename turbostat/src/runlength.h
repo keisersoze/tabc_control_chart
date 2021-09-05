@@ -19,14 +19,15 @@ double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2);
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(rl.conditional)]]
-double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
-                                                     unsigned n,
-                                                     unsigned nsim,
-                                                     unsigned nperm,
-                                                     double LCL,
-                                                     const std::string &test,
-                                                     unsigned run_length_cap,
-                                                     unsigned seed);
+Rcpp::DataFrame  conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
+                                                               unsigned n,
+                                                               unsigned nsim,
+                                                               unsigned nperm,
+                                                               Rcpp::NumericVector shifts,
+                                                               double LCL,
+                                                               const std::string &test,
+                                                               unsigned run_length_cap,
+                                                               unsigned seed);
 
 
 #endif //RACE_RUNLENGTH_H

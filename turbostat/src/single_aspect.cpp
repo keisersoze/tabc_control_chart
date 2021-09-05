@@ -36,8 +36,12 @@ Rcpp::NumericVector single_aspect (Rcpp::NumericVector x1,
                         std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
     }
-    double p_value = (double)Rcpp::sum(Rcpp::ifelse( perm_stats <= obs_stat, 1, 0))/(double)B;
-    return Rcpp::NumericVector::create(obs_stat,p_value);
+
+    unsigned position = Rcpp::sum(Rcpp::ifelse( perm_stats <= obs_stat, 1, 0));
+
+    double p_value = (double) position /(double)B;
+
+    return Rcpp::NumericVector::create(obs_stat,p_value, position);
 }
 
 Rcpp::NumericVector t_a_permtest_impl (Rcpp::NumericVector x1,

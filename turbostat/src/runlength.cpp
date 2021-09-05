@@ -79,28 +79,39 @@ double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
 //    return Rcpp::mean(run_lengths);
 //}
 
-double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
+Rcpp::DataFrame  conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample,
                                                      unsigned n,
                                                      unsigned nsim,
                                                      unsigned nperm,
+                                                     Rcpp::NumericVector shifts,
                                                      double LCL,
                                                      const std::string &test,
                                                      unsigned run_length_cap,
                                                      unsigned seed) {
+    Rcpp::NumericVector arls(shifts.size());
+    Rcpp::NumericVector sds(shifts.size());
     test_fun_ptr test_f = dispatch_from_string(test);
-    Rcpp::NumericVector run_lengths(nsim);
     dqrng::xoroshiro128plus rng(seed);
-    for (unsigned i = 0; i < nsim; ++i) {
-        unsigned run_length = 0;
-        double stat;
-        do {
-            run_length ++;
-            Rcpp::NumericVector test_sample_boot = sample_with_replacement(reference_sample, n, rng);
-            stat = test_f(reference_sample, test_sample_boot, nperm, rng)[1];
-        } while (stat > LCL and run_length <= run_length_cap );
-        run_lengths[i] = run_length;
+    for (int shift_index = 0; shift_index < shifts.size(); ++shift_index) {
+        double shift = shifts[shift_index];
+        Rcpp::NumericVector run_lengths(nsim);
+        Rcpp::NumericVector shifted_reference_sample = reference_sample + shift;
+        for (unsigned i = 0; i < nsim; ++i) {
+            unsigned run_length = 0;
+            double stat;
+            do {
+                run_length ++;
+                Rcpp::NumericVector test_sample_boot = sample_with_replacement(shifted_reference_sample, n, rng);
+                stat = test_f(reference_sample, test_sample_boot, nperm, rng)[1];
+            } while (stat > LCL and run_length <= run_length_cap );
+            run_lengths[i] = run_length;
+        }
+        arls[shift_index] = Rcpp::mean(run_lengths);
+        sds[shift_index] = Rcpp::sd(run_lengths);
     }
-    return Rcpp::mean(run_lengths);
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("Standard deviations") = sds);
+    return result;
 }
 
 
