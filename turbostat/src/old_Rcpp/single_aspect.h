@@ -18,8 +18,8 @@
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(permtest.ta)]]
-std::vector<double> t_a_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
+Rcpp::NumericVector t_a_permtest (Rcpp::NumericVector x1,
+                                  Rcpp::NumericVector x2,
                                   unsigned B,
                                   unsigned seed);
 
@@ -32,8 +32,8 @@ std::vector<double> t_a_permtest (const std::vector<double> &x1,
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(permtest.tb)]]
-std::vector<double> t_b_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
+Rcpp::NumericVector t_b_permtest (Rcpp::NumericVector x1,
+                                  Rcpp::NumericVector x2,
                                   unsigned B,
                                   unsigned seed);
 
@@ -46,23 +46,23 @@ std::vector<double> t_b_permtest (const std::vector<double> &x1,
 //' @param B the number of permutations to be used for estimating the pvalue
 //' @export
 // [[Rcpp::export(permtest.tc)]]
-std::vector<double> t_c_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
+Rcpp::NumericVector t_c_permtest (Rcpp::NumericVector x1,
+                                  Rcpp::NumericVector x2,
                                   unsigned B,
                                   unsigned seed);
 
-std::vector<double> t_a_permtest_impl (const std::vector<double> &x1,
-                                       const std::vector<double> &x2,
+Rcpp::NumericVector t_a_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
                                        unsigned B,
                                        dqrng::xoroshiro128plus &rng);
 
-std::vector<double> t_b_permtest_impl (const std::vector<double> &x1,
-                                       const std::vector<double> &x2,
+Rcpp::NumericVector t_b_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
                                        unsigned B,
                                        dqrng::xoroshiro128plus &rng);
 
-std::vector<double> t_c_permtest_impl (const std::vector<double> &x1,
-                                       const std::vector<double> &x2,
+Rcpp::NumericVector t_c_permtest_impl (Rcpp::NumericVector x1,
+                                       Rcpp::NumericVector x2,
                                        unsigned B,
                                        dqrng::xoroshiro128plus &rng);
 

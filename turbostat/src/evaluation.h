@@ -29,5 +29,8 @@ Rcpp::DataFrame  conditional_run_length_distribution_bootstrap(Rcpp::NumericVect
                                                                unsigned run_length_cap,
                                                                unsigned seed);
 
+// [[Rcpp::export(parallel_random_sum)]]
+std::vector<double> parallel_random_sum(int n, int m, int ncores);
+
 
 #endif //RACE_RUNLENGTH_H

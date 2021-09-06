@@ -2,13 +2,15 @@
 // Created by filip on 25/08/2021.
 //
 
-#include "runlength.h"
+#include "evaluation.h"
 #include "utils.h"
 #include "test_dispatching.h"
 #include "utils.h"
 
 #include <xoshiro.h>
+#include <random>
 
+#include <omp.h>
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2) {
     const unsigned m = x1.size();
@@ -96,22 +98,53 @@ Rcpp::DataFrame  conditional_run_length_distribution_bootstrap(Rcpp::NumericVect
         double shift = shifts[shift_index];
         Rcpp::NumericVector run_lengths(nsim);
         Rcpp::NumericVector shifted_reference_sample = reference_sample + shift;
-        for (unsigned i = 0; i < nsim; ++i) {
-            unsigned run_length = 0;
-            double stat;
-            do {
-                run_length ++;
-                Rcpp::NumericVector test_sample_boot = sample_with_replacement(shifted_reference_sample, n, rng);
-                stat = test_f(reference_sample, test_sample_boot, nperm, rng)[1];
-            } while (stat > LCL and run_length <= run_length_cap );
-            run_lengths[i] = run_length;
+        std::vector<double> shifted_reference_sample_c(shifted_reference_sample.begin(),shifted_reference_sample.end());
+        #pragma omp parallel
+        {
+            dqrng::xoroshiro128plus lrng(rng);      // make thread local copy of rng
+            lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
+            #pragma omp for
+            for (unsigned i = 0; i < nsim; ++i) {
+                unsigned run_length = 0;
+                double stat;
+                do {
+                    run_length++;
+                    std::vector<double> test_sample_boot = sample_with_replacement(shifted_reference_sample_c, n, lrng);
+                    // stat = test_f(reference_sample, test_sample_boot, nperm, lrng)[1];
+                } while (run_length <= run_length_cap);
+                run_lengths[i] = run_length;
+            }
         }
-        arls[shift_index] = Rcpp::mean(run_lengths);
-        sds[shift_index] = Rcpp::sd(run_lengths);
+//        arls[shift_index] = Rcpp::mean(run_lengths);
+//        sds[shift_index] = Rcpp::sd(run_lengths);
     }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
-                                                     Rcpp::Named("Standard deviations") = sds);
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("run lengths") = arls);
     return result;
+}
+
+
+std::vector<double> parallel_random_sum(int n, int m, int ncores) {
+    std::normal_distribution<double> dist(0.0, 1.0);
+    dqrng::xoshiro256plus rng(42);              // properly seeded rng
+    std::vector<double> res(m);
+    // ok to use rng here
+
+    #pragma omp parallel num_threads(ncores)
+    {
+        dqrng::xoshiro256plus lrng(rng);      // make thread local copy of rng
+        lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
+
+        #pragma omp for
+        for (int i = 0; i < m; ++i) {
+            double lres(0);
+            for (int j = 0; j < n; ++j) {
+                lres += dist(lrng);
+            }
+            res[i] = lres / n;
+        }
+    }
+    // ok to use rng here
+    return res;
 }
 
 

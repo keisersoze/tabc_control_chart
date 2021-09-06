@@ -1,17 +1,17 @@
-library(qcc)
+# library(qcc)
+#
+# data(pistonrings)
+# attach(pistonrings)
+# diameter <- qcc.groups(diameter, sample)
 
-data(pistonrings)
-attach(pistonrings)
-diameter <- qcc.groups(diameter, sample)
-
-X = as.vector(diameter[1:25,])
+X = rcauchy(100)
 
 seed = 42
 
 n = 10
 shifts = c(0, 0.001, 0.002, 0.003, 0.004)
 ARL.target = 250
-nsim = 200
+nsim = 2
 nperm = 5000
 
 plotting.stat1 = "abc"
