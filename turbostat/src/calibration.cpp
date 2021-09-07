@@ -25,6 +25,7 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
     dqrng::xoroshiro128plus rng(seed);
     for (unsigned i = 0; i < n_iterations; ++i) {
         std::vector<double> test_sample_boot = sample_with_replacement(reference_sample, n, rng);
+        Rcpp::Rcout << test_sample_boot[0] << std::endl;
         perm_test_result res = test_f(reference_sample, test_sample_boot, nperm, rng);
         counts[res.pos]++;
     }

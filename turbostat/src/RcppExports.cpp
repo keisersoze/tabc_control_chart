@@ -27,6 +27,38 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// conditional_run_length_distribution_bootstrap
+Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<double>& reference_sample, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap, unsigned seed);
+RcppExport SEXP _turbostat_conditional_run_length_distribution_bootstrap(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type reference_sample(reference_sampleSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
+    Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(conditional_run_length_distribution_bootstrap(reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// parallel_random_sum
+std::vector<double> parallel_random_sum(int n, int m, int ncores);
+RcppExport SEXP _turbostat_parallel_random_sum(SEXP nSEXP, SEXP mSEXP, SEXP ncoresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
+    rcpp_result_gen = Rcpp::wrap(parallel_random_sum(n, m, ncores));
+    return rcpp_result_gen;
+END_RCPP
+}
 // t_a_binding
 Rcpp::DataFrame t_a_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B, unsigned seed);
 RcppExport SEXP _turbostat_t_a_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
@@ -86,6 +118,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 7},
+    {"_turbostat_conditional_run_length_distribution_bootstrap", (DL_FUNC) &_turbostat_conditional_run_length_distribution_bootstrap, 9},
+    {"_turbostat_parallel_random_sum", (DL_FUNC) &_turbostat_parallel_random_sum, 3},
     {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 4},
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 4},
     {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 4},

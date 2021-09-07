@@ -139,11 +139,11 @@ x1=rnorm(100, mean = 0)
 x2=rnorm(100, mean = 0.5)
 
 start.time = proc.time()
-print(Tabc(x1,x2,"less", 100000))
+print(Tabc(x1,x2,"less", 10000))
 duration.time = proc.time() - start.time
 print (duration.time)
 
 start.time = proc.time()
-print(permtest.tabc(x1,x2, 100000, seed))
+print(permtest.tabc(x1,x2, 10000, seed))
 duration.time = proc.time() - start.time
 print (duration.time)
