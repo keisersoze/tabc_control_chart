@@ -7,8 +7,11 @@
 #include <iostream>
 
 #include <Rcpp.h>
+#include <xoshiro.h>
 
 #include "single_aspect.h"
+#include "multiple_aspects.h"
+
 
 std::string hello() {
     return "Hello world";
@@ -76,6 +79,29 @@ Rcpp::DataFrame t_c_binding(const std::vector<double> &x1,
                                    Rcpp::Named("nPerm") = res.n_perm,
                                    Rcpp::Named("pos") = res.pos);
 }
+
+
+//' Tabc permutation test
+//'
+//' Compute approximated pvalue for the Tabc test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.tabc)]]
+Rcpp::DataFrame t_abc_binding (const std::vector<double> &x1,
+                                   const std::vector<double> &x2,
+                                   unsigned B,
+                                   unsigned seed){
+    dqrng::xoroshiro128plus rng(seed);
+    perm_test_result res = t_abc(x1, x2, B, rng);
+    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
+                                   Rcpp::Named("obsStat") = res.obs_stat,
+                                   Rcpp::Named("nPerm") = res.n_perm,
+                                   Rcpp::Named("pos") = res.pos);
+}
+
 
 //NumericVector testA(NumericVector x1, NumericVector x2, int B) {
 //    std::vector<double> x1_c(x1.size());

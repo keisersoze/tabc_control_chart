@@ -52,11 +52,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// t_abc_binding
+Rcpp::DataFrame t_abc_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B, unsigned seed);
+RcppExport SEXP _turbostat_t_abc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(t_abc_binding(x1, x2, B, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 4},
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 4},
     {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 4},
+    {"_turbostat_t_abc_binding", (DL_FUNC) &_turbostat_t_abc_binding, 4},
     {NULL, NULL, 0}
 };
 

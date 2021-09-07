@@ -2,6 +2,8 @@
 // Created by filip on 25/08/2021.
 //
 
+#include <algorithm>
+#include <cassert>
 #include "utils.h"
 
 // https://stackoverflow.com/questions/39153082/rcpp-rank-function-that-does-average-ties

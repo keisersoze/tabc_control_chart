@@ -37,3 +37,15 @@ permtest.tc <- function(x1, x2, B, seed) {
     .Call(`_turbostat_t_c_binding`, x1, x2, B, seed)
 }
 
+#' Tabc permutation test
+#'
+#' Compute approximated pvalue for the Tabc test using a finite number of permutations.
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+permtest.tabc <- function(x1, x2, B, seed) {
+    .Call(`_turbostat_t_abc_binding`, x1, x2, B, seed)
+}
+
