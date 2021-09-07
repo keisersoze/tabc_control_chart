@@ -1,4 +1,5 @@
 seed = 42
+set.seed(seed)
 n = 10
 m = 100
 shifts = c(0, 1)

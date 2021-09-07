@@ -14,6 +14,9 @@ add_executable(data_aspects tests/test_data_aspects.cpp data_aspects.h data_aspe
 add_executable(single_aspect_tests tests/test_single_aspects.cpp data_aspects.h data_aspects.cpp utils.h utils.cpp test_interface.h test_interface.cpp single_aspect.h)
 add_executable(multi_aspects_tests tests/test_multiple_aspects.cpp data_aspects.h data_aspects.cpp utils.h utils.cpp test_interface.h test_interface.cpp multiple_aspects.h)
 
+add_executable(test_sample_with_replacement tests/test_sample_with_replacement.cpp utils.h utils.cpp )
+
+
 
 
 # target_link_libraries(test_omp PRIVATE OpenMP::OpenMP_CXX)

@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <random>
+#include <algorithm>
 
 std::vector<double> avg_rank(const std::vector<double> &v);
 
