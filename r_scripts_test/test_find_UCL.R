@@ -4,8 +4,8 @@ n = 10
 m = 100
 shifts = c(0, 1)
 X = rnorm(m)
-ARL.target = 10
-nsim = 2
+ARL.target = 100
+nsim = 300
 nperm = 5000
 plotting.stat = "abc"
 
@@ -33,13 +33,13 @@ print (LCL)
 #   }
 # }
 
-# seed = 62
-#
-# start.time = proc.time()
-# result2 = rl.conditional(X,n,nsim,nperm,shifts, LCL,plotting.stat, 5000, seed)
-# duration.time = proc.time() - start.time
-# print(duration.time)
-# print (result2)
+seed = 2
+
+start.time = proc.time()
+result2 = rl.conditional(X,n,nsim,nperm,shifts, LCL,plotting.stat, 5000, seed)
+duration.time = proc.time() - start.time
+print(duration.time)
+print (result2)
 
 
 # ARL.test2 = rl.conditional2(X,n,ARL.target,nsim,nperm,LCL,plotting.stat, 5000)
