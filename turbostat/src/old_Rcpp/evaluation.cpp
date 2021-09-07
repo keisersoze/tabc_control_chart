@@ -3,9 +3,9 @@
 //
 
 #include "evaluation.h"
-#include "utils.h"
-#include "test_dispatching.h"
-#include "utils.h"
+#include "../utils.h"
+#include "../test_dispatching.h"
+#include "../utils.h"
 
 #include <xoshiro.h>
 #include <random>

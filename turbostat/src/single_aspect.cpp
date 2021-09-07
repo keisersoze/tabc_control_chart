@@ -2,13 +2,16 @@
 // Created by filip on 25/08/2021.
 //
 
+#include <algorithm>    // std::count_if
+#include <numeric>
+
 #include "utils.h"
 #include "single_aspect.h"
-#include "old_Rcpp/data_aspects.h"
+#include "data_aspects.h"
 
-std::vector<double> single_aspect (const std::vector<double> &x1,
+perm_test_result single_aspect (const std::vector<double> &x1,
                                    const std::vector<double> &x2,
-                                   unsigned B,
+                                   unsigned n_perm,
                                    std::vector<double> (*aspect)(const std::vector<double> &),
                                    dqrng::xoroshiro128plus &rng){
     unsigned n1 = x1.size();
@@ -28,63 +31,38 @@ std::vector<double> single_aspect (const std::vector<double> &x1,
     double obs_stat = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
                       std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
-    std::vector<double> perm_stats(B);
-    for (unsigned i = 0; i < B ; ++i) {
+    std::vector<double> perm_stats(n_perm);
+    for (unsigned i = 0; i < n_perm ; ++i) {
         std::shuffle(transformed_pooled_sample.begin(), transformed_pooled_sample.end(), rng);
         perm_stats[i] = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
                         std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
     }
 
-    unsigned position = std::count_if(perm_stats.begin(), perm_stats.end(), [](int x){return x <= obs_stat;});
+    unsigned position = std::count_if(perm_stats.begin(), perm_stats.end(), [obs_stat](int x){return x <= obs_stat;});
 
-    double p_value = (double) position /(double)B;
-
-    return std::vector<double>({obs_stat,p_value, position});
+    perm_test_result res(obs_stat, n_perm, position);
+    return res;
 }
 
-std::vector<double> t_a_permtest_impl (const std::vector<double> &x1,
+perm_test_result t_a_permtest (const std::vector<double> &x1,
                                        const std::vector<double> &x2,
-                                       unsigned B,
+                                       unsigned n_perm,
                                        dqrng::xoroshiro128plus &rng){
 
-    return single_aspect(x1, x2, B, a_aspect, rng);
+    return single_aspect(x1, x2, n_perm, a_aspect, rng);
 }
 
-std::vector<double> t_b_permtest_impl (const std::vector<double> &x1,
+perm_test_result t_b_permtest (const std::vector<double> &x1,
                                        const std::vector<double> &x2,
-                                       unsigned B,
+                                       unsigned n_perm,
                                        dqrng::xoroshiro128plus &rng){
-    return single_aspect(x1, x2, B, b_aspect, rng);
+    return single_aspect(x1, x2, n_perm, b_aspect, rng);
 }
 
-std::vector<double> t_c_permtest_impl (const std::vector<double> &x1,
+perm_test_result t_c_permtest (const std::vector<double> &x1,
                                        const std::vector<double> &x2,
-                                       unsigned B,
+                                       unsigned n_perm,
                                        dqrng::xoroshiro128plus &rng){
-    return single_aspect(x1, x2, B, c_aspect, rng);
-}
-
-std::vector<double> t_a_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
-                                  unsigned B,
-                                  unsigned seed){
-    dqrng::xoroshiro128plus rng(seed);
-    return t_a_permtest_impl(x1, x2, B, rng);
-}
-
-std::vector<double> t_b_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
-                                  unsigned B,
-                                  unsigned seed){
-    dqrng::xoroshiro128plus rng(seed);
-    return t_b_permtest_impl(x1, x2, B, rng);
-}
-
-std::vector<double> t_c_permtest (const std::vector<double> &x1,
-                                  const std::vector<double> &x2,
-                                  unsigned B,
-                                  unsigned seed){
-    dqrng::xoroshiro128plus rng(seed);
-    return t_c_permtest_impl(x1, x2, B, rng);
+    return single_aspect(x1, x2, n_perm, c_aspect, rng);
 }

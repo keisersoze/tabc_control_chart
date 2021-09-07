@@ -5,12 +5,13 @@
 #ifndef RACE_TEST_DISPATCHING_H
 #define RACE_TEST_DISPATCHING_H
 
-#include "Rcpp.h"
+#include <vector>
 
 #include <xoshiro.h>
 
-typedef Rcpp::NumericVector (*test_fun_ptr) (Rcpp::NumericVector x1,
-                                             Rcpp::NumericVector x2,
+
+typedef std::vector<double> (*test_fun_ptr) (const std::vector<double> &x1,
+                                             const std::vector<double> &x2,
                                              unsigned B,
                                              dqrng::xoroshiro128plus &rng);
 

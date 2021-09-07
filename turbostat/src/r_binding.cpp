@@ -8,12 +8,73 @@
 
 #include <Rcpp.h>
 
-#include "evaluation.h"
-#include "turbotabc.h"
 #include "single_aspect.h"
 
 std::string hello() {
     return "Hello world";
+}
+
+//' Ta permutation test
+//'
+//' Compute approximated pvalue for the Ta test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.ta)]]
+Rcpp::DataFrame t_a_binding(const std::vector<double> &x1,
+                            const std::vector<double> &x2,
+                            unsigned B,
+                            unsigned seed) {
+    dqrng::xoroshiro128plus rng(seed);
+    perm_test_result res = t_a_permtest(x1, x2, B, rng);
+    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
+                                   Rcpp::Named("obsStat") = res.obs_stat,
+                                   Rcpp::Named("nPerm") = res.n_perm,
+                                   Rcpp::Named("pos") = res.pos);
+}
+
+//' Tb permutation test
+//'
+//' Compute approximated pvalue for the Tb test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.tb)]]
+Rcpp::DataFrame t_b_binding(const std::vector<double> &x1,
+                            const std::vector<double> &x2,
+                            unsigned B,
+                            unsigned seed) {
+    dqrng::xoroshiro128plus rng(seed);
+    perm_test_result res = t_b_permtest(x1, x2, B, rng);
+    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
+                                   Rcpp::Named("obsStat") = res.obs_stat,
+                                   Rcpp::Named("nPerm") = res.n_perm,
+                                   Rcpp::Named("pos") = res.pos);
+}
+
+//' Tc permutation test
+//'
+//' Compute approximated pvalue for the Tc test using a finite number of permutations.
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(permtest.tc)]]
+Rcpp::DataFrame t_c_binding(const std::vector<double> &x1,
+                            const std::vector<double> &x2,
+                            unsigned B,
+                            unsigned seed) {
+    dqrng::xoroshiro128plus rng(seed);
+    perm_test_result res = t_c_permtest(x1, x2, B, rng);
+    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
+                                   Rcpp::Named("obsStat") = res.obs_stat,
+                                   Rcpp::Named("nPerm") = res.n_perm,
+                                   Rcpp::Named("pos") = res.pos);
 }
 
 //NumericVector testA(NumericVector x1, NumericVector x2, int B) {

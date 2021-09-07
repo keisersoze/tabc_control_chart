@@ -5,7 +5,7 @@
 #ifndef RACE_DATA_ASPECTS_H
 #define RACE_DATA_ASPECTS_H
 
-#include <Rcpp.h>
+#include <vector>
 
 std::vector<double> a_aspect(const std::vector<double> &pooled_sample);
 
