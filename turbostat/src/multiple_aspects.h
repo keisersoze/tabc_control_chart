@@ -8,7 +8,7 @@
 #include <numeric>
 #include <algorithm>
 
-# include "test_result.h"
+# include "test_interface.h"
 # include "data_aspects.h"
 # include "utils.h"
 

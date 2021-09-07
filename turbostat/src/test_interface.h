@@ -2,8 +2,8 @@
 // Created by filip on 07/09/2021.
 //
 
-#ifndef RACE_TEST_RESULT_H
-#define RACE_TEST_RESULT_H
+#ifndef RACE_TEST_INTERFACE_H
+#define RACE_TEST_INTERFACE_H
 
 struct test_result {
     double obs_stat;
@@ -22,4 +22,4 @@ struct perm_test_result : public test_result {
 };
 
 
-#endif //RACE_TEST_RESULT_H
+#endif //RACE_TEST_INTERFACE_H

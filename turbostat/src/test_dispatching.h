@@ -6,14 +6,14 @@
 #define RACE_TEST_DISPATCHING_H
 
 #include <vector>
-
 #include <xoshiro.h>
 
+#include "test_interface.h"
 
-typedef std::vector<double> (*test_fun_ptr) (const std::vector<double> &x1,
-                                             const std::vector<double> &x2,
-                                             unsigned B,
-                                             dqrng::xoroshiro128plus &rng);
+typedef perm_test_result (*test_fun_ptr)(const std::vector<double> &x1,
+                                         const std::vector<double> &x2,
+                                         unsigned B,
+                                         dqrng::xoroshiro128plus &rng);
 
 test_fun_ptr dispatch_from_string(const std::string &s);
 

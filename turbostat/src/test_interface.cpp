@@ -2,7 +2,7 @@
 // Created by filip on 07/09/2021.
 //
 
-#include "test_result.h"
+#include "test_interface.h"
 
 test_result::test_result(double obs_stat, double p_value) : obs_stat(obs_stat), p_value(p_value) {}
 

@@ -10,6 +10,23 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// find_ucl_conditional
+Rcpp::List find_ucl_conditional(const std::vector<double>& reference_sample, unsigned n, double target_ARL, unsigned nsim, unsigned nperm, const std::string& test, unsigned seed);
+RcppExport SEXP _turbostat_find_ucl_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP target_ARLSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP testSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type reference_sample(reference_sampleSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type target_ARL(target_ARLSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_ucl_conditional(reference_sample, n, target_ARL, nsim, nperm, test, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // t_a_binding
 Rcpp::DataFrame t_a_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B, unsigned seed);
 RcppExport SEXP _turbostat_t_a_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
@@ -68,6 +85,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 7},
     {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 4},
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 4},
     {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 4},

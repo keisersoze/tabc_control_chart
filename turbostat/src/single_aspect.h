@@ -9,7 +9,7 @@
 #include <algorithm>    // std::count_if
 #include <numeric>
 
-#include "test_result.h"
+#include "test_interface.h"
 #include "utils.h"
 #include "single_aspect.h"
 #include "data_aspects.h"
