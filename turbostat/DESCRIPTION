@@ -9,6 +9,6 @@ License: Apache-2.0
 Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 1.0.7), methods
-LinkingTo: Rcpp, dqrng
+LinkingTo: Rcpp, dqrng, BH
 SystemRequirements: C++11
 RoxygenNote: 7.1.1

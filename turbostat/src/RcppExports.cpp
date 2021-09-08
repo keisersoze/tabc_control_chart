@@ -44,16 +44,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// parallel_random_sum
-std::vector<double> parallel_random_sum(int n, int m, int ncores);
-RcppExport SEXP _turbostat_parallel_random_sum(SEXP nSEXP, SEXP mSEXP, SEXP ncoresSEXP) {
+// unconditional_run_length_distribution
+Rcpp::DataFrame unconditional_run_length_distribution(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_unconditional_run_length_distribution(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(parallel_random_sum(n, m, ncores));
+    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
+    Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    rcpp_result_gen = Rcpp::wrap(unconditional_run_length_distribution(m, n, nsim, nperm, shifts, LCL, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -123,7 +128,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 6},
     {"_turbostat_conditional_run_length_distribution_bootstrap", (DL_FUNC) &_turbostat_conditional_run_length_distribution_bootstrap, 8},
-    {"_turbostat_parallel_random_sum", (DL_FUNC) &_turbostat_parallel_random_sum, 3},
+    {"_turbostat_unconditional_run_length_distribution", (DL_FUNC) &_turbostat_unconditional_run_length_distribution, 8},
     {"_turbostat_setseed", (DL_FUNC) &_turbostat_setseed, 1},
     {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 3},
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 3},
