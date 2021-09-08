@@ -5,6 +5,7 @@
 #include "calibration.h"
 #include "test_dispatching.h"
 #include "utils.h"
+#include "global_rng.h"
 
 #include <xoshiro.h>
 
@@ -16,16 +17,14 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
                                 double target_ARL,
                                 unsigned nsim,
                                 unsigned nperm,
-                                const std::string &test,
-                                unsigned seed) {
+                                const std::string &test) {
     test_fun_ptr test_f = dispatch_from_string(test);
     // double type_1_error_prob = 1.0 / (double) target_ARL;
     unsigned n_iterations = target_ARL * nsim;
     std::vector<unsigned> counts(nperm + 1, 0);
-    dqrng::xoroshiro128plus rng(seed);
     for (unsigned i = 0; i < n_iterations; ++i) {
-        std::vector<double> test_sample_boot = sample_with_replacement(reference_sample, n, rng);
-        perm_test_result res = test_f(reference_sample, test_sample_boot, nperm, rng);
+        std::vector<double> test_sample_boot = sample_with_replacement(reference_sample, n, global_rng::instance);
+        perm_test_result res = test_f(reference_sample, test_sample_boot, nperm, global_rng::instance);
         counts[res.pos]++;
     }
     unsigned tot_count = 0;

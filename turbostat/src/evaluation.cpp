@@ -5,6 +5,7 @@
 #include "evaluation.h"
 #include "utils.h"
 #include "test_dispatching.h"
+#include "global_rng.h"
 
 #include <xoshiro.h>
 #include <random>
@@ -87,12 +88,10 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
                                                               const std::vector<double> & shifts,
                                                               double LCL,
                                                               const std::string &test,
-                                                              unsigned run_length_cap,
-                                                              unsigned seed) {
+                                                              unsigned run_length_cap) {
     Rcpp::NumericVector arls(shifts.size());
     // Rcpp::NumericVector sds(shifts.size());
     test_fun_ptr test_f = dispatch_from_string(test);
-    dqrng::xoroshiro128plus rng(seed);
     for (int shift_index = 0; shift_index < shifts.size(); ++shift_index) {
         double shift = shifts[shift_index];
         std::vector<unsigned> run_lengths(nsim);
@@ -103,7 +102,7 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
                        [shift] (double x) -> double { return x + shift ; });
         #pragma omp parallel
         {
-            dqrng::xoroshiro128plus lrng(rng);      // make thread local copy of rng
+            dqrng::xoroshiro128plus lrng(global_rng::instance);      // make thread local copy of rng
             lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
             #pragma omp for
             for (unsigned i = 0; i < nsim; ++i) {

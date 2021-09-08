@@ -135,6 +135,7 @@ Tabc=function(x1,x2,alt,B=1000){
 
 seed = 4
 set.seed(seed)
+turbostat.setseed(43)
 x1=rnorm(100, mean = 0)
 x2=rnorm(100, mean = 0.5)
 
@@ -144,6 +145,6 @@ duration.time = proc.time() - start.time
 print (duration.time)
 
 start.time = proc.time()
-print(permtest.tabc(x1,x2, 10000, seed))
+print(permtest.tabc(x1,x2, 10000))
 duration.time = proc.time() - start.time
 print (duration.time)

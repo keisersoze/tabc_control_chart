@@ -1,16 +1,17 @@
 seed = 42
 set.seed(seed)
+turbostat.setseed(seed)
 n = 10
 m = 100
 shifts = c(0, 1)
 X = rnorm(m)
 ARL.target = 100
-nsim = 300
+nsim = 4
 nperm = 5000
 plotting.stat = "abc"
 
 start.time = proc.time()
-result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat, seed)
+result = find_UCL(X,n,ARL.target,nsim, nperm, plotting.stat)
 duration.time = proc.time() - start.time
 print (duration.time)
 
@@ -33,10 +34,9 @@ print (LCL)
 #   }
 # }
 
-seed = 2
 
 start.time = proc.time()
-result2 = rl.conditional(X,n,nsim,nperm,shifts, LCL,plotting.stat, 5000, seed)
+result2 = rl.conditional(X,n,nsim,nperm,shifts, LCL,plotting.stat, 5000)
 duration.time = proc.time() - start.time
 print(duration.time)
 print (result2)

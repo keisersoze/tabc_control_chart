@@ -28,7 +28,6 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
                                         double target_ARL,
                                         unsigned nsim,
                                         unsigned nperm,
-                                        const std::string &test,
-                                        unsigned seed);
+                                        const std::string &test);
 
 #endif //RACE_CALIBRATION_H
