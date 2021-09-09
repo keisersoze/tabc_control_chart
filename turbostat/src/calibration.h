@@ -30,4 +30,13 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
                                         unsigned nperm,
                                         const std::string &test);
 
+// [[Rcpp::export(find_UCL)]]
+Rcpp::DataFrame find_lcl_uncoditional(unsigned m,
+                                      unsigned n,
+                                      unsigned nsim,
+                                      unsigned nperm,
+                                      const std::vector<double> &lcl_seq,
+                                      const std::string &test,
+                                      unsigned run_length_cap);
+
 #endif //RACE_CALIBRATION_H
