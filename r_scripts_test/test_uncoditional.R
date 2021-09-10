@@ -8,16 +8,16 @@ inverse = function(x) {
 
 ## Calibration
 
-seed = 56
+seed = 1
 turbostat.setseed(seed)
 n = 5
 m = 100
 ARL.target = 100
-nperm = 5000
+nperm = 3000
 plotting.stat = "a"
 cap = 4000
 
-calibration.nsim = 5000
+calibration.nsim = 100
 calibration.lcl_seq = inverse(seq(2, 4.55, 0.01))
 
 start.time = proc.time()
@@ -45,8 +45,8 @@ abline(v = ARL.target)
 print(LCL)
 
 # Evaluation
-evaluation.nsim = 5000
-evaluation.shifts = c(0)
+evaluation.nsim = 100
+evaluation.shifts = c(0, 1)
 
 start.time = proc.time()
 result2 = rl.uncoditional(

@@ -162,6 +162,7 @@ Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
                                           const std::string &test,
                                           unsigned run_length_cap) {
     Rcpp::NumericVector arls(shifts.size());
+    Rcpp::NumericVector sds(shifts.size());
     test_fun_ptr test_f = dispatch_from_string(test);
     for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
         double shift = shifts[shift_index];
@@ -194,9 +195,11 @@ Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
         }
         global_rng::instance.long_jump(omp_get_max_threads() + 1);
         arls[shift_index] = std::accumulate(run_lengths.begin(), run_lengths.end(), 0.0) / run_lengths.size();
-        // sds[shift_index] = Rcpp::sd(run_lengths);
+        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
+        sds[shift_index] = Rcpp::sd(run_lengths_r);
     }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls);
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("SD") = sds);
     return result;
 }
 

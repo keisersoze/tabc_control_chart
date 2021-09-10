@@ -64,11 +64,12 @@ calibration.lcl_seq = inverse(seq(2, 4.55, 0.01))
 
 # Evaluation specific params
 evaluation.nsim = 5000
-evaluation.shifts = c(0)
+evaluation.shifts = c(0,0.5)
 
-ncol = len(charts) * 2
-df <- matrix(round(rnorm(16), 2), ncol = ncol)
-df <- cbind(paste(c(1,2,3,4)), df)
+ncol = length(charts) * 2
+nrows = length(evaluation.shifts)
+df <- matrix(round(rnorm(ncol*nrows), 2), ncol = ncol)
+df <- cbind(paste(evaluation.shifts), df)
 colnames(df) <- c("Shift", rep(c("ARL", "SD"), 2))
 print(df)
 
@@ -76,9 +77,9 @@ a_header <- construct_header(
   # the data.frame or matrix that should be plotted
   df,
   # the labels of the groups that we want to insert
-  grp_names = c("", "Group A", "Group B"),
+  grp_names = c("", charts),
   # the number of columns each group spans
-  span = c(1, 2, 2),
+  span = c(1, c(rep(2, length(charts)))),
   # the alignment of each group, can be a single character (lcr) or a vector
   align = "c"
 )
