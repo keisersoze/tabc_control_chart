@@ -8,17 +8,17 @@ inverse = function(x) {
 
 ## Calibration
 
-seed = 42
+seed = 2
 turbostat.setseed(seed)
 n = 10
 m = 100
 ARL.target = 250
-nsim = 200
+nsim = 1000
 nperm = 5000
 plotting.stat = "c"
-
-lcl_seq = inverse(seq(2, 5.70, 0.01))
 cap = 4000
+
+lcl_seq = inverse(seq(2, 5.60, 0.01))
 
 start.time = proc.time()
 rls = calibrate.uncoditional(
@@ -34,15 +34,18 @@ rls = calibrate.uncoditional(
 duration.time = proc.time() - start.time
 print (duration.time)
 
-summary = colMeans(rls)
-M = loess(lcl_seq ~ summary)
-plot(M)
-LCL = as.vector(predict(M, data.frame(summary = ARL.target)))
+arls = colMeans(rls)
+plot(lcl_seq ~ arls, pch=20, cex=0.02)
+M = loess(lcl_seq ~ arls)
+# lines(data$x[j],lw1$fitted[j],col="red",lwd=1)
+abline(h = LCL)
+abline(v = ARL.target)
+LCL = as.vector(predict(M, data.frame(arls = ARL.target)))
 print(LCL)
 
 # Evaluation
 
-shifts = c(0, 0.01, 0.02, 0.05)
+shifts = c(0)
 
 start.time = proc.time()
 result2 = rl.uncoditional(
