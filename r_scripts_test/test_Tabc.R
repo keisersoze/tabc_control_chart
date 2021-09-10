@@ -136,15 +136,15 @@ Tabc=function(x1,x2,alt,B=1000){
 seed = 4
 set.seed(seed)
 turbostat.setseed(43)
-x1=rnorm(100, mean = 0)
-x2=rnorm(100, mean = 0.5)
+x1=rcauchy(100, location = 0)
+x2=rcauchy(100, location = 0.1)
 
 start.time = proc.time()
-print(Tabc(x1,x2,"less", 10000))
+print(Tabc(x1,x2,"less", 100000))
 duration.time = proc.time() - start.time
 print (duration.time)
 
 start.time = proc.time()
-print(permtest.tabc(x1,x2, 10000))
+print(permtest.tabc(x1,x2, 100000))
 duration.time = proc.time() - start.time
 print (duration.time)

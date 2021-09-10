@@ -13,6 +13,10 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
     .Call(`_turbostat_find_ucl_conditional`, reference_sample, n, target_ARL, nsim, nperm, test)
 }
 
+calibrate.uncoditional <- function(m, n, nsim, nperm, lcl_seq, test, run_length_cap) {
+    .Call(`_turbostat_find_lcl_uncoditional`, m, n, nsim, nperm, lcl_seq, test, run_length_cap)
+}
+
 #' Test UCL
 #'
 #' Compute approximated pvalue for the Tb test using a finite number of permutations.

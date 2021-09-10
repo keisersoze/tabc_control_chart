@@ -26,6 +26,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_lcl_uncoditional
+Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_find_lcl_uncoditional(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type lcl_seq(lcl_seqSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_lcl_uncoditional(m, n, nsim, nperm, lcl_seq, test, run_length_cap));
+    return rcpp_result_gen;
+END_RCPP
+}
 // conditional_run_length_distribution_bootstrap
 Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<double>& reference_sample, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
 RcppExport SEXP _turbostat_conditional_run_length_distribution_bootstrap(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
@@ -127,6 +144,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 6},
+    {"_turbostat_find_lcl_uncoditional", (DL_FUNC) &_turbostat_find_lcl_uncoditional, 7},
     {"_turbostat_conditional_run_length_distribution_bootstrap", (DL_FUNC) &_turbostat_conditional_run_length_distribution_bootstrap, 8},
     {"_turbostat_unconditional_run_length_distribution", (DL_FUNC) &_turbostat_unconditional_run_length_distribution, 8},
     {"_turbostat_setseed", (DL_FUNC) &_turbostat_setseed, 1},
