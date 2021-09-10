@@ -10,7 +10,7 @@ duration.time = proc.time() - start.time
 print(duration.time)
 
 start.time = proc.time()
-print (permtest.tc(x1,x2, 100000, 42))
+print (permtest.tc(x1,x2, 100000, 2))
 duration.time = proc.time() - start.time
 print(duration.time)
 

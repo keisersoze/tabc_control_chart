@@ -5,65 +5,74 @@
 #ifndef RACE_SINGLE_ASPECT_H
 #define RACE_SINGLE_ASPECT_H
 
-#include <Rcpp.h>
-#include <xoshiro.h>
+#include <vector>
+#include <algorithm>    // std::count_if
+#include <numeric>
 
+#include "test_interface.h"
+#include "utils.h"
+#include "single_aspect.h"
+#include "data_aspects.h"
 
-//' Ta permutation test
-//'
-//' Compute approximated pvalue for the Ta test using a finite number of permutations.
-//'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
-//' @export
-// [[Rcpp::export(permtest.ta)]]
-Rcpp::NumericVector t_a_permtest (Rcpp::NumericVector x1,
-                                  Rcpp::NumericVector x2,
-                                  unsigned B,
-                                  unsigned seed);
+template <class RNG>
+perm_test_result single_aspect (const std::vector<double> &x1,
+                                const std::vector<double> &x2,
+                                unsigned n_perm,
+                                std::vector<double> (*aspect)(const std::vector<double> &),
+                                RNG &rng){
+    unsigned n1 = x1.size();
+    unsigned n2 = x2.size();
+    std::vector<double> pooled_sample(x1.size() + x2.size());
+    for (unsigned i = 0; i < n1; ++i) {
+        pooled_sample[i] = x1[i];
+    }
+    for (unsigned i = 0; i < n2 ; ++i) {
+        pooled_sample[n1 + i] = x2[i];
+    }
 
-//' Tb permutation test
-//'
-//' Compute approximated pvalue for the Tb test using a finite number of permutations.
-//'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
-//' @export
-// [[Rcpp::export(permtest.tb)]]
-Rcpp::NumericVector t_b_permtest (Rcpp::NumericVector x1,
-                                  Rcpp::NumericVector x2,
-                                  unsigned B,
-                                  unsigned seed);
+    std::vector<double> transformed_pooled_sample = aspect(pooled_sample);
 
-//' Tc permutation test
-//'
-//' Compute approximated pvalue for the Tc test using a finite number of permutations.
-//'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
-//' @export
-// [[Rcpp::export(permtest.tc)]]
-Rcpp::NumericVector t_c_permtest (Rcpp::NumericVector x1,
-                                  Rcpp::NumericVector x2,
-                                  unsigned B,
-                                  unsigned seed);
+    // Rcpp::Rcout << "transformed_pooled_sample " << transformed_pooled_sample << std::endl;
 
-Rcpp::NumericVector t_a_permtest_impl (Rcpp::NumericVector x1,
-                                       Rcpp::NumericVector x2,
-                                       unsigned B,
-                                       dqrng::xoroshiro128plus &rng);
+    double obs_stat = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
+                      std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
-Rcpp::NumericVector t_b_permtest_impl (Rcpp::NumericVector x1,
-                                       Rcpp::NumericVector x2,
-                                       unsigned B,
-                                       dqrng::xoroshiro128plus &rng);
+    std::vector<double> perm_stats(n_perm);
+    for (unsigned i = 0; i < n_perm ; ++i) {
+        std::shuffle(transformed_pooled_sample.begin(), transformed_pooled_sample.end(), rng);
+        perm_stats[i] = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
+                        std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
-Rcpp::NumericVector t_c_permtest_impl (Rcpp::NumericVector x1,
-                                       Rcpp::NumericVector x2,
-                                       unsigned B,
-                                       dqrng::xoroshiro128plus &rng);
+    }
 
+    unsigned position = std::count_if(perm_stats.begin(), perm_stats.end(), [obs_stat](double x){return x <= obs_stat;});
+
+    perm_test_result res(obs_stat, n_perm, position);
+    return res;
+}
+
+template <class RNG>
+perm_test_result t_a_permtest (const std::vector<double> &x1,
+                               const std::vector<double> &x2,
+                               unsigned n_perm,
+                               RNG &rng){
+
+    return single_aspect(x1, x2, n_perm, a_aspect, rng);
+}
+
+template <class RNG>
+perm_test_result t_b_permtest (const std::vector<double> &x1,
+                               const std::vector<double> &x2,
+                               unsigned n_perm,
+                               RNG &rng){
+    return single_aspect(x1, x2, n_perm, b_aspect, rng);
+}
+
+template <class RNG>
+perm_test_result t_c_permtest (const std::vector<double> &x1,
+                               const std::vector<double> &x2,
+                               unsigned n_perm,
+                               RNG &rng){
+    return single_aspect(x1, x2, n_perm, c_aspect, rng);
+}
 #endif //RACE_SINGLE_ASPECT_H

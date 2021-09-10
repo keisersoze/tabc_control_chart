@@ -10,105 +10,148 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// find_UCL
-Rcpp::List find_UCL(Rcpp::NumericVector reference_sample, unsigned n, double target_ARL, unsigned nsim, unsigned nperm, const std::string& test, unsigned seed);
-RcppExport SEXP _turbostat_find_UCL(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP target_ARLSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP testSEXP, SEXP seedSEXP) {
+// find_ucl_conditional
+Rcpp::List find_ucl_conditional(const std::vector<double>& reference_sample, unsigned n, double target_ARL, unsigned nsim, unsigned nperm, const std::string& test);
+RcppExport SEXP _turbostat_find_ucl_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP target_ARLSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP testSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type reference_sample(reference_sampleSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type reference_sample(reference_sampleSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
     Rcpp::traits::input_parameter< double >::type target_ARL(target_ARLSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_UCL(reference_sample, n, target_ARL, nsim, nperm, test, seed));
+    rcpp_result_gen = Rcpp::wrap(find_ucl_conditional(reference_sample, n, target_ARL, nsim, nperm, test));
+    return rcpp_result_gen;
+END_RCPP
+}
+// find_lcl_uncoditional
+Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_find_lcl_uncoditional(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type lcl_seq(lcl_seqSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_lcl_uncoditional(m, n, nsim, nperm, lcl_seq, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
 // conditional_run_length_distribution_bootstrap
-double conditional_run_length_distribution_bootstrap(Rcpp::NumericVector reference_sample, unsigned n, unsigned nsim, unsigned nperm, double LCL, const std::string& test, unsigned run_length_cap, unsigned seed);
-RcppExport SEXP _turbostat_conditional_run_length_distribution_bootstrap(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP, SEXP seedSEXP) {
+Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<double>& reference_sample, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_conditional_run_length_distribution_bootstrap(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type reference_sample(reference_sampleSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type reference_sample(reference_sampleSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
     Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(conditional_run_length_distribution_bootstrap(reference_sample, n, nsim, nperm, LCL, test, run_length_cap, seed));
+    rcpp_result_gen = Rcpp::wrap(conditional_run_length_distribution_bootstrap(reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
-// t_a_permtest
-Rcpp::NumericVector t_a_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B, unsigned seed);
-RcppExport SEXP _turbostat_t_a_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
+// unconditional_run_length_distribution
+Rcpp::DataFrame unconditional_run_length_distribution(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_unconditional_run_length_distribution(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(t_a_permtest(x1, x2, B, seed));
+    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
+    Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    rcpp_result_gen = Rcpp::wrap(unconditional_run_length_distribution(m, n, nsim, nperm, shifts, LCL, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
-// t_b_permtest
-Rcpp::NumericVector t_b_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B, unsigned seed);
-RcppExport SEXP _turbostat_t_b_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
+// setseed
+void setseed(unsigned s);
+RcppExport SEXP _turbostat_setseed(SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned >::type s(sSEXP);
+    setseed(s);
+    return R_NilValue;
+END_RCPP
+}
+// t_a_binding
+Rcpp::DataFrame t_a_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_a_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
     Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(t_b_permtest(x1, x2, B, seed));
+    rcpp_result_gen = Rcpp::wrap(t_a_binding(x1, x2, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// t_c_permtest
-Rcpp::NumericVector t_c_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B, unsigned seed);
-RcppExport SEXP _turbostat_t_c_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
+// t_b_binding
+Rcpp::DataFrame t_b_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_b_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
     Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(t_c_permtest(x1, x2, B, seed));
+    rcpp_result_gen = Rcpp::wrap(t_b_binding(x1, x2, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// t_abc_permtest
-Rcpp::NumericVector t_abc_permtest(Rcpp::NumericVector x1, Rcpp::NumericVector x2, unsigned B, unsigned seed);
-RcppExport SEXP _turbostat_t_abc_permtest(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP, SEXP seedSEXP) {
+// t_c_binding
+Rcpp::DataFrame t_c_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_c_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
     Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(t_abc_permtest(x1, x2, B, seed));
+    rcpp_result_gen = Rcpp::wrap(t_c_binding(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// t_abc_binding
+Rcpp::DataFrame t_abc_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_abc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(t_abc_binding(x1, x2, B));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_turbostat_find_UCL", (DL_FUNC) &_turbostat_find_UCL, 7},
+    {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 6},
+    {"_turbostat_find_lcl_uncoditional", (DL_FUNC) &_turbostat_find_lcl_uncoditional, 7},
     {"_turbostat_conditional_run_length_distribution_bootstrap", (DL_FUNC) &_turbostat_conditional_run_length_distribution_bootstrap, 8},
-    {"_turbostat_t_a_permtest", (DL_FUNC) &_turbostat_t_a_permtest, 4},
-    {"_turbostat_t_b_permtest", (DL_FUNC) &_turbostat_t_b_permtest, 4},
-    {"_turbostat_t_c_permtest", (DL_FUNC) &_turbostat_t_c_permtest, 4},
-    {"_turbostat_t_abc_permtest", (DL_FUNC) &_turbostat_t_abc_permtest, 4},
+    {"_turbostat_unconditional_run_length_distribution", (DL_FUNC) &_turbostat_unconditional_run_length_distribution, 8},
+    {"_turbostat_setseed", (DL_FUNC) &_turbostat_setseed, 1},
+    {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 3},
+    {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 3},
+    {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 3},
+    {"_turbostat_t_abc_binding", (DL_FUNC) &_turbostat_t_abc_binding, 3},
     {NULL, NULL, 0}
 };
 

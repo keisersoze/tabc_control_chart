@@ -4,7 +4,7 @@
 
 #include "utils.h"
 #include "single_aspect.h"
-#include "data_aspects.h"
+#include "old_Rcpp/data_aspects.h"
 
 Rcpp::NumericVector single_aspect (Rcpp::NumericVector x1,
                                    Rcpp::NumericVector x2,

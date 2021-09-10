@@ -4,13 +4,16 @@
 
 #include "test_dispatching.h"
 #include "single_aspect.h"
-#include "turbotabc.h"
+#include "multiple_aspects.h"
 
-std::map<std::string, test_fun_ptr> m = {{"a", t_a_permtest_impl},
-                                         {"b", t_b_permtest_impl},
-                                         {"c", t_c_permtest_impl},
-                                         {"abc", t_abc_permtest_impl}};
+#include <map>
 
-test_fun_ptr dispatch_from_string(const std::string &s){
+std::map<std::string, test_fun_ptr> m = {{"a",   t_a_permtest<dqrng::xoroshiro128plus>},
+                                         {"b",   t_b_permtest<dqrng::xoroshiro128plus>},
+                                         {"c",   t_c_permtest<dqrng::xoroshiro128plus>},
+                                         {"abc", t_abc<dqrng::xoroshiro128plus>}
+};
+
+test_fun_ptr dispatch_from_string(const std::string &s) {
     return m[s];
 }

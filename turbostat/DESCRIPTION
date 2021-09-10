@@ -3,12 +3,12 @@ Type: Package
 Title: Tabc charts
 Version: 0.3.0
 Author: Filippo Maganza
-Maintainer: Filippo Maganza <yourself@somewhere.net>
+Maintainer: Filippo Maganza <filippomaganza@gmail.com>
 Description: TODO
 License: Apache-2.0
 Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 1.0.7), methods
-LinkingTo: Rcpp, dqrng
-SystemRequirements: C++11
+LinkingTo: Rcpp, dqrng, BH
+SystemRequirements: C++14
 RoxygenNote: 7.1.1

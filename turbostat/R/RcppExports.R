@@ -9,8 +9,12 @@
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test, seed) {
-    .Call(`_turbostat_find_UCL`, reference_sample, n, target_ARL, nsim, nperm, test, seed)
+find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
+    .Call(`_turbostat_find_ucl_conditional`, reference_sample, n, target_ARL, nsim, nperm, test)
+}
+
+calibrate.uncoditional <- function(m, n, nsim, nperm, lcl_seq, test, run_length_cap) {
+    .Call(`_turbostat_find_lcl_uncoditional`, m, n, nsim, nperm, lcl_seq, test, run_length_cap)
 }
 
 #' Test UCL
@@ -21,8 +25,20 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test, seed) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-rl.conditional <- function(reference_sample, n, nsim, nperm, LCL, test, run_length_cap, seed) {
-    .Call(`_turbostat_conditional_run_length_distribution_bootstrap`, reference_sample, n, nsim, nperm, LCL, test, run_length_cap, seed)
+rl.conditional <- function(reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap) {
+    .Call(`_turbostat_conditional_run_length_distribution_bootstrap`, reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap)
+}
+
+#' Test UCL
+#'
+#' Compute approximated pvalue for the Tb test using a finite number of permutations.
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+rl.uncoditional <- function(m, n, nsim, nperm, shifts, LCL, test, run_length_cap) {
+    .Call(`_turbostat_unconditional_run_length_distribution`, m, n, nsim, nperm, shifts, LCL, test, run_length_cap)
 }
 
 #' Ta permutation test
@@ -33,8 +49,20 @@ rl.conditional <- function(reference_sample, n, nsim, nperm, LCL, test, run_leng
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.ta <- function(x1, x2, B, seed) {
-    .Call(`_turbostat_t_a_permtest`, x1, x2, B, seed)
+turbostat.setseed <- function(s) {
+    invisible(.Call(`_turbostat_setseed`, s))
+}
+
+#' Ta permutation test
+#'
+#' Compute approximated pvalue for the Ta test using a finite number of permutations.
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+permtest.ta <- function(x1, x2, B) {
+    .Call(`_turbostat_t_a_binding`, x1, x2, B)
 }
 
 #' Tb permutation test
@@ -45,8 +73,8 @@ permtest.ta <- function(x1, x2, B, seed) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tb <- function(x1, x2, B, seed) {
-    .Call(`_turbostat_t_b_permtest`, x1, x2, B, seed)
+permtest.tb <- function(x1, x2, B) {
+    .Call(`_turbostat_t_b_binding`, x1, x2, B)
 }
 
 #' Tc permutation test
@@ -57,8 +85,8 @@ permtest.tb <- function(x1, x2, B, seed) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tc <- function(x1, x2, B, seed) {
-    .Call(`_turbostat_t_c_permtest`, x1, x2, B, seed)
+permtest.tc <- function(x1, x2, B) {
+    .Call(`_turbostat_t_c_binding`, x1, x2, B)
 }
 
 #' Tabc permutation test
@@ -69,7 +97,7 @@ permtest.tc <- function(x1, x2, B, seed) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-permtest.tabc <- function(x1, x2, B, seed) {
-    .Call(`_turbostat_t_abc_permtest`, x1, x2, B, seed)
+permtest.tabc <- function(x1, x2, B) {
+    .Call(`_turbostat_t_abc_binding`, x1, x2, B)
 }
 
