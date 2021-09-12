@@ -6,6 +6,7 @@
 #include "test_dispatching.h"
 #include "utils.h"
 #include "global_rng.h"
+#include "distribution_dispatching.h"
 
 #include <xoshiro.h>
 #include <boost/random/normal_distribution.hpp>
@@ -60,7 +61,9 @@ Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
     #pragma omp parallel
     {
         // TODO distribution should be a parameter
-        boost::random::normal_distribution<double> dist_null(0, 1);
+        std::vector<double> params = {0.0, 1.0};
+        std::function<double (dqrng::xoroshiro128plus&)> sampling_func =
+                dispatch_sampling_function<dqrng::xoroshiro128plus>("norm", params, 0.0);
 
         std::vector<double> reference_sample(m);
         std::vector<double> test_sample(n);
@@ -71,14 +74,14 @@ Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
         #pragma omp for
         for (unsigned i = 0; i < nsim; ++i) {
             std::generate(reference_sample.begin(), reference_sample.end(),
-                          [&dist_null, &lrng]() { return dist_null(lrng); });
+                          [&sampling_func, &lrng]() { return sampling_func(lrng); });
             unsigned run_length = 0;
             unsigned lcl_idx = 0;
             double stat;
             for (;;) {
                 run_length++;
                 std::generate(test_sample.begin(), test_sample.end(),
-                              [&dist_null, &lrng]() { return dist_null(lrng); });
+                              [&sampling_func, &lrng]() { return sampling_func(lrng); });
                 perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
                 stat = res.p_value;
                 while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {
