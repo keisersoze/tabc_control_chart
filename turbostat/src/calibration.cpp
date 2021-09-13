@@ -45,6 +45,8 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
 
 Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
                                           unsigned n,
+                                          const std::string &dist,
+                                          const std::vector<double> &params,
                                           unsigned nsim,
                                           unsigned nperm,
                                           const std::vector<double> &lcl_seq,
@@ -61,9 +63,8 @@ Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
     #pragma omp parallel
     {
         // TODO distribution should be a parameter
-        std::vector<double> params = {0.0, 1.0};
         std::function<double (dqrng::xoroshiro128plus&)> sampling_func =
-                dispatch_sampling_function<dqrng::xoroshiro128plus>("norm", params, 0.0);
+                dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, 0.0);
 
         std::vector<double> reference_sample(m);
         std::vector<double> test_sample(n);

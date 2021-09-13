@@ -12,18 +12,22 @@ seed = 1
 turbostat.setseed(seed)
 n = 5
 m = 100
+dist = "norm"
+params = c(0,1)
 ARL.target = 100
 nperm = 3000
 plotting.stat = "a"
 cap = 4000
 
-calibration.nsim = 100
+calibration.nsim = 10
 calibration.lcl_seq = inverse(seq(2, 4.55, 0.01))
 
 start.time = proc.time()
 rls = calibrate.uncoditional(
   m = m,
   n = n,
+  dist = dist,
+  params = params,
   nsim = calibration.nsim,
   nperm = nperm,
   lcl_seq = calibration.lcl_seq,
@@ -45,13 +49,15 @@ abline(v = ARL.target)
 print(LCL)
 
 # Evaluation
-evaluation.nsim = 100
+evaluation.nsim = 10
 evaluation.shifts = c(0, 1)
 
 start.time = proc.time()
 result2 = rl.uncoditional(
   m = m,
   n = n,
+  dist = dist,
+  params = params,
   nsim = evaluation.nsim,
   nperm = nperm,
   shifts = evaluation.shifts,

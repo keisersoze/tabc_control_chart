@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "test_dispatching.h"
 #include "global_rng.h"
+#include "distribution_dispatching.h"
 
 #include <random>
 
@@ -155,6 +156,8 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
 
 Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
                                           unsigned n,
+                                          const std::string &dist,
+                                          const std::vector<double> &params,
                                           unsigned nsim,
                                           unsigned nperm,
                                           const std::vector<double> &shifts,
@@ -169,8 +172,10 @@ Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
         std::vector<unsigned> run_lengths(nsim);
         #pragma omp parallel
         {
-            boost::random::normal_distribution<double> dist_reference(0, 1);
-            boost::random::normal_distribution<double> dist_test(0 + shift, 1);
+            std::function<double (dqrng::xoroshiro128plus&)> dist_reference =
+                    dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, 0.0);
+            std::function<double (dqrng::xoroshiro128plus&)> dist_test =
+                    dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, shift);
 
             std::vector<double> reference_sample(m);
             std::vector<double> test_sample(n);

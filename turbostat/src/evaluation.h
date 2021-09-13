@@ -41,6 +41,8 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
 // [[Rcpp::export(rl.uncoditional)]]
 Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
                                                       unsigned n,
+                                                      const std::string &dist,
+                                                      const std::vector<double> &params,
                                                       unsigned nsim,
                                                       unsigned nperm,
                                                       const std::vector<double> &shifts,

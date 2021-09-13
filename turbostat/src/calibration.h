@@ -33,6 +33,8 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
 // [[Rcpp::export(calibrate.uncoditional)]]
 Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
                                           unsigned n,
+                                          const std::string &dist,
+                                          const std::vector<double> &params,
                                           unsigned nsim,
                                           unsigned nperm,
                                           const std::vector<double> &lcl_seq,
