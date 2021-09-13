@@ -33,7 +33,7 @@ std::function<double (Engine&)> dispatch_sampling_function(const std::string &di
     if (dist == "norm"){
         return dispatch_norm<Engine>(params, location_shift);
     } else if (dist == "cauchy"){
-        return dispatch_norm<Engine>(params, location_shift);
+        return dispatch_cauchy<Engine>(params, location_shift);
     } else {
         throw std::invalid_argument( "Invalid argument" );
     }
