@@ -13,8 +13,8 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
     .Call(`_turbostat_find_ucl_conditional`, reference_sample, n, target_ARL, nsim, nperm, test)
 }
 
-calibrate.uncoditional <- function(m, n, nsim, nperm, lcl_seq, test, run_length_cap) {
-    .Call(`_turbostat_find_lcl_uncoditional`, m, n, nsim, nperm, lcl_seq, test, run_length_cap)
+calibrate.uncoditional <- function(m, n, dist, params, nsim, nperm, lcl_seq, test, run_length_cap) {
+    .Call(`_turbostat_find_lcl_uncoditional`, m, n, dist, params, nsim, nperm, lcl_seq, test, run_length_cap)
 }
 
 #' Test UCL
@@ -37,8 +37,8 @@ rl.conditional <- function(reference_sample, n, nsim, nperm, shifts, LCL, test, 
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-rl.uncoditional <- function(m, n, nsim, nperm, shifts, LCL, test, run_length_cap) {
-    .Call(`_turbostat_unconditional_run_length_distribution`, m, n, nsim, nperm, shifts, LCL, test, run_length_cap)
+rl.uncoditional <- function(m, n, dist, params, nsim, nperm, shifts, LCL, test, run_length_cap) {
+    .Call(`_turbostat_unconditional_run_length_distribution`, m, n, dist, params, nsim, nperm, shifts, LCL, test, run_length_cap)
 }
 
 #' Ta permutation test

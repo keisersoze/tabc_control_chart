@@ -27,19 +27,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_lcl_uncoditional
-Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& test, unsigned run_length_cap);
-RcppExport SEXP _turbostat_find_lcl_uncoditional(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
+Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m, unsigned n, const std::string& dist, const std::vector<double>& params, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_find_lcl_uncoditional(SEXP mSEXP, SEXP nSEXP, SEXP distSEXP, SEXP paramsSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type dist(distSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type lcl_seq(lcl_seqSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_lcl_uncoditional(m, n, nsim, nperm, lcl_seq, test, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(find_lcl_uncoditional(m, n, dist, params, nsim, nperm, lcl_seq, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -62,20 +64,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // unconditional_run_length_distribution
-Rcpp::DataFrame unconditional_run_length_distribution(unsigned m, unsigned n, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
-RcppExport SEXP _turbostat_unconditional_run_length_distribution(SEXP mSEXP, SEXP nSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
+Rcpp::DataFrame unconditional_run_length_distribution(unsigned m, unsigned n, const std::string& dist, const std::vector<double>& params, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& test, unsigned run_length_cap);
+RcppExport SEXP _turbostat_unconditional_run_length_distribution(SEXP mSEXP, SEXP nSEXP, SEXP distSEXP, SEXP paramsSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP testSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type dist(distSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type params(paramsSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
     Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type test(testSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(unconditional_run_length_distribution(m, n, nsim, nperm, shifts, LCL, test, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(unconditional_run_length_distribution(m, n, dist, params, nsim, nperm, shifts, LCL, test, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -144,9 +148,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 6},
-    {"_turbostat_find_lcl_uncoditional", (DL_FUNC) &_turbostat_find_lcl_uncoditional, 7},
+    {"_turbostat_find_lcl_uncoditional", (DL_FUNC) &_turbostat_find_lcl_uncoditional, 9},
     {"_turbostat_conditional_run_length_distribution_bootstrap", (DL_FUNC) &_turbostat_conditional_run_length_distribution_bootstrap, 8},
-    {"_turbostat_unconditional_run_length_distribution", (DL_FUNC) &_turbostat_unconditional_run_length_distribution, 8},
+    {"_turbostat_unconditional_run_length_distribution", (DL_FUNC) &_turbostat_unconditional_run_length_distribution, 10},
     {"_turbostat_setseed", (DL_FUNC) &_turbostat_setseed, 1},
     {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 3},
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 3},

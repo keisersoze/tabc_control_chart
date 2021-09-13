@@ -58,9 +58,6 @@ nperm = 5000
 charts = c("a","b")
 cap = 4000
 
-# Calibration specific params
-calibration.nsim = 5000
-calibration.lcl_seq = inverse(seq(2, 4.55, 0.01))
 
 # Evaluation specific params
 evaluation.nsim = 5000
