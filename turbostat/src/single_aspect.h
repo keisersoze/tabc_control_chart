@@ -34,18 +34,16 @@ perm_test_result single_aspect (const std::vector<double> &x1,
 
     // Rcpp::Rcout << "transformed_pooled_sample " << transformed_pooled_sample << std::endl;
 
-    double obs_stat = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
-                      std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
+    double obs_stat = std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
     std::vector<double> perm_stats(n_perm);
     for (unsigned i = 0; i < n_perm ; ++i) {
         std::shuffle(transformed_pooled_sample.begin(), transformed_pooled_sample.end(), rng);
-        perm_stats[i] = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0)-
-                        std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
+        perm_stats[i] = std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
 
     }
 
-    unsigned position = std::count_if(perm_stats.begin(), perm_stats.end(), [obs_stat](double x){return x <= obs_stat;});
+    unsigned position = std::count_if(perm_stats.begin(), perm_stats.end(), [obs_stat](double x){return x >= obs_stat;});
 
     perm_test_result res(obs_stat, n_perm, position);
     return res;

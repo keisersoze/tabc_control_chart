@@ -20,17 +20,30 @@ Tb = function(x1, x2, B=1000){
 }
 
 
+
 seed = 42
 set.seed(seed)
-x1 = rnorm(50, mean = 0)
-x2 = rnorm(50, mean = 0)
+turbostat.setseed(seed)
+
+x1 = rnorm(100, mean = 0)
+x2 = rnorm(5, mean = 0)
 
 start.time = proc.time()
-print (Tb(x1,x2,100000))
+print (Tb(x1,x2,10000))
 duration.time = proc.time() - start.time
 print(duration.time)
 
 start.time = proc.time()
-print (permtest.tb(x1,x2, 100000))
+print (permtest.tb(x1,x2, 10000))
 duration.time = proc.time() - start.time
 print(duration.time)
+
+# pvalues = rep(NA,30000)
+#
+# for (i in 1:30000) {
+#   x1 = rnorm(100, mean = 0)
+#   x2 = rnorm(5, mean = 0)
+#   pvalues[i] = permtest.tb(x1,x2, 1000)$pvalue
+# }
+#
+# plot( density (pvalues))
