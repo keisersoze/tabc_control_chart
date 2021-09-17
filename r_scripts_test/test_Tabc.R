@@ -130,7 +130,7 @@ Tabc=function(x1,x2,alt,B=1000){
   }
 
   pv.tabc=length(tabc.perm[tabc.perm<=tabc.ob])/B
-  return(pv.tabc)
+  return(c(pv.tabc, tabc.ob))
 }
 
 seed = 4
