@@ -30,12 +30,9 @@ perm_test_result t_abc (const std::vector<double> &x1,
     std::vector<double> categorical_aspect = b_aspect(pooled_sample);
     std::vector<double> rank_aspect = c_aspect(pooled_sample);
 
-    double ta_obs = std::accumulate(pooled_sample.begin() , pooled_sample.begin() + n1 , 0.0)-
-                    std::accumulate(pooled_sample.begin() + n1 , pooled_sample.end() , 0.0);
-    double tb_obs = std::accumulate(categorical_aspect.begin() , categorical_aspect.begin() + n1 , 0.0)-
-                    std::accumulate(categorical_aspect.begin() + n1 , categorical_aspect.end() , 0.0);
-    double tc_obs = std::accumulate(rank_aspect.begin() , rank_aspect.begin() + n1 , 0.0) -
-                    std::accumulate(rank_aspect.begin() + n1 , rank_aspect.end() , 0.0);
+    double ta_obs = std::accumulate(pooled_sample.begin() + n1 , pooled_sample.end() , 0.0);
+    double tb_obs = std::accumulate(categorical_aspect.begin() + n1 , categorical_aspect.end() , 0.0);
+    double tc_obs = std::accumulate(rank_aspect.begin() + n1 , rank_aspect.end() , 0.0);
 
 //    Rcpp::Rcout << "Ta_obs " << ta_obs << std::endl;
 //    Rcpp::Rcout << "Tb_obs " << tb_obs << std::endl;
@@ -56,43 +53,31 @@ perm_test_result t_abc (const std::vector<double> &x1,
 //        tb_perm[i] = T_b(permuted_pooled_sample, n1, median);
 //        tc_perm[i] = T_c(permuted_pooled_sample, n1);
 
-        double  sum_of_x1_numerical = 0;
         double  sum_of_x2_numerical = 0;
-        for (unsigned j = 0; j < n1; ++j) {
-            sum_of_x1_numerical = sum_of_x1_numerical + pooled_sample[p[j]];
-        }
         for (unsigned j = n1; j < pooled_sample.size(); ++j) {
             sum_of_x2_numerical = sum_of_x2_numerical + pooled_sample[p[j]];
         }
-        ta_perm[i] = sum_of_x1_numerical - sum_of_x2_numerical;
+        ta_perm[i] = sum_of_x2_numerical;
 
-        double  sum_of_x1_categorical = 0;
         double  sum_of_x2_categorical = 0;
-        for (unsigned j = 0; j < n1; ++j) {
-            sum_of_x1_categorical = sum_of_x1_categorical + categorical_aspect[p[j]];
-        }
         for (unsigned j = n1; j < pooled_sample.size(); ++j) {
             sum_of_x2_categorical = sum_of_x2_categorical + categorical_aspect[p[j]];
         }
-        tb_perm[i] = sum_of_x1_categorical - sum_of_x2_categorical;
+        tb_perm[i] = sum_of_x2_categorical;
 
-        double sum_of_x1_ranks = 0;
         double sum_of_x2_ranks = 0;
-        for (unsigned j = 0; j < n1; ++j) {
-            sum_of_x1_ranks = sum_of_x1_ranks + rank_aspect[p[j]];
-        }
         for (unsigned j = n1; j < pooled_sample.size(); ++j) {
             sum_of_x2_ranks = sum_of_x2_ranks + rank_aspect[p[j]];
         }
-        tc_perm[i] = sum_of_x1_ranks - sum_of_x2_ranks;
+        tc_perm[i] = sum_of_x2_ranks;
     }
 //    Rcpp::Rcout << "Ta " << ta_perm << std::endl;
 //    Rcpp::Rcout << "Tb " << tb_perm << std::endl;
 //    Rcpp::Rcout << "Tc " << tc_perm << std::endl;
 
-    unsigned pa = std::count_if(ta_perm.begin(), ta_perm.end(), [ta_obs](double x){return x <= ta_obs;});
-    unsigned pb = std::count_if(tb_perm.begin(), tb_perm.end(), [tb_obs](double x){return x <= tb_obs;});
-    unsigned pc = std::count_if(tc_perm.begin(), tc_perm.end(), [tc_obs](double x){return x <= tc_obs;});
+    unsigned pa = std::count_if(ta_perm.begin(), ta_perm.end(), [ta_obs](double x){return x >= ta_obs;});
+    unsigned pb = std::count_if(tb_perm.begin(), tb_perm.end(), [tb_obs](double x){return x >= tb_obs;});
+    unsigned pc = std::count_if(tc_perm.begin(), tc_perm.end(), [tc_obs](double x){return x >= tc_obs;});
     unsigned tabc_obs = std::min({pa, pb, pc});
 
 //    Rcpp::Rcout << "pa " << pa << std::endl;
@@ -100,9 +85,9 @@ perm_test_result t_abc (const std::vector<double> &x1,
 //    Rcpp::Rcout << "pc " << pc << std::endl;
 //    Rcpp::Rcout << "Tabc " << tabc_obs << std::endl;
 
-    std::vector<unsigned> ta_perm_order = sort_permutation(ta_perm);
-    std::vector<unsigned> tb_perm_order = sort_permutation(tb_perm);
-    std::vector<unsigned> tc_perm_order = sort_permutation(tc_perm);
+    std::vector<unsigned> ta_perm_order = sort_permutation(ta_perm, true);
+    std::vector<unsigned> tb_perm_order = sort_permutation(tb_perm, true);
+    std::vector<unsigned> tc_perm_order = sort_permutation(tc_perm, true);
 
     apply_permutation_in_place(ta_perm, ta_perm_order);
     apply_permutation_in_place(tb_perm, tb_perm_order);

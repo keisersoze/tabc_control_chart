@@ -26,11 +26,16 @@ std::vector<T> sample_with_replacement(const std::vector<T> &v, unsigned sample_
 
 // https://stackoverflow.com/questions/17074324/how-can-i-sort-two-vectors-in-the-same-way-with-criteria-that-uses-only-one-of
 template<typename T>
-std::vector<unsigned> sort_permutation(const std::vector<T> &vec) {
+std::vector<unsigned> sort_permutation(const std::vector<T> &vec, bool desc = false) {
     std::vector<unsigned> p(vec.size());
     std::iota(p.begin(), p.end(), 0);
-    std::sort(p.begin(), p.end(),
-              [&](unsigned i, unsigned j) { return vec[i] < vec[j]; });
+    if (desc) {
+        std::sort(p.begin(), p.end(),
+                  [&](unsigned i, unsigned j) { return vec[i] > vec[j]; });
+    } else {
+        std::sort(p.begin(), p.end(),
+                  [&](unsigned i, unsigned j) { return vec[i] < vec[j]; });
+    }
     return p;
 }
 
