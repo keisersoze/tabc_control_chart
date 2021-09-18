@@ -145,6 +145,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// t_ab_binding
+Rcpp::DataFrame t_ab_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_ab_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(t_ab_binding(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// t_bc_binding
+Rcpp::DataFrame t_bc_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_bc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(t_bc_binding(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// t_ac_binding
+Rcpp::DataFrame t_ac_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
+RcppExport SEXP _turbostat_t_ac_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< unsigned >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(t_ac_binding(x1, x2, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_find_ucl_conditional", (DL_FUNC) &_turbostat_find_ucl_conditional, 6},
@@ -156,6 +195,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 3},
     {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 3},
     {"_turbostat_t_abc_binding", (DL_FUNC) &_turbostat_t_abc_binding, 3},
+    {"_turbostat_t_ab_binding", (DL_FUNC) &_turbostat_t_ab_binding, 3},
+    {"_turbostat_t_bc_binding", (DL_FUNC) &_turbostat_t_bc_binding, 3},
+    {"_turbostat_t_ac_binding", (DL_FUNC) &_turbostat_t_ac_binding, 3},
     {NULL, NULL, 0}
 };
 

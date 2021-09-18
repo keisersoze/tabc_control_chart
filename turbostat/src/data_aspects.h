@@ -7,6 +7,9 @@
 
 #include <vector>
 
+typedef std::vector<double> (aspect)(const std::vector<double> &pooled_sample);
+typedef aspect* aspect_ptr;
+
 std::vector<double> a_aspect(const std::vector<double> &pooled_sample);
 
 std::vector<double> b_aspect(const std::vector<double> &pooled_sample);
