@@ -48,7 +48,7 @@ construct_header <- function(df, grp_names, span, align = "c", draw_line = T) {
 
 library(xtable)
 
-load("results/stdnormal5000.RData")
+load("results/OOC_performance_test/stdnormal5000.RData")
 
 ncol = length(charts) * 2
 nrow = length(evaluation.shifts)

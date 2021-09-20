@@ -15,12 +15,15 @@ m = 100
 dist = "norm"
 params = c(0,1)
 ARL.target = 100
-nperm = 3000
-plotting.stat = "a"
+nperm = 1000
+plotting.stat = "b"
 cap = 4000
 
-calibration.nsim = 10
+calibration.nsim = 1000
 calibration.lcl_seq = inverse(seq(2, 4.55, 0.01))
+
+evaluation.nsim = 1000
+evaluation.shifts = c(0, 1)
 
 start.time = proc.time()
 rls = calibrate.uncoditional(
@@ -49,8 +52,6 @@ abline(v = ARL.target)
 print(LCL)
 
 # Evaluation
-evaluation.nsim = 10
-evaluation.shifts = c(0, 1)
 
 start.time = proc.time()
 result2 = rl.uncoditional(

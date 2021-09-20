@@ -29,12 +29,12 @@ x1 = rnorm(100, mean = 0)
 x2 = rnorm(5, mean = 0)
 
 start.time = proc.time()
-print (Tb(x1,x2,10000))
+print (Tb(x1,x2,100000))
 duration.time = proc.time() - start.time
 print(duration.time)
 
 start.time = proc.time()
-print (permtest.tb(x1,x2, 10000))
+print (permtest.tb(x1,x2, 100000))
 duration.time = proc.time() - start.time
 print(duration.time)
 

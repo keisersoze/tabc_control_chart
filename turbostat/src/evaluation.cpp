@@ -185,7 +185,6 @@ Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
 
             #pragma omp for
             for (unsigned i = 0; i < nsim; ++i) {
-                // TODO distribution should be a parameter
                 std::generate(reference_sample.begin(), reference_sample.end(), [&dist_reference, &lrng](){return dist_reference(lrng);});
                 unsigned run_length = 0;
                 double stat;
