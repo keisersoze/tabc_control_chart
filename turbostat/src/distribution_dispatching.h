@@ -42,10 +42,10 @@ template<class Engine>
 std::function<double (Engine&)> dispatch_exponential(const std::vector<double> &params,
                                                      double location_shift){
     double old_rate = params[0];
-    double old_mean = 1.0/rate;
+    double old_mean = 1.0/old_rate;
     double new_mean = old_mean + location_shift;
     double new_rate = 1.0/new_mean;
-    return boost::random::laplace_distribution<double> (new_rate, scale);
+    return boost::random::exponential_distribution<double> (new_rate);
 }
 
 //template<class Engine>
