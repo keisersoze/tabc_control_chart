@@ -4,7 +4,11 @@
 
 #ifndef RACE_CALIBRATION_H
 #define RACE_CALIBRATION_H
+
 #include "Rcpp.h"
+
+#include "distribution_dispatching.h"
+
 
 struct calibration_result {
 
@@ -24,21 +28,19 @@ struct calibration_result {
 //' @export
 // [[Rcpp::export(find_UCL)]]
 Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
-                                        unsigned n,
-                                        double target_ARL,
-                                        unsigned nsim,
-                                        unsigned nperm,
-                                        const std::string &test);
+                                unsigned n,
+                                double target_ARL,
+                                unsigned nsim,
+                                unsigned nperm,
+                                const std::string &test);
 
-// [[Rcpp::export(calibrate.uncoditional)]]
-Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
-                                          unsigned n,
-                                          const std::string &dist,
-                                          const std::vector<double> &params,
-                                          unsigned nsim,
-                                          unsigned nperm,
-                                          const std::vector<double> &lcl_seq,
-                                          const std::string &test,
-                                          unsigned run_length_cap);
+std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
+                                                                       unsigned n,
+                                                                       generator gen,
+                                                                       unsigned nsim,
+                                                                       unsigned nperm,
+                                                                       const std::vector<double> &lcl_seq,
+                                                                       const std::string &chart,
+                                                                       unsigned run_length_cap);
 
 #endif //RACE_CALIBRATION_H

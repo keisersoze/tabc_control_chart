@@ -6,7 +6,6 @@
 #include "test_dispatching.h"
 #include "utils.h"
 #include "global_rng.h"
-#include "distribution_dispatching.h"
 
 #include <xoshiro.h>
 #include <boost/random/normal_distribution.hpp>
@@ -43,28 +42,24 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
                               Rcpp::Named("distribution") = counts);
 }
 
-Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
-                                          unsigned n,
-                                          const std::string &dist,
-                                          const std::vector<double> &params,
-                                          unsigned nsim,
-                                          unsigned nperm,
-                                          const std::vector<double> &lcl_seq,
-                                          const std::string &test,
-                                          unsigned run_length_cap) {
-    test_fun_ptr test_f = dispatch_from_string(test);
+std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
+                                                                       unsigned n,
+                                                                       generator gen,
+                                                                       unsigned nsim,
+                                                                       unsigned nperm,
+                                                                       const std::vector<double> &lcl_seq,
+                                                                       const std::string &chart,
+                                                                       unsigned run_length_cap) {
+    test_fun_ptr test_f = dispatch_from_string(chart);
 
     std::vector<double> lcl_seq_sorted(lcl_seq);
     std::sort(lcl_seq_sorted.begin(), lcl_seq_sorted.end(), std::greater<>());
 
-    std::vector<std::vector<int> > res_matrix(
+    std::vector<std::vector<int>> res_matrix(
             nsim,
             std::vector<int>(lcl_seq_sorted.size()));
     #pragma omp parallel
     {
-        // TODO distribution should be a parameter
-        std::function<double (dqrng::xoroshiro128plus&)> sampling_func =
-                dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, 0.0);
 
         std::vector<double> reference_sample(m);
         std::vector<double> test_sample(n);
@@ -74,15 +69,13 @@ Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
 
         #pragma omp for
         for (unsigned i = 0; i < nsim; ++i) {
-            std::generate(reference_sample.begin(), reference_sample.end(),
-                          [&sampling_func, &lrng]() { return sampling_func(lrng); });
+            gen(lrng, reference_sample);
             unsigned run_length = 0;
             unsigned lcl_idx = 0;
             double stat;
             for (;;) {
                 run_length++;
-                std::generate(test_sample.begin(), test_sample.end(),
-                              [&sampling_func, &lrng]() { return sampling_func(lrng); });
+                gen(lrng, test_sample);
                 perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
                 stat = res.p_value;
                 while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {
@@ -96,16 +89,7 @@ Rcpp::NumericMatrix find_lcl_uncoditional(unsigned m,
         }
     }
     global_rng::instance.long_jump(omp_get_max_threads() + 1);
-
-    Rcpp::NumericMatrix res_rcpp(nsim, lcl_seq_sorted.size());
-
-    for (unsigned i = 0; i < nsim; ++i) {
-        for (unsigned j = 0; j < lcl_seq_sorted.size(); ++j) {
-            res_rcpp(i, j) = res_matrix[i][j];
-        }
-    }
-
-    return res_rcpp;
+    return res_matrix;
 }
 
 

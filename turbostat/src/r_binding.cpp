@@ -12,7 +12,10 @@
 #include "single_aspect.h"
 #include "multiple_aspects.h"
 #include "global_rng.h"
+#include "calibration.h"
 
+#include "distributions.h"
+#include "distribution_dispatching.h"
 
 std::string hello() {
     return "Hello world";
@@ -164,6 +167,64 @@ Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
                                    Rcpp::Named("nPerm") = res.n_perm,
                                    Rcpp::Named("pos") = res.pos);
 }
+
+//' Unconditional calibration
+//'
+//' to do
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(calibrate.unconditional)]]
+Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
+                                           unsigned n,
+                                           const std::string &dist,
+                                           unsigned nsim,
+                                           unsigned nperm,
+                                           const std::vector<double> &lcl_seq,
+                                           const std::string &chart,
+                                           unsigned run_length_cap) {
+    std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
+                                                                                        n,
+                                                                                        dispatch_generator_from_string(dist),
+                                                                                        nsim,
+                                                                                        nperm,
+                                                                                        lcl_seq,
+                                                                                        chart,
+                                                                                        run_length_cap);
+
+    Rcpp::NumericMatrix res_rcpp(nsim, lcl_seq.size());
+
+    for (unsigned i = 0; i < nsim; ++i) {
+        for (unsigned j = 0; j < lcl_seq.size(); ++j) {
+            res_rcpp(i, j) = res_matrix[i][j];
+        }
+    }
+
+    return res_rcpp;
+
+}
+
+
+// [[Rcpp::export(test.normal)]]
+std::vector<double> test_normal(unsigned n,
+                                double mean,
+                                double sd) {
+    std::vector<double> v(n);
+    rnorm(mean, sd, v, global_rng::instance);
+    return v;
+}
+
+// [[Rcpp::export(test.exp)]]
+std::vector<double> test_exp(unsigned n) {
+    normalized_exponential_generator<dqrng::xoroshiro128plus> gen;
+    std::vector<double> v(n);
+    gen(global_rng::instance, v);
+    return v;
+}
+
+
 
 
 //NumericVector testA(NumericVector x1, NumericVector x2, int B) {
