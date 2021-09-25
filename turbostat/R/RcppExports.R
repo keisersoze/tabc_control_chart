@@ -13,10 +13,6 @@ find_UCL <- function(reference_sample, n, target_ARL, nsim, nperm, test) {
     .Call(`_turbostat_find_ucl_conditional`, reference_sample, n, target_ARL, nsim, nperm, test)
 }
 
-calibrate.uncoditional <- function(m, n, dist, params, nsim, nperm, lcl_seq, test, run_length_cap) {
-    .Call(`_turbostat_find_lcl_uncoditional`, m, n, dist, params, nsim, nperm, lcl_seq, test, run_length_cap)
-}
-
 #' Test UCL
 #'
 #' Compute approximated pvalue for the Tb test using a finite number of permutations.
@@ -27,18 +23,6 @@ calibrate.uncoditional <- function(m, n, dist, params, nsim, nperm, lcl_seq, tes
 #' @export
 rl.conditional <- function(reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap) {
     .Call(`_turbostat_conditional_run_length_distribution_bootstrap`, reference_sample, n, nsim, nperm, shifts, LCL, test, run_length_cap)
-}
-
-#' Test UCL
-#'
-#' Compute approximated pvalue for the Tb test using a finite number of permutations.
-#'
-#' @param x1 An numeric vector
-#' @param x2 An numeric vector
-#' @param B the number of permutations to be used for estimating the pvalue
-#' @export
-rl.uncoditional <- function(m, n, dist, params, nsim, nperm, shifts, LCL, test, run_length_cap) {
-    .Call(`_turbostat_unconditional_run_length_distribution`, m, n, dist, params, nsim, nperm, shifts, LCL, test, run_length_cap)
 }
 
 #' Ta permutation test
@@ -135,5 +119,33 @@ permtest.tbc <- function(x1, x2, B) {
 #' @export
 permtest.tac <- function(x1, x2, B) {
     .Call(`_turbostat_t_ac_binding`, x1, x2, B)
+}
+
+#' Unconditional calibration
+#'
+#' to do
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+calibrate.unconditional <- function(m, n, dist, nsim, nperm, lcl_seq, chart, run_length_cap) {
+    .Call(`_turbostat_calibrate_unconditional`, m, n, dist, nsim, nperm, lcl_seq, chart, run_length_cap)
+}
+
+#' Unconditional evaluation
+#'
+#' to do
+#'
+#' @param x1 An numeric vector
+#' @param x2 An numeric vector
+#' @param B the number of permutations to be used for estimating the pvalue
+#' @export
+evaluate.unconditional <- function(m, n, dist, nsim, nperm, shifts, LCL, chart, run_length_cap) {
+    .Call(`_turbostat_evaluate_unconditional`, m, n, dist, nsim, nperm, shifts, LCL, chart, run_length_cap)
+}
+
+test.exp <- function(n) {
+    .Call(`_turbostat_test_exp`, n)
 }
 

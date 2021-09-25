@@ -44,7 +44,7 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
 
 std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
                                                                        unsigned n,
-                                                                       generator gen,
+                                                                       generator ic_variate_generator,
                                                                        unsigned nsim,
                                                                        unsigned nperm,
                                                                        const std::vector<double> &lcl_seq,
@@ -69,13 +69,13 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
 
         #pragma omp for
         for (unsigned i = 0; i < nsim; ++i) {
-            gen(lrng, reference_sample);
+            ic_variate_generator(lrng, reference_sample);
             unsigned run_length = 0;
             unsigned lcl_idx = 0;
             double stat;
             for (;;) {
                 run_length++;
-                gen(lrng, test_sample);
+                ic_variate_generator(lrng, test_sample);
                 perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
                 stat = res.p_value;
                 while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {

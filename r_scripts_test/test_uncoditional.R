@@ -51,16 +51,15 @@ print(LCL)
 # Evaluation
 
 start.time = proc.time()
-result2 = rl.uncoditional(
+result2 = evaluate.unconditional(
   m = m,
   n = n,
   dist = dist,
-  params = params,
   nsim = evaluation.nsim,
   nperm = nperm,
   shifts = evaluation.shifts,
   LCL = LCL,
-  test =chart,
+  chart = chart,
   run_length_cap = cap
 )
 duration.time = proc.time() - start.time

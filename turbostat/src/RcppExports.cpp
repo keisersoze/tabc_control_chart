@@ -145,9 +145,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// calibrate_uncoditional
-Rcpp::NumericMatrix calibrate_uncoditional(unsigned m, unsigned n, const std::string& dist, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& chart, unsigned run_length_cap);
-RcppExport SEXP _turbostat_calibrate_uncoditional(SEXP mSEXP, SEXP nSEXP, SEXP distSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP chartSEXP, SEXP run_length_capSEXP) {
+// calibrate_unconditional
+Rcpp::NumericMatrix calibrate_unconditional(unsigned m, unsigned n, const std::string& dist, unsigned nsim, unsigned nperm, const std::vector<double>& lcl_seq, const std::string& chart, unsigned run_length_cap);
+RcppExport SEXP _turbostat_calibrate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP lcl_seqSEXP, SEXP chartSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -159,20 +159,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::vector<double>& >::type lcl_seq(lcl_seqSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type chart(chartSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(calibrate_uncoditional(m, n, dist, nsim, nperm, lcl_seq, chart, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(calibrate_unconditional(m, n, dist, nsim, nperm, lcl_seq, chart, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
-// test_normal
-std::vector<double> test_normal(unsigned n, double mean, double sd);
-RcppExport SEXP _turbostat_test_normal(SEXP nSEXP, SEXP meanSEXP, SEXP sdSEXP) {
+// evaluate_unconditional
+Rcpp::DataFrame evaluate_unconditional(unsigned m, unsigned n, const std::string& dist, unsigned nsim, unsigned nperm, const std::vector<double>& shifts, double LCL, const std::string& chart, unsigned run_length_cap);
+RcppExport SEXP _turbostat_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distSEXP, SEXP nsimSEXP, SEXP npermSEXP, SEXP shiftsSEXP, SEXP LCLSEXP, SEXP chartSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type mean(meanSEXP);
-    Rcpp::traits::input_parameter< double >::type sd(sdSEXP);
-    rcpp_result_gen = Rcpp::wrap(test_normal(n, mean, sd));
+    Rcpp::traits::input_parameter< const std::string& >::type dist(distSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type nperm(npermSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type shifts(shiftsSEXP);
+    Rcpp::traits::input_parameter< double >::type LCL(LCLSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type chart(chartSEXP);
+    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
+    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional(m, n, dist, nsim, nperm, shifts, LCL, chart, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -199,8 +205,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_t_ab_binding", (DL_FUNC) &_turbostat_t_ab_binding, 3},
     {"_turbostat_t_bc_binding", (DL_FUNC) &_turbostat_t_bc_binding, 3},
     {"_turbostat_t_ac_binding", (DL_FUNC) &_turbostat_t_ac_binding, 3},
-    {"_turbostat_calibrate_uncoditional", (DL_FUNC) &_turbostat_calibrate_uncoditional, 8},
-    {"_turbostat_test_normal", (DL_FUNC) &_turbostat_test_normal, 3},
+    {"_turbostat_calibrate_unconditional", (DL_FUNC) &_turbostat_calibrate_unconditional, 8},
+    {"_turbostat_evaluate_unconditional", (DL_FUNC) &_turbostat_evaluate_unconditional, 9},
     {"_turbostat_test_exp", (DL_FUNC) &_turbostat_test_exp, 1},
     {NULL, NULL, 0}
 };

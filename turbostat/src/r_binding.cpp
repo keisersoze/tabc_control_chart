@@ -9,17 +9,16 @@
 #include <Rcpp.h>
 #include <xoshiro.h>
 
+#include "global_rng.h"
+
 #include "single_aspect.h"
 #include "multiple_aspects.h"
-#include "global_rng.h"
-#include "calibration.h"
 
-#include "distributions.h"
 #include "distribution_dispatching.h"
 
-std::string hello() {
-    return "Hello world";
-}
+#include "calibration.h"
+
+#include "evaluation.h"
 
 //' Ta permutation test
 //'
@@ -121,8 +120,8 @@ Rcpp::DataFrame t_abc_binding(const std::vector<double> &x1,
 //' @export
 // [[Rcpp::export(permtest.tab)]]
 Rcpp::DataFrame t_ab_binding(const std::vector<double> &x1,
-                              const std::vector<double> &x2,
-                              unsigned B) {
+                             const std::vector<double> &x2,
+                             unsigned B) {
     perm_test_result res = t_ab(x1, x2, B, global_rng::instance);
     return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
                                    Rcpp::Named("obsStat") = res.obs_stat,
@@ -140,8 +139,8 @@ Rcpp::DataFrame t_ab_binding(const std::vector<double> &x1,
 //' @export
 // [[Rcpp::export(permtest.tbc)]]
 Rcpp::DataFrame t_bc_binding(const std::vector<double> &x1,
-                              const std::vector<double> &x2,
-                              unsigned B) {
+                             const std::vector<double> &x2,
+                             unsigned B) {
     perm_test_result res = t_bc(x1, x2, B, global_rng::instance);
     return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
                                    Rcpp::Named("obsStat") = res.obs_stat,
@@ -159,8 +158,8 @@ Rcpp::DataFrame t_bc_binding(const std::vector<double> &x1,
 //' @export
 // [[Rcpp::export(permtest.tac)]]
 Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
-                              const std::vector<double> &x2,
-                              unsigned B) {
+                             const std::vector<double> &x2,
+                             unsigned B) {
     perm_test_result res = t_ac(x1, x2, B, global_rng::instance);
     return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
                                    Rcpp::Named("obsStat") = res.obs_stat,
@@ -178,16 +177,17 @@ Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
 //' @export
 // [[Rcpp::export(calibrate.unconditional)]]
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
-                                           unsigned n,
-                                           const std::string &dist,
-                                           unsigned nsim,
-                                           unsigned nperm,
-                                           const std::vector<double> &lcl_seq,
-                                           const std::string &chart,
-                                           unsigned run_length_cap) {
+                                            unsigned n,
+                                            const std::string &dist,
+                                            unsigned nsim,
+                                            unsigned nperm,
+                                            const std::vector<double> &lcl_seq,
+                                            const std::string &chart,
+                                            unsigned run_length_cap) {
+    generator ic_variate_generator = dispatch_generator_from_string(dist);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
-                                                                                        dispatch_generator_from_string(dist),
+                                                                                        ic_variate_generator,
                                                                                         nsim,
                                                                                         nperm,
                                                                                         lcl_seq,
@@ -207,14 +207,49 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 }
 
 
-// [[Rcpp::export(test.normal)]]
-std::vector<double> test_normal(unsigned n,
-                                double mean,
-                                double sd) {
-    std::vector<double> v(n);
-    rnorm(mean, sd, v, global_rng::instance);
-    return v;
+//' Unconditional evaluation
+//'
+//' to do
+//'
+//' @param x1 An numeric vector
+//' @param x2 An numeric vector
+//' @param B the number of permutations to be used for estimating the pvalue
+//' @export
+// [[Rcpp::export(evaluate.unconditional)]]
+Rcpp::DataFrame evaluate_unconditional(unsigned m,
+                                       unsigned n,
+                                       const std::string &dist,
+                                       unsigned nsim,
+                                       unsigned nperm,
+                                       const std::vector<double> &shifts,
+                                       double LCL,
+                                       const std::string &chart,
+                                       unsigned run_length_cap) {
+    generator ic_variate_generator = dispatch_generator_from_string(dist);
+    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
+                                                                                                    n,
+                                                                                                    ic_variate_generator,
+                                                                                                    nsim,
+                                                                                                    nperm,
+                                                                                                    shifts,
+                                                                                                    LCL,
+                                                                                                    chart,
+                                                                                                    run_length_cap);
+    Rcpp::Rcout << "Here" << std::endl;
+    Rcpp::NumericVector arls(shifts.size());
+    Rcpp::NumericVector sds(shifts.size());
+    for (int shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
+        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
+        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
+        arls[shift_index] = Rcpp::mean(run_lengths_r);
+        sds[shift_index] = Rcpp::sd(run_lengths_r);
+    }
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("SD") = sds);
+    return result;
+
 }
+
 
 // [[Rcpp::export(test.exp)]]
 std::vector<double> test_exp(unsigned n) {

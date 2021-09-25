@@ -3,15 +3,9 @@
 //
 
 #include "evaluation.h"
-#include "utils.h"
 #include "test_dispatching.h"
 #include "global_rng.h"
-#include "distribution_dispatching.h"
-
-#include <random>
-
-#include <xoshiro.h>
-#include <boost/random/normal_distribution.hpp>
+#include "utils.h" //sample_with_replacement
 
 #include <omp.h>
 
@@ -154,57 +148,56 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
 }
 
 
-Rcpp::DataFrame unconditional_run_length_distribution(unsigned m,
-                                          unsigned n,
-                                          const std::string &dist,
-                                          const std::vector<double> &params,
-                                          unsigned nsim,
-                                          unsigned nperm,
-                                          const std::vector<double> &shifts,
-                                          double LCL,
-                                          const std::string &test,
-                                          unsigned run_length_cap) {
-    Rcpp::NumericVector arls(shifts.size());
-    Rcpp::NumericVector sds(shifts.size());
-    test_fun_ptr test_f = dispatch_from_string(test);
+std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
+                                                                           unsigned n,
+                                                                           generator ic_variate_generator,
+                                                                           unsigned nsim,
+                                                                           unsigned nperm,
+                                                                           const std::vector<double> &shifts,
+                                                                           double LCL,
+                                                                           const std::string &chart,
+                                                                           unsigned run_length_cap) {
+    test_fun_ptr test_f = dispatch_from_string(chart);
+    std::vector<std::vector<unsigned>> rl_matrix(
+            shifts.size(),
+            std::vector<unsigned>(nsim));
     for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
         double shift = shifts[shift_index];
-        std::vector<unsigned> run_lengths(nsim);
         #pragma omp parallel
         {
-            std::function<double (dqrng::xoroshiro128plus&)> dist_reference =
-                    dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, 0.0);
-            std::function<double (dqrng::xoroshiro128plus&)> dist_test =
-                    dispatch_sampling_function<dqrng::xoroshiro128plus>(dist, params, shift);
-
             std::vector<double> reference_sample(m);
             std::vector<double> test_sample(n);
 
-            dqrng::xoroshiro128plus lrng(global_rng::instance);      // make thread local copy of rng
-            lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
+            // make thread local copy of rng
+            dqrng::xoroshiro128plus lrng(global_rng::instance);
+            // advance rng by 1 ... ncores jumps
+            lrng.long_jump(omp_get_thread_num() + 1);
 
-            #pragma omp for
+#           pragma omp for
             for (unsigned i = 0; i < nsim; ++i) {
-                std::generate(reference_sample.begin(), reference_sample.end(), [&dist_reference, &lrng](){return dist_reference(lrng);});
+                // generate reference sample
+                ic_variate_generator(lrng, reference_sample);
                 unsigned run_length = 0;
                 double stat;
                 do {
                     run_length++;
-                    std::generate(test_sample.begin(), test_sample.end(), [&dist_test, &lrng](){return dist_test(lrng);});
+                    // generate test sample as if the process was IC
+                    ic_variate_generator(lrng, test_sample);
+                    // apply shift
+                    std::transform(test_sample.begin(),
+                                   test_sample.end(),
+                                   test_sample.begin(),
+                                   [shift](double x) -> double { return x + shift; });
+                    // compute statistic
                     perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
                     stat = res.p_value;
                 } while (stat > LCL and run_length <= run_length_cap);
-                run_lengths[i] = run_length;
+                rl_matrix[shift_index][i] = run_length;
             }
         }
         global_rng::instance.long_jump(omp_get_max_threads() + 1);
-        arls[shift_index] = std::accumulate(run_lengths.begin(), run_lengths.end(), 0.0) / run_lengths.size();
-        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
-        sds[shift_index] = Rcpp::sd(run_lengths_r);
     }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
-                                                     Rcpp::Named("SD") = sds);
-    return result;
+    return rl_matrix;
 }
 
 
