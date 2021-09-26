@@ -44,7 +44,7 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
 
 std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
                                                                        unsigned n,
-                                                                       generator ic_variate_generator,
+                                                                       const distribution &ic_distribution,
                                                                        unsigned nsim,
                                                                        unsigned nperm,
                                                                        const std::vector<double> &lcl_seq,
@@ -58,24 +58,27 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
     std::vector<std::vector<int>> res_matrix(
             nsim,
             std::vector<int>(lcl_seq_sorted.size()));
-    #pragma omp parallel
+    #pragma omp parallel firstprivate(ic_distribution)
     {
-
         std::vector<double> reference_sample(m);
         std::vector<double> test_sample(n);
 
-        dqrng::xoroshiro128plus lrng(global_rng::instance);      // make thread local copy of rng
+        dqrng::xoroshiro128plus lrng(global_rng::instance);  // make thread local copy of rng
         lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
 
         #pragma omp for
         for (unsigned i = 0; i < nsim; ++i) {
-            ic_variate_generator(lrng, reference_sample);
+            std::generate(reference_sample.begin(), reference_sample.end(),
+                          [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+            // ic_variate_generator(lrng, reference_sample);
             unsigned run_length = 0;
             unsigned lcl_idx = 0;
             double stat;
             for (;;) {
                 run_length++;
-                ic_variate_generator(lrng, test_sample);
+                std::generate(test_sample.begin(), test_sample.end(),
+                              [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+                // ic_variate_generator(lrng, test_sample);
                 perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
                 stat = res.p_value;
                 while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {

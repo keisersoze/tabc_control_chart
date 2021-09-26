@@ -30,15 +30,15 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
                                                               const std::string &test,
                                                               unsigned run_length_cap);
 
-std::vector <std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
-                                                                            unsigned n,
-                                                                            generator gen,
-                                                                            unsigned nsim,
-                                                                            unsigned nperm,
-                                                                            const std::vector<double> &shifts,
-                                                                            double LCL,
-                                                                            const std::string &chart,
-                                                                            unsigned run_length_cap);
+std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
+                                                                           unsigned n,
+                                                                           const distribution &ic_distribution,
+                                                                           unsigned nsim,
+                                                                           unsigned nperm,
+                                                                           const std::vector<double> &shifts,
+                                                                           double LCL,
+                                                                           const std::string &chart,
+                                                                           unsigned run_length_cap);
 
 
 #endif //RACE_RUNLENGTH_H

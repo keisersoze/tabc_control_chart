@@ -150,7 +150,7 @@ Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<
 
 std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
                                                                            unsigned n,
-                                                                           generator ic_variate_generator,
+                                                                           const distribution &ic_distribution,
                                                                            unsigned nsim,
                                                                            unsigned nperm,
                                                                            const std::vector<double> &shifts,
@@ -163,7 +163,7 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
             std::vector<unsigned>(nsim));
     for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
         double shift = shifts[shift_index];
-        #pragma omp parallel
+        #pragma omp parallel firstprivate(ic_distribution)
         {
             std::vector<double> reference_sample(m);
             std::vector<double> test_sample(n);
@@ -176,13 +176,17 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
 #           pragma omp for
             for (unsigned i = 0; i < nsim; ++i) {
                 // generate reference sample
-                ic_variate_generator(lrng, reference_sample);
+                std::generate(reference_sample.begin(), reference_sample.end(),
+                              [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+                // ic_variate_generator(lrng, reference_sample);
                 unsigned run_length = 0;
                 double stat;
                 do {
                     run_length++;
                     // generate test sample as if the process was IC
-                    ic_variate_generator(lrng, test_sample);
+                    std::generate(test_sample.begin(), test_sample.end(),
+                                  [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+                    // ic_variate_generator(lrng, test_sample);
                     // apply shift
                     std::transform(test_sample.begin(),
                                    test_sample.end(),

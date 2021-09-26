@@ -5,10 +5,11 @@
 #include "distribution_dispatching.h"
 #include <map>
 
-std::map<std::string, generator> mymap = {{"norm",           normal_generator<dqrng::xoroshiro128plus>(0.0, 1.0)},
-                                          {"normalized_exp", normalized_exponential_generator<dqrng::xoroshiro128plus>()}
-};
+normalized_rate_one_exponential::normalized_rate_one_exponential(): exp_boost(1.0){};
 
-generator dispatch_generator_from_string(const std::string &s) {
+std::map<std::string, distribution> mymap = {{"norm", boost::random::normal_distribution<double>(0.0, 1.0)},
+                                             {"normalized_rate_one_exponential", normalized_rate_one_exponential()}};
+
+distribution dispatch_generator_from_string(const std::string &s) {
     return mymap[s];
 }

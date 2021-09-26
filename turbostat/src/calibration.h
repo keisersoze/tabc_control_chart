@@ -36,7 +36,7 @@ Rcpp::List find_ucl_conditional(const std::vector<double> &reference_sample,
 
 std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
                                                                        unsigned n,
-                                                                       generator gen,
+                                                                       const distribution &ic_distribution,
                                                                        unsigned nsim,
                                                                        unsigned nperm,
                                                                        const std::vector<double> &lcl_seq,

@@ -17,45 +17,30 @@
 #include <cmath>        // std::abs
 #include <vector>
 
-typedef std::function<void (dqrng::xoroshiro128plus &, std::vector<double> &)> generator;
+typedef std::function<double (dqrng::xoroshiro128plus &)> distribution;
 
-template<class Engine>
-class normal_generator{
+class normalized_rate_one_exponential{
 private:
-    boost::random::normal_distribution<double> dist_boost;
+    boost::random::exponential_distribution<double> exp_boost;
 public:
-    normal_generator(double mean, double sd): dist_boost(mean, sd){}
-
-    void operator () (Engine &rng, std::vector<double> &v) {
-        std::generate(v.begin(), v.end(), [this, &rng]() { return dist_boost(rng);});
+    normalized_rate_one_exponential();
+    template<class Engine>
+    double operator () (Engine &rng) {
+        return exp_boost(rng) - 1.0;
     }
 };
 
-template<class Engine>
-class normalized_exponential_generator{
-private:
-    boost::random::exponential_distribution<double> dist_boost;
-public:
-    normalized_exponential_generator(): dist_boost(1.0){}
-
-    void operator () (Engine &rng, std::vector<double> &v) {
-        std::generate(v.begin(), v.end(), [this, &rng]() { return dist_boost(rng) - 1.0;});
-    }
-};
-
-generator dispatch_generator_from_string(const std::string &s);
-
+distribution dispatch_generator_from_string(const std::string &s);
 
 //template<class Engine>
 //class normal_generator{
 //private:
 //    boost::random::normal_distribution<double> dist_boost;
-//    Engine &rng;
 //public:
-//    normal_generator(double mean, double sd, Engine &rng) : dist_boost(mean, sd), rng(rng){}
+//    normal_generator(double mean, double sd): dist_boost(mean, sd){}
 //
-//    void operator () (std::vector<double> &v) const {
-//        return std::generate(v.begin(), v.end(), [&dist_boost, &rng]() { return dist_boost(rng);});
+//    void operator () (Engine &rng, std::vector<double> &v) {
+//        std::generate(v.begin(), v.end(), [this, &rng]() { return dist_boost(rng);});
 //    }
 //};
 //
@@ -63,14 +48,14 @@ generator dispatch_generator_from_string(const std::string &s);
 //class normalized_exponential_generator{
 //private:
 //    boost::random::exponential_distribution<double> dist_boost;
-//    Engine &rng;
 //public:
-//    normalized_exponential_generator(Engine &rng) : dist_boost(1.0), rng(rng){}
+//    normalized_exponential_generator(): dist_boost(1.0){}
 //
-//    void operator () (std::vector<double> &v) const {
-//        return std::generate(v.begin(), v.end(), [&dist_boost, &rng]() { return dist_boost(rng) - 1.0;});
+//    void operator () (Engine &rng, std::vector<double> &v) {
+//        std::generate(v.begin(), v.end(), [this, &rng]() { return dist_boost(rng) - 1.0;});
 //    }
 //};
+
 //
 //typedef std::function<void (std::vector<double>&)> generator;
 //

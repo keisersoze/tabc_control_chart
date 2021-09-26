@@ -184,10 +184,10 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             const std::vector<double> &lcl_seq,
                                             const std::string &chart,
                                             unsigned run_length_cap) {
-    generator ic_variate_generator = dispatch_generator_from_string(dist);
+    distribution ic_distribution = dispatch_generator_from_string(dist);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
-                                                                                        ic_variate_generator,
+                                                                                        ic_distribution,
                                                                                         nsim,
                                                                                         nperm,
                                                                                         lcl_seq,
@@ -225,10 +225,10 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        double LCL,
                                        const std::string &chart,
                                        unsigned run_length_cap) {
-    generator ic_variate_generator = dispatch_generator_from_string(dist);
+    distribution ic_distribution = dispatch_generator_from_string(dist);
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,
-                                                                                                    ic_variate_generator,
+                                                                                                    ic_distribution,
                                                                                                     nsim,
                                                                                                     nperm,
                                                                                                     shifts,
@@ -253,9 +253,10 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
 
 // [[Rcpp::export(test.exp)]]
 std::vector<double> test_exp(unsigned n) {
-    normalized_exponential_generator<dqrng::xoroshiro128plus> gen;
+    normalized_rate_one_exponential d;
     std::vector<double> v(n);
-    gen(global_rng::instance, v);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
     return v;
 }
 
