@@ -16,6 +16,8 @@
 
 #include "distribution.h"
 
+#include "permutation_monitoring_statistic.h"
+
 #include "calibration.h"
 
 #include "evaluation.h"
@@ -167,10 +169,36 @@ Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
-std::map<std::string, distribution> distributions_map = {
+std::map<std::string, distribution> distribution_map = {
         {"norm", boost::random::normal_distribution<double>(0.0, 1.0)},
         {"normalized_rate_one_exponential", normalized_rate_one_exponential()}
 };
+
+typedef perm_test_result (*permutation_test_ptr)(const std::vector<double> &x1,
+                                                 const std::vector<double> &x2,
+                                                 unsigned B,
+                                                 dqrng::xoroshiro128plus &rng);
+
+std::map<std::string, permutation_test> permutation_pvalue_monitoring_stat_map = {
+        {"a",   t_a_permtest<dqrng::xoroshiro128plus>},
+        {"b",   t_b_permtest<dqrng::xoroshiro128plus>},
+        {"c",   t_c_permtest<dqrng::xoroshiro128plus>},
+        {"abc", t_abc<dqrng::xoroshiro128plus>},
+        {"ab", t_ab<dqrng::xoroshiro128plus>},
+        {"ac", t_ac<dqrng::xoroshiro128plus>},
+        {"bc", t_bc<dqrng::xoroshiro128plus>}
+};
+
+monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s, Rcpp::List monitoring_stat_params){
+    if (permutation_pvalue_monitoring_stat_map.find(monitoring_stat_s) != permutation_pvalue_monitoring_stat_map.end()){
+        permutation_test pt = permutation_pvalue_monitoring_stat_map[monitoring_stat_s];
+        unsigned n_permutations = monitoring_stat_params["n_permutations"];
+        permutation_pvalue_monitoring_statistic monitoring_stat(pt, n_permutations);
+        return monitoring_stat;
+    } else {
+        Rcpp::stop("Monitoring statistic not recognized");
+    }
+}
 
 //' Unconditional calibration
 //'
@@ -183,20 +211,20 @@ std::map<std::string, distribution> distributions_map = {
 // [[Rcpp::export(calibrate.unconditional)]]
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             unsigned n,
-                                            const std::string &dist,
-                                            unsigned nsim,
-                                            unsigned nperm,
+                                            const std::string &distribution_key,
+                                            const std::string &monitoring_statistic_key,
+                                            Rcpp::List monitoring_statistic_parameters,
                                             const std::vector<double> &lcl_seq,
-                                            const std::string &chart,
+                                            unsigned nsim,
                                             unsigned run_length_cap) {
-    distribution ic_distribution = distributions_map[dist];
+    distribution ic_distribution = distribution_map[distribution_key];
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
                                                                                         ic_distribution,
-                                                                                        nsim,
-                                                                                        nperm,
+                                                                                        ms,
                                                                                         lcl_seq,
-                                                                                        chart,
+                                                                                        nsim,
                                                                                         run_length_cap);
 
     Rcpp::NumericMatrix res_rcpp(nsim, lcl_seq.size());
@@ -223,22 +251,22 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 // [[Rcpp::export(evaluate.unconditional)]]
 Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        unsigned n,
-                                       const std::string &dist,
-                                       unsigned nsim,
-                                       unsigned nperm,
-                                       const std::vector<double> &shifts,
                                        double LCL,
-                                       const std::string &chart,
+                                       const std::vector<double> &shifts,
+                                       const std::string &distribution_key,
+                                       const std::string &monitoring_statistic_key,
+                                       Rcpp::List monitoring_statistic_parameters,
+                                       unsigned nsim,
                                        unsigned run_length_cap) {
-    distribution ic_distribution = distributions_map[dist];
+    distribution ic_distribution = distribution_map[distribution_key];
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,
-                                                                                                    ic_distribution,
-                                                                                                    nsim,
-                                                                                                    nperm,
-                                                                                                    shifts,
                                                                                                     LCL,
-                                                                                                    chart,
+                                                                                                    shifts,
+                                                                                                    ic_distribution,
+                                                                                                    ms,
+                                                                                                    nsim,
                                                                                                     run_length_cap);
     Rcpp::NumericVector arls(shifts.size());
     Rcpp::NumericVector sds(shifts.size());

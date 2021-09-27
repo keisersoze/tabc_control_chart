@@ -3,9 +3,12 @@
 //
 
 #include "evaluation.h"
-#include "test_dispatching.h"
+
 #include "global_rng.h"
+
 #include "utils.h" //sample_with_replacement
+
+#include <xoshiro.h>
 
 #include <omp.h>
 
@@ -53,117 +56,66 @@
 //    return res;
 //}
 
-//double
-//unconditional_run_length_distribution(unsigned int n,
-//                                      Rcpp::NumericVector phaseI_sample,
-//                                      unsigned int nsim,
-//                                      double LCL,
-//                                      unsigned run_length_cap) {
-//    unsigned m = phaseI_sample.size();
-//    Rcpp::NumericVector run_lengths(nsim);
-//    for (unsigned i = 0; i < nsim; ++i) {
-//        Rcpp::NumericVector phaseI_sample_boot = Rcpp::sample(phaseI_sample, m, true);
-//        unsigned run_length = 0;
-//        for (;;) {
-//            Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
-//            double plotting_stat = testCExact(phaseI_sample_boot, test_sample);
-//            if (plotting_stat > LCL and run_length <= run_length_cap){
-//                run_length ++;
-//            } else{
-//                break;
+//Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<double> &reference_sample,
+//                                                              unsigned n,
+//                                                              unsigned nsim,
+//                                                              unsigned nperm,
+//                                                              const std::vector<double> &shifts,
+//                                                              double LCL,
+//                                                              const std::string &test,
+//                                                              unsigned run_length_cap) {
+//    Rcpp::NumericVector arls(shifts.size());
+//    // Rcpp::NumericVector sds(shifts.size());
+//    test_fun_ptr test_f = dispatch_from_string(test);
+//    for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
+//        double shift = shifts[shift_index];
+//        std::vector<unsigned> run_lengths(nsim);
+//        std::vector<double> shifted_reference_sample(reference_sample.size());
+//        // TODO shift test sample and not reference sample
+//        std::transform(reference_sample.begin(),
+//                       reference_sample.end(),
+//                       shifted_reference_sample.begin(),
+//                       [shift](double x) -> double { return x + shift; });
+//        #pragma omp parallel
+//        {
+//            dqrng::xoroshiro128plus lrng(global_rng::instance);      // make thread local copy of rng
+//            lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
+//            #pragma omp for
+//            for (unsigned i = 0; i < nsim; ++i) {
+//                unsigned run_length = 0;
+//                double stat;
+//                do {
+//                    run_length++;
+//                    std::vector<double> test_sample_boot = sample_with_replacement(shifted_reference_sample, n, lrng);
+//                    perm_test_result res = test_f(reference_sample, test_sample_boot, nperm, lrng);
+//                    stat = res.p_value;
+//                } while (stat > LCL and run_length <= run_length_cap);
+//                run_lengths[i] = run_length;
 //            }
 //        }
-//        run_lengths[i]= run_length;
+//        global_rng::instance.long_jump(omp_get_max_threads() + 1);
+//        arls[shift_index] = std::accumulate(run_lengths.begin(), run_lengths.end(), 0.0) / run_lengths.size();
+//        // sds[shift_index] = Rcpp::sd(run_lengths);
 //    }
-//    return Rcpp::mean(run_lengths);
+//    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls);
+//    return result;
 //}
-
-//double
-//unconditional_arl_distribution_free_charts(unsigned int n,
-//                                           unsigned int m,
-//                                           unsigned int nsim,
-//                                           double LCL,
-//                                           unsigned run_length_cap) {
-//    Rcpp::NumericVector run_lengths(nsim);
-//    for (unsigned i = 0; i < nsim; ++i) {
-//        Rcpp::NumericVector phaseI_sample_boot = Rcpp::rnorm(phaseI_sample, m, true);
-//        unsigned run_length = 0;
-//        for (;;) {
-//            Rcpp::NumericVector test_sample = Rcpp::sample(phaseI_sample, n);
-//            double plotting_stat = testCExact(phaseI_sample_boot, test_sample);
-//            if (plotting_stat > LCL and run_length <= run_length_cap){
-//                run_length ++;
-//            } else{
-//                break;
-//            }
-//        }
-//        run_lengths[i]= run_length;
-//    }
-//    return Rcpp::mean(run_lengths);
-//}
-
-Rcpp::DataFrame conditional_run_length_distribution_bootstrap(const std::vector<double> &reference_sample,
-                                                              unsigned n,
-                                                              unsigned nsim,
-                                                              unsigned nperm,
-                                                              const std::vector<double> &shifts,
-                                                              double LCL,
-                                                              const std::string &test,
-                                                              unsigned run_length_cap) {
-    Rcpp::NumericVector arls(shifts.size());
-    // Rcpp::NumericVector sds(shifts.size());
-    test_fun_ptr test_f = dispatch_from_string(test);
-    for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
-        double shift = shifts[shift_index];
-        std::vector<unsigned> run_lengths(nsim);
-        std::vector<double> shifted_reference_sample(reference_sample.size());
-        // TODO shift test sample and not reference sample
-        std::transform(reference_sample.begin(),
-                       reference_sample.end(),
-                       shifted_reference_sample.begin(),
-                       [shift](double x) -> double { return x + shift; });
-        #pragma omp parallel
-        {
-            dqrng::xoroshiro128plus lrng(global_rng::instance);      // make thread local copy of rng
-            lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
-            #pragma omp for
-            for (unsigned i = 0; i < nsim; ++i) {
-                unsigned run_length = 0;
-                double stat;
-                do {
-                    run_length++;
-                    std::vector<double> test_sample_boot = sample_with_replacement(shifted_reference_sample, n, lrng);
-                    perm_test_result res = test_f(reference_sample, test_sample_boot, nperm, lrng);
-                    stat = res.p_value;
-                } while (stat > LCL and run_length <= run_length_cap);
-                run_lengths[i] = run_length;
-            }
-        }
-        global_rng::instance.long_jump(omp_get_max_threads() + 1);
-        arls[shift_index] = std::accumulate(run_lengths.begin(), run_lengths.end(), 0.0) / run_lengths.size();
-        // sds[shift_index] = Rcpp::sd(run_lengths);
-    }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls);
-    return result;
-}
 
 
 std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
                                                                            unsigned n,
-                                                                           const distribution &ic_distribution,
-                                                                           unsigned nsim,
-                                                                           unsigned nperm,
-                                                                           const std::vector<double> &shifts,
                                                                            double LCL,
-                                                                           const std::string &chart,
+                                                                           const std::vector<double> &shifts,
+                                                                           const distribution &ic_distribution,
+                                                                           const monitoring_statistic &ms,
+                                                                           unsigned nsim,
                                                                            unsigned run_length_cap) {
-    test_fun_ptr test_f = dispatch_from_string(chart);
     std::vector<std::vector<unsigned>> rl_matrix(
             shifts.size(),
             std::vector<unsigned>(nsim));
     for (unsigned shift_index = 0; shift_index < shifts.size(); ++shift_index) {
         double shift = shifts[shift_index];
-        #pragma omp parallel firstprivate(ic_distribution)
+        #pragma omp parallel firstprivate(ic_distribution) firstprivate(ms)
         {
             std::vector<double> reference_sample(m);
             std::vector<double> test_sample(n);
@@ -173,7 +125,7 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
             // advance rng by 1 ... ncores jumps
             lrng.long_jump(omp_get_thread_num() + 1);
 
-#           pragma omp for
+            #pragma omp for
             for (unsigned i = 0; i < nsim; ++i) {
                 // generate reference sample
                 std::generate(reference_sample.begin(), reference_sample.end(),
@@ -192,9 +144,8 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
                                    test_sample.end(),
                                    test_sample.begin(),
                                    [shift](double x) -> double { return x + shift; });
-                    // compute statistic
-                    perm_test_result res = test_f(reference_sample, test_sample, nperm, lrng);
-                    stat = res.p_value;
+                    // compute monitoring statistic
+                    stat = ms(reference_sample, test_sample, lrng);
                 } while (stat > LCL and run_length <= run_length_cap);
                 rl_matrix[shift_index][i] = run_length;
             }

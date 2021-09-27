@@ -4,7 +4,7 @@
 
 #include "evaluation.h"
 #include "../utils.h"
-#include "../test_dispatching.h"
+#include "../permutation_monitoring_statistic.h"
 #include "../utils.h"
 
 #include <xoshiro.h>

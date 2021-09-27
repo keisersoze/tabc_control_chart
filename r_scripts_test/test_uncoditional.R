@@ -12,8 +12,8 @@ n = 10
 m = 100
 dist = "norm"
 ARL.target = 100
-nperm = 1000
-chart = "abc"
+monitorning.stat = "abc"
+monitorning.stat.params = list("n_permutations" = 1000)
 cap = 4000
 
 calibration.nsim = 50
@@ -28,11 +28,11 @@ start.time = proc.time()
 rls = calibrate.unconditional(
   m = m,
   n = n,
-  dist = dist,
-  nsim = calibration.nsim,
-  nperm = nperm,
+  distribution_key = dist,
+  monitoring_statistic_key = monitorning.stat,
+  monitoring_statistic_parameters = monitorning.stat.params,
   lcl_seq = calibration.lcl_seq,
-  chart = chart,
+  nsim = calibration.nsim,
   run_length_cap = cap
 )
 
@@ -54,12 +54,12 @@ start.time = proc.time()
 result2 = evaluate.unconditional(
   m = m,
   n = n,
-  dist = dist,
-  nsim = evaluation.nsim,
-  nperm = nperm,
-  shifts = evaluation.shifts,
   LCL = LCL,
-  chart = chart,
+  shifts = evaluation.shifts,
+  distribution_key = dist,
+  monitoring_statistic_key = monitorning.stat,
+  monitoring_statistic_parameters = monitorning.stat.params,
+  nsim = evaluation.nsim,
   run_length_cap = cap
 )
 duration.time = proc.time() - start.time
