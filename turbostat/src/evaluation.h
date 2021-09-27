@@ -7,7 +7,7 @@
 
 #include <Rcpp.h>
 
-#include "distribution_dispatching.h"
+#include "distribution.h"
 
 double testCExact(Rcpp::NumericVector x1, Rcpp::NumericVector x2);
 

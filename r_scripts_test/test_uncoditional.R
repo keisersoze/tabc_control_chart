@@ -16,10 +16,10 @@ nperm = 1000
 chart = "abc"
 cap = 4000
 
-calibration.nsim = 1000
-calibration.lcl_seq = inverse(seq(2, 4.60, 0.01))
+calibration.nsim = 50
+calibration.lcl_seq = inverse(seq(2, 4.60, 0.005))
 
-evaluation.nsim = 1000
+evaluation.nsim = 50
 evaluation.shifts = c(0, 1)
 
 # Calibration

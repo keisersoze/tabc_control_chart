@@ -7,7 +7,7 @@
 
 #include "Rcpp.h"
 
-#include "distribution_dispatching.h"
+#include "distribution.h"
 
 
 struct calibration_result {

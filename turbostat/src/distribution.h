@@ -30,8 +30,6 @@ public:
     }
 };
 
-distribution dispatch_generator_from_string(const std::string &s);
-
 //template<class Engine>
 //class normal_generator{
 //private:

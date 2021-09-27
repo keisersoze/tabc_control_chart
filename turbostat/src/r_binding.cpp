@@ -14,7 +14,7 @@
 #include "single_aspect.h"
 #include "multiple_aspects.h"
 
-#include "distribution_dispatching.h"
+#include "distribution.h"
 
 #include "calibration.h"
 
@@ -167,6 +167,11 @@ Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
+std::map<std::string, distribution> distributions_map = {
+        {"norm", boost::random::normal_distribution<double>(0.0, 1.0)},
+        {"normalized_rate_one_exponential", normalized_rate_one_exponential()}
+};
+
 //' Unconditional calibration
 //'
 //' to do
@@ -184,7 +189,7 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             const std::vector<double> &lcl_seq,
                                             const std::string &chart,
                                             unsigned run_length_cap) {
-    distribution ic_distribution = dispatch_generator_from_string(dist);
+    distribution ic_distribution = distributions_map[dist];
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
                                                                                         ic_distribution,
@@ -225,7 +230,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        double LCL,
                                        const std::string &chart,
                                        unsigned run_length_cap) {
-    distribution ic_distribution = dispatch_generator_from_string(dist);
+    distribution ic_distribution = distributions_map[dist];
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,
                                                                                                     ic_distribution,
@@ -235,7 +240,6 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                                                                                     LCL,
                                                                                                     chart,
                                                                                                     run_length_cap);
-    Rcpp::Rcout << "Here" << std::endl;
     Rcpp::NumericVector arls(shifts.size());
     Rcpp::NumericVector sds(shifts.size());
     for (int shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
