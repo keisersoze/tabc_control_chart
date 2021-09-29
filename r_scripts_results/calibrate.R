@@ -6,17 +6,17 @@ inverse = function(x) {
   return (-(exp(-x) *  (exp(x) - exp(10))) / (exp(10) - 1))
 }
 
-seed = 436576
+seed = 46599
 turbostat.setseed(seed)
 m = 50
 n = 5
 ARL.target = 250
 monitorning.stat = "ac-2"
-monitorning.stat.params = list("n_permutations" = 3500)
-cap = 4000
+monitorning.stat.params = list("n_permutations" = 4000)
+cap = 50000
 
 calibration.nsim = 5000
-calibration.lcl_seq = inverse(seq(2, 5.4, 0.0001))
+calibration.lcl_seq = inverse(seq(2, 5.30, 0.0001))
 
 evaluation.dist = "norm"
 evaluation.nsim = 5000
@@ -80,4 +80,4 @@ save(m,
      rls,
      arls,
      LCL,
-     file = "results/calibration_results/ac-2_50_5_v2.RData")
+     file = "results/calibration_results/ac-2_50_5_v3.RData")
