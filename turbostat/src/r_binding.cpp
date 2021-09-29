@@ -174,10 +174,7 @@ std::map<std::string, distribution> distribution_map = {
         {"normalized_rate_one_exponential", normalized_rate_one_exponential()}
 };
 
-typedef perm_test_result (*permutation_test_ptr)(const std::vector<double> &x1,
-                                                 const std::vector<double> &x2,
-                                                 unsigned B,
-                                                 dqrng::xoroshiro128plus &rng);
+// Unidirectional charts unconditional calibration and evaluation
 
 std::map<std::string, permutation_test> permutation_pvalue_monitoring_stat_map = {
         {"a",   t_a_permtest<dqrng::xoroshiro128plus>},
@@ -189,11 +186,23 @@ std::map<std::string, permutation_test> permutation_pvalue_monitoring_stat_map =
         {"bc", t_bc<dqrng::xoroshiro128plus>}
 };
 
+std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring_stat_map = {
+        {"abc-2", t_abc_phase_1<dqrng::xoroshiro128plus>},
+        {"ab-2", t_ab_phase_1<dqrng::xoroshiro128plus>},
+        {"ac-2", t_ac_phase_1<dqrng::xoroshiro128plus>},
+        {"bc-2", t_bc_phase_1<dqrng::xoroshiro128plus>}
+};
+
 monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s, Rcpp::List monitoring_stat_params){
     if (permutation_pvalue_monitoring_stat_map.find(monitoring_stat_s) != permutation_pvalue_monitoring_stat_map.end()){
         permutation_test pt = permutation_pvalue_monitoring_stat_map[monitoring_stat_s];
         unsigned n_permutations = monitoring_stat_params["n_permutations"];
         permutation_pvalue_monitoring_statistic monitoring_stat(pt, n_permutations);
+        return monitoring_stat;
+    } else if (multiaspect_obs_value_monitoring_stat_map.find(monitoring_stat_s) != multiaspect_obs_value_monitoring_stat_map.end()){
+        multiaspect_test_phase_1 mtp1 = multiaspect_obs_value_monitoring_stat_map[monitoring_stat_s];
+        unsigned n_permutations = monitoring_stat_params["n_permutations"];
+        multiaspect_obs_value_monitoring_statistic monitoring_stat(mtp1, n_permutations);
         return monitoring_stat;
     } else {
         Rcpp::stop("Monitoring statistic not recognized");

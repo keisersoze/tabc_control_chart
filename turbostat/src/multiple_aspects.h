@@ -7,21 +7,14 @@
 
 #include <numeric>
 #include <algorithm>
+#include <vector>
 
 # include "test_interface.h"
 # include "data_aspects.h"
 # include "utils.h"
 
-struct phase_1_result {
-    std::vector<std::vector<double>> aspects_perm_stats;
-    unsigned min_pos;
-
-    phase_1_result(const std::vector<std::vector<double>>  &aspects_perm_stats,
-                   unsigned min_pos);
-};
-
 template<class RNG>
-phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
+multiaspect_phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
                                        const std::vector<double> &x2,
                                        unsigned n_perm,
                                        RNG &rng,
@@ -79,7 +72,7 @@ phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
                                      [i, &aspects_obs](double x) { return x >= aspects_obs[i]; });
     }
     unsigned min_pos = *min_element(positions.begin(), positions.end());
-    return phase_1_result(aspects_perm_stats, min_pos);
+    return multiaspect_phase_1_result(aspects_perm_stats, min_pos);
 }
 
 
@@ -90,7 +83,7 @@ perm_test_result multiple_aspect_phase_2(const std::vector<double> &x1,
                                          unsigned n_perm,
                                          RNG &rng,
                                          const std::vector<aspect_ptr> &aspects) {
-    phase_1_result res = multiple_aspect_phase_1(x1,x2,n_perm,rng,aspects);
+    multiaspect_phase_1_result res = multiple_aspect_phase_1(x1,x2,n_perm,rng,aspects);
     std::vector<std::vector<double>> &aspects_perm_stats = res.aspects_perm_stats;
     unsigned min_pos = res.min_pos;
 
@@ -146,6 +139,8 @@ perm_test_result multiple_aspect_phase_2(const std::vector<double> &x1,
     return res2;
 }
 
+// Phase 1 and phase 2
+
 template<class RNG>
 perm_test_result t_abc(const std::vector<double> &x1,
                        const std::vector<double> &x2,
@@ -180,6 +175,44 @@ perm_test_result t_bc(const std::vector<double> &x1,
                       RNG &rng) {
     std::vector<aspect_ptr> aspects({b_aspect, c_aspect});
     return multiple_aspect_phase_2(x1, x2, n_perm, rng, aspects);
+}
+
+// Phase 1 only
+
+template<class RNG>
+multiaspect_phase_1_result t_abc_phase_1(const std::vector<double> &x1,
+                                         const std::vector<double> &x2,
+                                         unsigned n_perm,
+                                         RNG &rng) {
+    std::vector<aspect_ptr> aspects({a_aspect, b_aspect, c_aspect});
+    return multiple_aspect_phase_1(x1, x2, n_perm, rng, aspects);
+}
+
+template<class RNG>
+multiaspect_phase_1_result t_ab_phase_1(const std::vector<double> &x1,
+                                        const std::vector<double> &x2,
+                                        unsigned n_perm,
+                                        RNG &rng) {
+    std::vector<aspect_ptr> aspects({a_aspect, b_aspect});
+    return multiple_aspect_phase_1(x1, x2, n_perm, rng, aspects);
+}
+
+template<class RNG>
+multiaspect_phase_1_result t_ac_phase_1(const std::vector<double> &x1,
+                                        const std::vector<double> &x2,
+                                        unsigned n_perm,
+                                        RNG &rng) {
+    std::vector<aspect_ptr> aspects({a_aspect, c_aspect});
+    return multiple_aspect_phase_1(x1, x2, n_perm, rng, aspects);
+}
+
+template<class RNG>
+multiaspect_phase_1_result t_bc_phase_1(const std::vector<double> &x1,
+                                        const std::vector<double> &x2,
+                                        unsigned n_perm,
+                                        RNG &rng) {
+    std::vector<aspect_ptr> aspects({b_aspect, c_aspect});
+    return multiple_aspect_phase_1(x1, x2, n_perm, rng, aspects);
 }
 
 

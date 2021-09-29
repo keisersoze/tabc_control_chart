@@ -28,5 +28,22 @@ public:
                         dqrng::xoroshiro128plus &rng);
 };
 
+typedef std::function<multiaspect_phase_1_result (const std::vector<double> &,
+                                                  const std::vector<double> &,
+                                                  unsigned B,
+                                                  dqrng::xoroshiro128plus &)> multiaspect_test_phase_1;
+
+class multiaspect_obs_value_monitoring_statistic{
+private:
+    multiaspect_test_phase_1 mtp1;
+    unsigned B;
+public:
+    multiaspect_obs_value_monitoring_statistic(const multiaspect_test_phase_1 &pt, unsigned B);
+
+    double operator () (const std::vector<double> &x1,
+                        const std::vector<double> &x2,
+                        dqrng::xoroshiro128plus &rng);
+};
+
 
 #endif //RACE_TEST_DISPATCHING_H
