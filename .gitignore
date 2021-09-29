@@ -223,3 +223,6 @@ vignettes/*.pdf
 
 # R STUDIO 
 *.Rproj
+
+# Calibration results
+/r_scripts_results/results/calibration_results
