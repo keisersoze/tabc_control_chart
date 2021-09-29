@@ -5,5 +5,5 @@
 #include "multiple_aspects.h"
 
 phase_1_result::phase_1_result(const std::vector<std::vector<double>> &aspects_perm_stats,
-                               unsigned tabc_obs)
-                               : aspects_perm_stats(aspects_perm_stats), tabc_obs(tabc_obs) {}
+                               unsigned min_pos)
+                               : aspects_perm_stats(aspects_perm_stats), min_pos(min_pos) {}

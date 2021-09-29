@@ -14,18 +14,18 @@
 
 struct phase_1_result {
     std::vector<std::vector<double>> aspects_perm_stats;
-    unsigned tabc_obs;
+    unsigned min_pos;
 
     phase_1_result(const std::vector<std::vector<double>>  &aspects_perm_stats,
-                   unsigned tabc_obs);
+                   unsigned min_pos);
 };
 
 template<class RNG>
 phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
-                                         const std::vector<double> &x2,
-                                         unsigned n_perm,
-                                         RNG &rng,
-                                         const std::vector<aspect_ptr> &aspects){
+                                       const std::vector<double> &x2,
+                                       unsigned n_perm,
+                                       RNG &rng,
+                                       const std::vector<aspect_ptr> &aspects){
     unsigned n1 = x1.size();
     unsigned n2 = x2.size();
     std::vector<double> pooled_sample(x1);
@@ -76,10 +76,10 @@ phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
     for (unsigned i = 0; i < aspects.size(); ++i) {
         //TODO take aspects_obs by reference
         positions[i] = std::count_if(aspects_perm_stats[i].begin(), aspects_perm_stats[i].end(),
-                                     [i, aspects_obs](double x) { return x >= aspects_obs[i]; });
+                                     [i, &aspects_obs](double x) { return x >= aspects_obs[i]; });
     }
-    unsigned tabc_obs = *min_element(positions.begin(), positions.end());
-    return phase_1_result(aspects_perm_stats, tabc_obs);
+    unsigned min_pos = *min_element(positions.begin(), positions.end());
+    return phase_1_result(aspects_perm_stats, min_pos);
 }
 
 
@@ -92,7 +92,7 @@ perm_test_result multiple_aspect_phase_2(const std::vector<double> &x1,
                                          const std::vector<aspect_ptr> &aspects) {
     phase_1_result res = multiple_aspect_phase_1(x1,x2,n_perm,rng,aspects);
     std::vector<std::vector<double>> &aspects_perm_stats = res.aspects_perm_stats;
-    unsigned tabc_obs = res.tabc_obs;
+    unsigned min_pos = res.min_pos;
 
 //    Rcpp::Rcout << "pa " << pa << std::endl;
 //    Rcpp::Rcout << "pb " << pb << std::endl;
@@ -139,9 +139,9 @@ perm_test_result multiple_aspect_phase_2(const std::vector<double> &x1,
     // Rcpp::Rcout << "Tabc perm " << tabc_perm_stats << std::endl;
 
     unsigned position = std::count_if(tabc_perm_stats.begin(), tabc_perm_stats.end(),
-                                      [tabc_obs](double x) { return x <= tabc_obs; });
+                                      [min_pos](double x) { return x <= min_pos; });
 
-    perm_test_result res2(tabc_obs, n_perm, position);
+    perm_test_result res2((double)min_pos/(double)n_perm, n_perm, position);
 
     return res2;
 }
