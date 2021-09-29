@@ -12,12 +12,20 @@
 # include "data_aspects.h"
 # include "utils.h"
 
+struct phase_1_result {
+    std::vector<std::vector<double>> aspects_perm_stats;
+    unsigned tabc_obs;
+
+    phase_1_result(const std::vector<std::vector<double>>  &aspects_perm_stats,
+                   unsigned tabc_obs);
+};
+
 template<class RNG>
-perm_test_result multiple_aspect(const std::vector<double> &x1,
-                                 const std::vector<double> &x2,
-                                 unsigned n_perm,
-                                 RNG &rng,
-                                 const std::vector<aspect_ptr> &aspects) {
+phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,
+                                         const std::vector<double> &x2,
+                                         unsigned n_perm,
+                                         RNG &rng,
+                                         const std::vector<aspect_ptr> &aspects){
     unsigned n1 = x1.size();
     unsigned n2 = x2.size();
     std::vector<double> pooled_sample(x1);
@@ -66,10 +74,25 @@ perm_test_result multiple_aspect(const std::vector<double> &x1,
 
     std::vector<unsigned> positions(aspects.size());
     for (unsigned i = 0; i < aspects.size(); ++i) {
+        //TODO take aspects_obs by reference
         positions[i] = std::count_if(aspects_perm_stats[i].begin(), aspects_perm_stats[i].end(),
                                      [i, aspects_obs](double x) { return x >= aspects_obs[i]; });
     }
     unsigned tabc_obs = *min_element(positions.begin(), positions.end());
+    return phase_1_result(aspects_perm_stats, tabc_obs);
+}
+
+
+
+template<class RNG>
+perm_test_result multiple_aspect_phase_2(const std::vector<double> &x1,
+                                         const std::vector<double> &x2,
+                                         unsigned n_perm,
+                                         RNG &rng,
+                                         const std::vector<aspect_ptr> &aspects) {
+    phase_1_result res = multiple_aspect_phase_1(x1,x2,n_perm,rng,aspects);
+    std::vector<std::vector<double>> &aspects_perm_stats = res.aspects_perm_stats;
+    unsigned tabc_obs = res.tabc_obs;
 
 //    Rcpp::Rcout << "pa " << pa << std::endl;
 //    Rcpp::Rcout << "pb " << pb << std::endl;
@@ -118,9 +141,9 @@ perm_test_result multiple_aspect(const std::vector<double> &x1,
     unsigned position = std::count_if(tabc_perm_stats.begin(), tabc_perm_stats.end(),
                                       [tabc_obs](double x) { return x <= tabc_obs; });
 
-    perm_test_result res(tabc_obs, n_perm, position);
+    perm_test_result res2(tabc_obs, n_perm, position);
 
-    return res;
+    return res2;
 }
 
 template<class RNG>
@@ -129,7 +152,7 @@ perm_test_result t_abc(const std::vector<double> &x1,
                        unsigned n_perm,
                        RNG &rng) {
     std::vector<aspect_ptr> aspects({a_aspect, b_aspect, c_aspect});
-    return multiple_aspect(x1, x2, n_perm, rng, aspects);
+    return multiple_aspect_phase_2(x1, x2, n_perm, rng, aspects);
 }
 
 template<class RNG>
@@ -138,7 +161,7 @@ perm_test_result t_ab(const std::vector<double> &x1,
                       unsigned n_perm,
                       RNG &rng) {
     std::vector<aspect_ptr> aspects({a_aspect, b_aspect});
-    return multiple_aspect(x1, x2, n_perm, rng, aspects);
+    return multiple_aspect_phase_2(x1, x2, n_perm, rng, aspects);
 }
 
 template<class RNG>
@@ -147,7 +170,7 @@ perm_test_result t_ac(const std::vector<double> &x1,
                       unsigned n_perm,
                       RNG &rng) {
     std::vector<aspect_ptr> aspects({a_aspect, c_aspect});
-    return multiple_aspect(x1, x2, n_perm, rng, aspects);
+    return multiple_aspect_phase_2(x1, x2, n_perm, rng, aspects);
 }
 
 template<class RNG>
@@ -156,7 +179,7 @@ perm_test_result t_bc(const std::vector<double> &x1,
                       unsigned n_perm,
                       RNG &rng) {
     std::vector<aspect_ptr> aspects({b_aspect, c_aspect});
-    return multiple_aspect(x1, x2, n_perm, rng, aspects);
+    return multiple_aspect_phase_2(x1, x2, n_perm, rng, aspects);
 }
 
 

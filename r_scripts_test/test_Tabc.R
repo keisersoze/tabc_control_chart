@@ -140,11 +140,11 @@ x1=rcauchy(100, location = 0)
 x2=rcauchy(10, location = 0.1)
 
 start.time = proc.time()
-print(Tabc(x1,x2,"less", 3000))
+print(Tabc(x1,x2,"less", 30000))
 duration.time = proc.time() - start.time
 print (duration.time)
 
 start.time = proc.time()
-print(permtest.tabc(x1,x2, 3000))
+print(permtest.tabc(x1,x2, 30000))
 duration.time = proc.time() - start.time
 print (duration.time)
