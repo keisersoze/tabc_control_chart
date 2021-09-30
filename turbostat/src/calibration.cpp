@@ -63,7 +63,6 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
         for (unsigned i = 0; i < nsim; ++i) {
             std::generate(reference_sample.begin(), reference_sample.end(),
                           [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
-            // ic_variate_generator(lrng, reference_sample);
             unsigned run_length = 0;
             unsigned lcl_idx = 0;
             double stat;
@@ -71,15 +70,26 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
                 run_length++;
                 std::generate(test_sample.begin(), test_sample.end(),
                               [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
-                // ic_variate_generator(lrng, test_sample);
                 stat = ms(reference_sample, test_sample, lrng);
+                // Update rl for limits that have been surpassed
                 while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {
                     res_matrix[i][lcl_idx] = run_length;
                     lcl_idx++;
                 }
-                if (run_length == run_length_cap or lcl_idx == lcl_seq_sorted.size()) {
+                // All limits have been surpassed
+                if (lcl_idx == lcl_seq_sorted.size()){
                     break;
                 }
+                // If rl threshold is hit before all limits are surpassed then truncate rl
+                // for all remaining limits (this can introduce bias)
+                if (run_length == run_length_cap) {
+                    while (lcl_idx < lcl_seq_sorted.size()) {
+                        res_matrix[i][lcl_idx] = run_length_cap;
+                        lcl_idx++;
+                    }
+                    break;
+                }
+
             }
         }
     }
