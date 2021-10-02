@@ -6,17 +6,17 @@ inverse = function(x) {
   return (-(exp(-x) *  (exp(x) - exp(10))) / (exp(10) - 1))
 }
 
-seed = 46599
+seed = 366872
 turbostat.setseed(seed)
-m = 50
-n = 5
-ARL.target = 250
-monitorning.stat = "ac-2"
+m = 100
+n = 10
+ARL.target = 370
+monitorning.stat = "ac"
 monitorning.stat.params = list("n_permutations" = 4000)
-cap = 50000
+cap = 100000
 
 calibration.nsim = 5000
-calibration.lcl_seq = inverse(seq(2, 5.30, 0.0001))
+calibration.lcl_seq = inverse(seq(2, 6.05, 0.0005))
 
 evaluation.dist = "norm"
 evaluation.nsim = 5000
@@ -51,7 +51,7 @@ print(LCL)
 # Evaluation
 
 start.time = proc.time()
-result2 = evaluate.unconditional(
+evaluation.result = evaluate.unconditional(
   m = m,
   n = n,
   LCL = LCL,
@@ -64,7 +64,17 @@ result2 = evaluate.unconditional(
 )
 duration.time = proc.time() - start.time
 print(duration.time)
-print (result2)
+print (evaluation.result)
+
+
+filename =  paste(c(monitorning.stat,
+                    format(ARL.target, nsmall = 0),
+                    format(m, nsmall = 0),
+                    format(n, nsmall = 0),
+                    format(calibration.nsim, nsmall = 0),
+                    format(seed, nsmall = 0)), collapse = "_")
+
+basepath = paste(c("results/calibration_results/", filename, ".RData"), collapse = "")
 
 save(m,
      n,
@@ -80,4 +90,5 @@ save(m,
      rls,
      arls,
      LCL,
-     file = "results/calibration_results/ac-2_50_5_v3.RData")
+     evaluation.result,
+     file = basepath)
