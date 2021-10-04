@@ -6,89 +6,98 @@ inverse = function(x) {
   return (-(exp(-x) *  (exp(x) - exp(10))) / (exp(10) - 1))
 }
 
-seed = 366872
-turbostat.setseed(seed)
-m = 100
-n = 10
-ARL.target = 370
-monitorning.stat = "ac"
-monitorning.stat.params = list("n_permutations" = 4000)
-cap = 100000
+library(turbostat)
 
-calibration.nsim = 5000
-calibration.lcl_seq = inverse(seq(2, 6.05, 0.0005))
+# Calibration parameters
 
-evaluation.dist = "norm"
-evaluation.nsim = 5000
-evaluation.shifts = c(0, 1)
+calib.seed = 34256
+calib.m = 100
+calib.n = 10
 
-# Calibration
+calib.ARL0.target = 370
+
+calib.monitor_stat = "c"
+calib.monitor_stat.params = list("n_permutations" = 1000)
+
+calib.cap = 10000
+
+calib.nsim = 50
+calib.lcl_seq = inverse(seq(2, 5.5, 0.0005))
+
+calib.eval.dist = "norm"
+calib.eval.nsim = 50
+calib.eval.shifts = c(0, 1)
+
+# Calibration script
+
+turbostat.setseed(calib.seed)
 
 start.time = proc.time()
-rls = calibrate.unconditional(
-  m = m,
-  n = n,
+calib.rls = calibrate.unconditional(
+  m = calib.m,
+  n = calib.n,
   distribution_key = "norm",
-  monitoring_statistic_key = monitorning.stat,
-  monitoring_statistic_parameters = monitorning.stat.params,
-  lcl_seq = calibration.lcl_seq,
-  nsim = calibration.nsim,
-  run_length_cap = cap
+  monitoring_statistic_key = calib.monitor_stat,
+  monitoring_statistic_parameters = calib.monitor_stat.params,
+  lcl_seq = calib.lcl_seq,
+  nsim = calib.nsim,
+  run_length_cap = calib.cap
 )
 
 duration.time = proc.time() - start.time
 print (duration.time)
 
-arls = colMeans(rls)
-plot(calibration.lcl_seq ~ arls, pch=20, cex=0.02)
-afn = approxfun(arls,calibration.lcl_seq)
+calib.arls = colMeans(calib.rls)
+plot(calib.lcl_seq ~ calib.arls, pch=20, cex=0.02)
+afn = approxfun(calib.arls,calib.lcl_seq)
 curve(afn, add=TRUE, col="red")
-LCL = afn(ARL.target)
-abline(h = LCL)
-abline(v = ARL.target)
-print(LCL)
+calib.LCL = afn(calib.ARL0.target)
+abline(h = calib.LCL)
+abline(v = calib.ARL0.target)
+print(calib.LCL)
 
 # Evaluation
 
 start.time = proc.time()
-evaluation.result = evaluate.unconditional(
-  m = m,
-  n = n,
-  LCL = LCL,
-  shifts = evaluation.shifts,
-  distribution_key = evaluation.dist,
-  monitoring_statistic_key = monitorning.stat,
-  monitoring_statistic_parameters = monitorning.stat.params,
-  nsim = evaluation.nsim,
-  run_length_cap = cap
+calib.eval.result = evaluate.unconditional(
+  m = calib.m,
+  n = calib.n,
+  LCL = calib.LCL,
+  shifts = calib.eval.shifts,
+  distribution_key = calib.eval.dist,
+  monitoring_statistic_key = calib.monitor_stat,
+  monitoring_statistic_parameters = calib.monitor_stat.params,
+  nsim = calib.eval.nsim,
+  run_length_cap = calib.cap
 )
 duration.time = proc.time() - start.time
 print(duration.time)
-print (evaluation.result)
+print (calib.eval.result)
 
+# Save results
 
-filename =  paste(c(monitorning.stat,
-                    format(ARL.target, nsmall = 0),
-                    format(m, nsmall = 0),
-                    format(n, nsmall = 0),
-                    format(calibration.nsim, nsmall = 0),
-                    format(seed, nsmall = 0)), collapse = "_")
+filename =  paste(c(calib.monitor_stat,
+                    format(calib.ARL0.target, nsmall = 0),
+                    format(calib.m, nsmall = 0),
+                    format(calib.n, nsmall = 0),
+                    format(calib.nsim, nsmall = 0),
+                    format(calib.seed, nsmall = 0)), collapse = "_")
 
 basepath = paste(c("results/calibration_results/", filename, ".RData"), collapse = "")
 
-save(m,
-     n,
-     monitorning.stat,
-     monitorning.stat.params,
-     calibration.nsim,
-     calibration.lcl_seq,
-     evaluation.dist,
-     evaluation.nsim,
-     evaluation.shifts,
-     cap,
-     seed,
-     rls,
-     arls,
-     LCL,
-     evaluation.result,
+save(calib.m,
+     calib.n,
+     calib.monitor_stat,
+     calib.monitor_stat.params,
+     calib.nsim,
+     calib.lcl_seq,
+     calib.eval.dist,
+     calib.eval.nsim,
+     calib.eval.shifts,
+     calib.cap,
+     calib.seed,
+     calib.rls,
+     calib.arls,
+     calib.LCL,
+     calib.eval.result,
      file = basepath)

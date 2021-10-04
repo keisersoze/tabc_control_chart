@@ -48,10 +48,10 @@ construct_header <- function(df, grp_names, span, align = "c", draw_line = T) {
 
 library(xtable)
 
-load("results/OOC_performance_test/stdnormal5000.RData")
+load("results/evaluation_results/370_100_10_10_4637.RData")
 
-ncol = length(charts) * 2
-nrow = length(evaluation.shifts)
+ncol = length(eval.charts) * 2
+nrow = length(eval.shifts)
 df <- matrix(nrow = nrow, ncol = ncol)
 
 for (row in (1:nrow)) {
@@ -65,17 +65,17 @@ for (row in (1:nrow)) {
 }
  df = round (df , digits = 2)
 
-df <- cbind(paste(evaluation.shifts), df)
-colnames(df) <- c("Shift", rep(c("ARL", "SD"), length(charts)))
+df <- cbind(paste(eval.shifts), df)
+colnames(df) <- c("Shift", rep(c("ARL", "SD"), length(eval.charts)))
 print(df)
 
 a_header <- construct_header(
   # the data.frame or matrix that should be plotted
   df,
   # the labels of the groups that we want to insert
-  grp_names = c("", charts),
+  grp_names = c("", eval.charts),
   # the number of columns each group spans
-  span = c(1, c(rep(2, length(charts)))),
+  span = c(1, c(rep(2, length(eval.charts)))),
   # the alignment of each group, can be a single character (lcr) or a vector
   align = "c"
 )
