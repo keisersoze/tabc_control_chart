@@ -7,8 +7,8 @@ eval.calibrations = c("results/calibration_results/a_370_100_10_50_34256.RData",
 
 eval.nsim = 10
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "normalized_rate_one_exponential"
-eval.dist.params = list()
+eval.dist = "norm"
+eval.dist.params = list("mean" = 0 , "sd" = 1)
 eval.m = 100
 eval.n = 10
 eval.ARL0.target = 370

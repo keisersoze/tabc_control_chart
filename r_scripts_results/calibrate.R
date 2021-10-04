@@ -10,23 +10,23 @@ library(turbostat)
 
 # Calibration parameters
 
-calib.seed = 34256
+calib.seed = 47631
 calib.m = 100
 calib.n = 10
 
-calib.ARL0.target = 370
+calib.ARL0.target = 250
 
-calib.monitor_stat = "c"
-calib.monitor_stat.params = list("n_permutations" = 1000)
+calib.monitor_stat = "bc"
+calib.monitor_stat.params = list("n_permutations" = 3500)
 
-calib.cap = 10000
+calib.cap = 25000
 
-calib.nsim = 50
-calib.lcl_seq = inverse(seq(2, 5.5, 0.0005))
+calib.nsim = 5000
+calib.lcl_seq = inverse(seq(2, 5.45, 0.0005))
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
-calib.eval.nsim = 50
+calib.eval.nsim = 5000
 calib.eval.shifts = c(0, 1)
 
 # Calibration script
