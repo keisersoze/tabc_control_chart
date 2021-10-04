@@ -25,6 +25,7 @@ calib.nsim = 50
 calib.lcl_seq = inverse(seq(2, 5.5, 0.0005))
 
 calib.eval.dist = "norm"
+calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
 calib.eval.nsim = 50
 calib.eval.shifts = c(0, 1)
 
@@ -37,6 +38,7 @@ calib.rls = calibrate.unconditional(
   m = calib.m,
   n = calib.n,
   distribution_key = "norm",
+  distribution_parameters = list("mean" = 0 , "sd" = 1),
   monitoring_statistic_key = calib.monitor_stat,
   monitoring_statistic_parameters = calib.monitor_stat.params,
   lcl_seq = calib.lcl_seq,
@@ -65,6 +67,7 @@ calib.eval.result = evaluate.unconditional(
   LCL = calib.LCL,
   shifts = calib.eval.shifts,
   distribution_key = calib.eval.dist,
+  distribution_parameters = calib.eval.dist.params,
   monitoring_statistic_key = calib.monitor_stat,
   monitoring_statistic_parameters = calib.monitor_stat.params,
   nsim = calib.eval.nsim,
@@ -92,6 +95,7 @@ save(calib.m,
      calib.nsim,
      calib.lcl_seq,
      calib.eval.dist,
+     calib.eval.dist.params,
      calib.eval.nsim,
      calib.eval.shifts,
      calib.cap,

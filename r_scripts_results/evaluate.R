@@ -7,7 +7,8 @@ eval.calibrations = c("results/calibration_results/a_370_100_10_50_34256.RData",
 
 eval.nsim = 10
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "norm"
+eval.dist = "normalized_rate_one_exponential"
+eval.dist.params = list()
 eval.m = 100
 eval.n = 10
 eval.ARL0.target = 370
@@ -65,6 +66,7 @@ for (i in seq_along(eval.calibrations)){
     LCL = calib.LCL,
     shifts = eval.shifts,
     distribution_key = eval.dist,
+    distribution_parameters = eval.dist.params,
     monitoring_statistic_key = calib.monitor_stat,
     monitoring_statistic_parameters = calib.monitor_stat.params,
     nsim = eval.nsim,
@@ -91,6 +93,7 @@ save(eval.calibrations,
      eval.m,
      eval.n,
      eval.dist,
+     eval.dist.params,
      eval.shifts,
      eval.seed,
      eval.charts,

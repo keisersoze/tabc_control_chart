@@ -15,6 +15,10 @@
 #include "multiple_aspects.h"
 
 #include "distribution.h"
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/cauchy_distribution.hpp>
+#include <boost/random/laplace_distribution.hpp>
+#include <boost/random/student_t_distribution.hpp>
 
 #include "permutation_monitoring_statistic.h"
 
@@ -169,10 +173,20 @@ Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
-std::map<std::string, distribution> distribution_map = {
-        {"norm", boost::random::normal_distribution<double>(0.0, 1.0)},
-        {"normalized_rate_one_exponential", normalized_rate_one_exponential()}
-};
+distribution build_distribution(const std::string &dist_s, Rcpp::List distribution_params){
+    if (dist_s == "norm"){
+        double mean = distribution_params["mean"];
+        double sd = distribution_params["sd"];
+        return boost::random::normal_distribution<double>(mean, sd);
+    } else if (dist_s == "t"){
+        unsigned df = distribution_params["df"];
+        return boost::random::student_t_distribution<double>(df);
+    } else if (dist_s == "normalized_rate_one_exponential"){
+        return normalized_rate_one_exponential();
+    } else {
+        Rcpp::stop("Monitoring statistic not recognized");
+    }
+}
 
 // Unidirectional charts unconditional calibration and evaluation
 
@@ -221,12 +235,13 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             unsigned n,
                                             const std::string &distribution_key,
+                                            Rcpp::List distribution_parameters,
                                             const std::string &monitoring_statistic_key,
                                             Rcpp::List monitoring_statistic_parameters,
                                             const std::vector<double> &lcl_seq,
                                             unsigned nsim,
                                             unsigned run_length_cap) {
-    distribution ic_distribution = distribution_map[distribution_key];
+    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
     monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
@@ -263,11 +278,12 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        double LCL,
                                        const std::vector<double> &shifts,
                                        const std::string &distribution_key,
+                                       Rcpp::List distribution_parameters,
                                        const std::string &monitoring_statistic_key,
                                        Rcpp::List monitoring_statistic_parameters,
                                        unsigned nsim,
                                        unsigned run_length_cap) {
-    distribution ic_distribution = distribution_map[distribution_key];
+    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
     monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,

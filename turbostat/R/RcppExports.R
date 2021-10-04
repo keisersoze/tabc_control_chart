@@ -105,8 +105,8 @@ permtest.tac <- function(x1, x2, B) {
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-calibrate.unconditional <- function(m, n, distribution_key, monitoring_statistic_key, monitoring_statistic_parameters, lcl_seq, nsim, run_length_cap) {
-    .Call(`_turbostat_calibrate_unconditional`, m, n, distribution_key, monitoring_statistic_key, monitoring_statistic_parameters, lcl_seq, nsim, run_length_cap)
+calibrate.unconditional <- function(m, n, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, lcl_seq, nsim, run_length_cap) {
+    .Call(`_turbostat_calibrate_unconditional`, m, n, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, lcl_seq, nsim, run_length_cap)
 }
 
 #' Unconditional evaluation
@@ -117,8 +117,8 @@ calibrate.unconditional <- function(m, n, distribution_key, monitoring_statistic
 #' @param x2 An numeric vector
 #' @param B the number of permutations to be used for estimating the pvalue
 #' @export
-evaluate.unconditional <- function(m, n, LCL, shifts, distribution_key, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
-    .Call(`_turbostat_evaluate_unconditional`, m, n, LCL, shifts, distribution_key, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
+evaluate.unconditional <- function(m, n, LCL, shifts, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
+    .Call(`_turbostat_evaluate_unconditional`, m, n, LCL, shifts, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
 }
 
 test.exp <- function(n) {
