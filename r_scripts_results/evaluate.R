@@ -2,16 +2,21 @@ library(turbostat)
 
 # Evaluation parameters
 
-eval.calibrations = c("results/calibration_results/a_370_100_10_50_34256.RData",
-                      "results/calibration_results/c_370_100_10_50_34256.RData")
+eval.calibrations = c("results/calibration_results/a_250_100_10_5000_47631.RData",
+                      "results/calibration_results/b_250_100_10_5000_47631.RData",
+                      "results/calibration_results/c_250_100_10_5000_47631.RData",
+                      "results/calibration_results/ab_250_100_10_5000_47631.RData",
+                      "results/calibration_results/ac_250_100_10_5000_47631.RData",
+                      "results/calibration_results/bc_250_100_10_5000_47631.RData",
+                      "results/calibration_results/abc_250_100_10_5000_47631.RData")
 
-eval.nsim = 10
+eval.nsim = 5000
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "norm"
-eval.dist.params = list("mean" = 0 , "sd" = 1)
+eval.dist = "normalized_rate_one_exponential"
+eval.dist.params = list()
 eval.m = 100
 eval.n = 10
-eval.ARL0.target = 370
+eval.ARL0.target = 250
 eval.seed = 4637
 
 # Evaluation script
@@ -82,6 +87,7 @@ for (i in seq_along(eval.calibrations)){
 }
 
 filename =  paste(c(format(eval.ARL0.target, nsmall = 0),
+                    eval.dist,
                     format(eval.m, nsmall = 0),
                     format(eval.n, nsmall = 0),
                     format(eval.nsim, nsmall = 0),
