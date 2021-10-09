@@ -46,4 +46,20 @@ public:
 };
 
 
+typedef std::function<double (const std::vector<double> &,
+                              const std::vector<double> &)> simple_statistic;
+
+class simple_monitoring_statistic{
+private:
+    simple_statistic s;
+public:
+    simple_monitoring_statistic(const simple_statistic &s);
+
+    double operator () (const std::vector<double> &x1,
+                        const std::vector<double> &x2,
+                        dqrng::xoroshiro128plus &rng);
+};
+
+
+
 #endif //RACE_TEST_DISPATCHING_H

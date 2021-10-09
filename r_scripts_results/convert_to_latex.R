@@ -48,7 +48,7 @@ construct_header <- function(df, grp_names, span, align = "c", draw_line = T) {
 
 library(xtable)
 
-load("results/evaluation_results/370_100_10_10_4637.RData")
+load("results/evaluation_results/250_100_10_5000_4637.RData")
 
 ncol = length(eval.charts) * 2
 nrow = length(eval.shifts)
@@ -63,7 +63,7 @@ for (row in (1:nrow)) {
     }
   }
 }
- df = round (df , digits = 2)
+df = round (df , digits = 1)
 
 df <- cbind(paste(eval.shifts), df)
 colnames(df) <- c("Shift", rep(c("ARL", "SD"), length(eval.charts)))

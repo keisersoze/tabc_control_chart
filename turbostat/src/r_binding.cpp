@@ -13,6 +13,7 @@
 
 #include "single_aspect.h"
 #include "multiple_aspects.h"
+#include "simple_stats.h"
 
 #include "distribution.h"
 #include <boost/random/normal_distribution.hpp>
@@ -20,7 +21,7 @@
 #include <boost/random/laplace_distribution.hpp>
 #include <boost/random/student_t_distribution.hpp>
 
-#include "permutation_monitoring_statistic.h"
+#include "monitoring_statistic_wrappers.h"
 
 #include "calibration.h"
 
@@ -207,6 +208,11 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
         {"bc-2", t_bc_phase_1<dqrng::xoroshiro128plus>}
 };
 
+std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
+        {"wilcoxon", simple_monitoring_statistic(wilcoxon)}
+};
+
+
 monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s, Rcpp::List monitoring_stat_params){
     if (permutation_pvalue_monitoring_stat_map.find(monitoring_stat_s) != permutation_pvalue_monitoring_stat_map.end()){
         permutation_test pt = permutation_pvalue_monitoring_stat_map[monitoring_stat_s];
@@ -218,6 +224,8 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         unsigned n_permutations = monitoring_stat_params["n_permutations"];
         multiaspect_obs_value_monitoring_statistic monitoring_stat(mtp1, n_permutations);
         return monitoring_stat;
+    } else if (simple_monitoring_stat_map.find(monitoring_stat_s) != simple_monitoring_stat_map.end()){
+        return simple_monitoring_stat_map[monitoring_stat_s];
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }
@@ -250,7 +258,6 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                                                                         lcl_seq,
                                                                                         nsim,
                                                                                         run_length_cap);
-
     Rcpp::NumericMatrix res_rcpp(nsim, lcl_seq.size());
 
     for (unsigned i = 0; i < nsim; ++i) {
@@ -260,7 +267,6 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
     }
 
     return res_rcpp;
-
 }
 
 
@@ -318,42 +324,6 @@ std::vector<double> test_exp(unsigned n) {
 }
 
 
-
-
-//NumericVector testA(NumericVector x1, NumericVector x2, int B) {
-//    std::vector<double> x1_c(x1.size());
-//    for (int j = 0; j < x1.size(); ++j) {
-//        x1_c[j] = x1[j];
-//    }
-//    std::vector<double> x2_c(x2.size());
-//    for (int j = 0; j < x2.size(); ++j) {
-//        x2_c[j] = x2[j];
-//    }
-//    std::pair<double, double> pair = test_A(x1_c, x2_c, B);
-//    return NumericVector::create(pair.second ,pair.first);
-//}
-//
-//NumericVector testC(NumericVector x1, NumericVector x2, int B) {
-//    std::vector<double> x1_c(x1.size());
-//    for (int j = 0; j < x1.size(); ++j) {
-//        x1_c[j] = x1[j];
-//    }
-//    std::vector<double> x2_c(x2.size());
-//    for (int j = 0; j < x2.size(); ++j) {
-//        x2_c[j] = x2[j];
-//    }
-//    std::pair<double, double> pair = test_C(x1_c, x2_c, B);
-//    return NumericVector::create(pair.second ,pair.first);
-//}
-
-//double sumcpp(const std::vector<double>& x) {
-//    return accumulate(x.begin() , x.end(), 0.0);
-//}
-
-//NumericVector rnormcpp(int i) {
-//    return Rcpp::rnorm(i);
-//}
-
 //RCPP_MODULE(test_module) {
 //        class_<TestClass>( "TestClass" )
 //                .constructor<int>()
@@ -371,17 +341,3 @@ std::vector<double> test_exp(unsigned n) {
 //        Rcpp::function("testCrcpp", &testCExact);
 //        Rcpp::function("turbotabc", &T_abc_permtest);
 //}
-
-//RCPP_MODULE(test_module) {
-//        Rcpp::function("hello" , &hello);
-//        // Rcpp::function("testC", &testC);
-//        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
-//        Rcpp::function("exact.tc", &testCExact);
-//
-//        Rcpp::function("permtest.ta", &t_a_permtest);
-//        Rcpp::function("permtest.tb", &t_b_permtest);
-//        Rcpp::function("permtest.tc", &t_c_permtest);
-//        Rcpp::function("permtest.tabc", &t_abc_permtest);
-//}
-
-
