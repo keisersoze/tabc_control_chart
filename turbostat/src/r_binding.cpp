@@ -209,7 +209,9 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
 };
 
 std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
-        {"wilcoxon", simple_monitoring_statistic(wilcoxon)}
+        {"wilcoxon", simple_monitoring_statistic(wilcoxon_rank_sum)},
+        {"mann-whitney", simple_monitoring_statistic(mann_whitney)}
+
 };
 
 

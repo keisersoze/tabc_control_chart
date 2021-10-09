@@ -8,7 +8,7 @@
 
 #include "numeric" //accumulate
 
-double wilcoxon (const std::vector<double> &x1,
+double wilcoxon_rank_sum (const std::vector<double> &x1,
                  const std::vector<double> &x2){
     unsigned n1 = x1.size();
     std::vector<double> pooled_sample(x1);
@@ -18,3 +18,16 @@ double wilcoxon (const std::vector<double> &x1,
                       std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0);
     return obs_stat;
 }
+
+
+double mann_whitney (const std::vector<double> &x1,
+                     const std::vector<double> &x2){
+    unsigned n1 = x1.size();
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = c_aspect(pooled_sample);
+    double sum_of_x1_ranks = std::accumulate(ranks.begin(), ranks.begin() + n1, 0.0);
+    double obs_stat = sum_of_x1_ranks - (double) n1 * ((double) (n1 + 1))/2.0;
+    return obs_stat;
+}
+
