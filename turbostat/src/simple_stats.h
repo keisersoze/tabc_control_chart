@@ -13,4 +13,7 @@ double wilcoxon_rank_sum (const std::vector<double> &x1,
 double mann_whitney (const std::vector<double> &x1,
                      const std::vector<double> &x2);
 
+double sum_of_signs (const std::vector<double> &x1,
+                     const std::vector<double> &x2);
+
 #endif //RACE_SIMPLE_STATS_H

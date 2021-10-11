@@ -210,7 +210,8 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
 
 std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"wilcoxon", simple_monitoring_statistic(wilcoxon_rank_sum)},
-        {"mann-whitney", simple_monitoring_statistic(mann_whitney)}
+        {"mann-whitney", simple_monitoring_statistic(mann_whitney)},
+        {"sum-of-sings", simple_monitoring_statistic(sum_of_signs)}
 
 };
 
@@ -323,6 +324,12 @@ std::vector<double> test_exp(unsigned n) {
     std::generate(v.begin(), v.end(),
                   [&d]() { return d(global_rng::instance);});
     return v;
+}
+
+// [[Rcpp::export(test.stat)]]
+double test_stat(const std::vector<double> &x1,
+                const std::vector<double> &x2) {
+    return sum_of_signs(x1,x2);
 }
 
 
