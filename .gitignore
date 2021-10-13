@@ -225,4 +225,4 @@ vignettes/*.pdf
 *.Rproj
 
 # Calibration results
-/r_scripts_results/results/calibration_results
+/r_scripts_results/results

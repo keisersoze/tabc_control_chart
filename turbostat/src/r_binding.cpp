@@ -211,8 +211,10 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
 std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"wilcoxon", simple_monitoring_statistic(wilcoxon_rank_sum)},
         {"mann-whitney", simple_monitoring_statistic(mann_whitney)},
-        {"sum-of-sings", simple_monitoring_statistic(sum_of_signs)}
-
+        {"sum-of-sings", simple_monitoring_statistic(sum_of_signs)},
+        {"difference_of_sums", simple_monitoring_statistic(difference_of_sums)},
+        {"difference_of_means", simple_monitoring_statistic(difference_of_means)},
+        {"sum-of-x2", simple_monitoring_statistic(x2_sum)}
 };
 
 

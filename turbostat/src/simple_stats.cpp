@@ -19,7 +19,6 @@ double wilcoxon_rank_sum (const std::vector<double> &x1,
     return obs_stat;
 }
 
-
 double mann_whitney (const std::vector<double> &x1,
                      const std::vector<double> &x2){
     unsigned n1 = x1.size();
@@ -38,6 +37,26 @@ double sum_of_signs (const std::vector<double> &x1,
     pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
     std::vector<double> signs = b_aspect(pooled_sample);
     double obs_stat = std::accumulate(signs.begin() + n1, signs.end(), 0.0);
+    return obs_stat;
+}
+
+double difference_of_sums (const std::vector<double> &x1,
+                           const std::vector<double> &x2){
+    double obs_stat = std::accumulate(x1.begin(), x1.end() , 0.0)-
+                      std::accumulate(x2.begin(), x2.end() , 0.0);
+    return obs_stat;
+}
+
+double difference_of_means (const std::vector<double> &x1,
+                           const std::vector<double> &x2){
+    double obs_stat = std::accumulate(x1.begin(), x1.end() , 0.0) / (double) x1.size() -
+                      std::accumulate(x2.begin(), x2.end() , 0.0) / (double) x1.size();
+    return obs_stat;
+}
+
+double x2_sum (const std::vector<double> &x1,
+               const std::vector<double> &x2){
+    double obs_stat = std::accumulate(x2.begin(), x2.end() , 0.0);
     return obs_stat;
 }
 
