@@ -16,7 +16,7 @@ calib.n = 10
 
 calib.ARL0.target = 250
 
-calib.monitor_stat = "difference_of_means"
+calib.monitor_stat = "sum-of-sings"
 # calib.monitor_stat.params = list("n_permutations" = 3500)
 calib.monitor_stat.params = list()
 
@@ -24,8 +24,8 @@ calib.cap = 25000
 
 calib.nsim = 10000
 # calib.lcl_seq = inverse(seq(20, 50, 0.1))
-calib.limits_seq = seq(0, -0.9 , -0.0005)
-calib.upper_limit = FALSE
+calib.limits_seq = seq(0, 9 , 1)
+calib.upper_limit = TRUE
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
@@ -95,6 +95,7 @@ basepath = paste(c("results/calibration_results/", filename, ".RData"), collapse
 
 save(calib.m,
      calib.n,
+     calib.ARL0.target,
      calib.monitor_stat,
      calib.monitor_stat.params,
      calib.nsim,

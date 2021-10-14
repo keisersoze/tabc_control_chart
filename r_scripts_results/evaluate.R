@@ -2,15 +2,11 @@ library(turbostat)
 
 # Evaluation parameters
 
-eval.calibrations = c("results/calibration_results/a_250_100_10_5000_47631.RData",
-                      "results/calibration_results/b_250_100_10_5000_47631.RData",
-                      "results/calibration_results/c_250_100_10_5000_47631.RData",
-                      "results/calibration_results/ab_250_100_10_5000_47631.RData",
-                      "results/calibration_results/ac_250_100_10_5000_47631.RData",
-                      "results/calibration_results/bc_250_100_10_5000_47631.RData",
-                      "results/calibration_results/abc_250_100_10_5000_47631.RData")
+eval.calibrations = c("results/calibration_results/difference_of_means_250_100_10_10000_324.RData",
+                      "results/calibration_results/mann-whitney_250_100_10_10000_324.RData",
+                      "results/calibration_results/sum-of-sings_250_100_10_10000_324.RData")
 
-eval.nsim = 5000
+eval.nsim = 10000
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
 eval.dist = "normalized_rate_one_exponential"
 eval.dist.params = list()
@@ -21,7 +17,7 @@ eval.seed = 4637
 
 # Evaluation script
 
-turbostat.setseed(calib.seed)
+turbostat.setseed(eval.seed)
 
 eval.charts = rep(NA, length(eval.calibrations))
 
@@ -68,7 +64,8 @@ for (i in seq_along(eval.calibrations)){
   result = evaluate.unconditional(
     m = calib.m,
     n = calib.n,
-    LCL = calib.LCL,
+    limit = calib.limit,
+    upper_limit = calib.upper_limit,
     shifts = eval.shifts,
     distribution_key = eval.dist,
     distribution_parameters = eval.dist.params,
