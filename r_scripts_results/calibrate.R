@@ -10,24 +10,27 @@ library(turbostat)
 
 # Calibration parameters
 
-calib.seed = 47631
+calib.seed = 324
 calib.m = 100
 calib.n = 10
 
 calib.ARL0.target = 250
 
-calib.monitor_stat = "ac"
-calib.monitor_stat.params = list("n_permutations" = 3500)
+calib.monitor_stat = "difference_of_means"
+# calib.monitor_stat.params = list("n_permutations" = 3500)
+calib.monitor_stat.params = list()
 
 calib.cap = 25000
 
-calib.nsim = 5000
-calib.lcl_seq = inverse(seq(2, 5.0, 0.0005))
+calib.nsim = 10000
+# calib.lcl_seq = inverse(seq(20, 50, 0.1))
+calib.limits_seq = seq(0, -0.9 , -0.0005)
+calib.upper_limit = FALSE
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
-calib.eval.nsim = 5000
-calib.eval.shifts = c(0, 1)
+calib.eval.nsim = 10000
+calib.eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
 
 # Calibration script
 
@@ -41,7 +44,8 @@ calib.rls = calibrate.unconditional(
   distribution_parameters = list("mean" = 0 , "sd" = 1),
   monitoring_statistic_key = calib.monitor_stat,
   monitoring_statistic_parameters = calib.monitor_stat.params,
-  lcl_seq = calib.lcl_seq,
+  limits_seq = calib.limits_seq,
+  upper_limit = calib.upper_limit,
   nsim = calib.nsim,
   run_length_cap = calib.cap
 )
@@ -50,13 +54,13 @@ duration.time = proc.time() - start.time
 print (duration.time)
 
 calib.arls = colMeans(calib.rls)
-plot(calib.lcl_seq ~ calib.arls, pch=20, cex=0.02)
-afn = approxfun(calib.arls,calib.lcl_seq)
+plot(calib.limits_seq ~ calib.arls, pch=20, cex=0.02)
+afn = approxfun(calib.arls,calib.limits_seq)
 curve(afn, add=TRUE, col="red")
-calib.LCL = afn(calib.ARL0.target)
-abline(h = calib.LCL)
+calib.limit = afn(calib.ARL0.target)
+abline(h = calib.limit)
 abline(v = calib.ARL0.target)
-print(calib.LCL)
+print(calib.limit)
 
 # Evaluation
 
@@ -64,7 +68,8 @@ start.time = proc.time()
 calib.eval.result = evaluate.unconditional(
   m = calib.m,
   n = calib.n,
-  LCL = calib.LCL,
+  limit = calib.limit,
+  upper_limit = calib.upper_limit,
   shifts = calib.eval.shifts,
   distribution_key = calib.eval.dist,
   distribution_parameters = calib.eval.dist.params,
@@ -93,7 +98,8 @@ save(calib.m,
      calib.monitor_stat,
      calib.monitor_stat.params,
      calib.nsim,
-     calib.lcl_seq,
+     calib.limits_seq,
+     calib.upper_limit,
      calib.eval.dist,
      calib.eval.dist.params,
      calib.eval.nsim,
@@ -102,6 +108,6 @@ save(calib.m,
      calib.seed,
      calib.rls,
      calib.arls,
-     calib.LCL,
+     calib.limit,
      calib.eval.result,
      file = basepath)

@@ -50,7 +50,7 @@ double difference_of_sums (const std::vector<double> &x1,
 double difference_of_means (const std::vector<double> &x1,
                            const std::vector<double> &x2){
     double obs_stat = std::accumulate(x1.begin(), x1.end() , 0.0) / (double) x1.size() -
-                      std::accumulate(x2.begin(), x2.end() , 0.0) / (double) x1.size();
+                      std::accumulate(x2.begin(), x2.end() , 0.0) / (double) x2.size();
     return obs_stat;
 }
 

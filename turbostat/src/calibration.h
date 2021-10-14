@@ -21,7 +21,8 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
                                                                        unsigned n,
                                                                        const distribution &ic_distribution,
                                                                        const monitoring_statistic &ms,
-                                                                       const std::vector<double> &lcl_seq,
+                                                                       const std::vector<double> &limits_seq,
+                                                                       bool upper_limit,
                                                                        unsigned nsim,
                                                                        unsigned run_length_cap);
 

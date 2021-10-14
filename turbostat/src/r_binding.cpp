@@ -251,7 +251,8 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             Rcpp::List distribution_parameters,
                                             const std::string &monitoring_statistic_key,
                                             Rcpp::List monitoring_statistic_parameters,
-                                            const std::vector<double> &lcl_seq,
+                                            const std::vector<double> &limits_seq,
+                                            bool upper_limit,
                                             unsigned nsim,
                                             unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
@@ -260,13 +261,14 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                                                                         n,
                                                                                         ic_distribution,
                                                                                         ms,
-                                                                                        lcl_seq,
+                                                                                        limits_seq,
+                                                                                        upper_limit,
                                                                                         nsim,
                                                                                         run_length_cap);
-    Rcpp::NumericMatrix res_rcpp(nsim, lcl_seq.size());
+    Rcpp::NumericMatrix res_rcpp(nsim, limits_seq.size());
 
     for (unsigned i = 0; i < nsim; ++i) {
-        for (unsigned j = 0; j < lcl_seq.size(); ++j) {
+        for (unsigned j = 0; j < limits_seq.size(); ++j) {
             res_rcpp(i, j) = res_matrix[i][j];
         }
     }
@@ -286,7 +288,8 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 // [[Rcpp::export(evaluate.unconditional)]]
 Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        unsigned n,
-                                       double LCL,
+                                       double limit,
+                                       bool upper_limit,
                                        const std::vector<double> &shifts,
                                        const std::string &distribution_key,
                                        Rcpp::List distribution_parameters,
@@ -298,7 +301,8 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
     monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,
-                                                                                                    LCL,
+                                                                                                    limit,
+                                                                                                    upper_limit,
                                                                                                     shifts,
                                                                                                     ic_distribution,
                                                                                                     ms,
@@ -306,7 +310,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                                                                                     run_length_cap);
     Rcpp::NumericVector arls(shifts.size());
     Rcpp::NumericVector sds(shifts.size());
-    for (int shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
+    for (unsigned shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
         std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
         Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
         arls[shift_index] = Rcpp::mean(run_lengths_r);
@@ -328,10 +332,20 @@ std::vector<double> test_exp(unsigned n) {
     return v;
 }
 
-// [[Rcpp::export(test.stat)]]
-double test_stat(const std::vector<double> &x1,
-                const std::vector<double> &x2) {
-    return sum_of_signs(x1,x2);
+// [[Rcpp::export(test1)]]
+std::vector<double>  test1(unsigned n) {
+    std::vector<double> v(n);
+    for (unsigned i = 0; i < n; ++i) {
+        boost::random::normal_distribution<double> dist(0.0, 1.0);
+        std::vector<double> reference_sample(100);
+        std::vector<double> test_sample(10);
+        std::generate(reference_sample.begin(), reference_sample.end(),
+                      [&dist]() { return dist(global_rng::instance);});
+        std::generate(test_sample.begin(), test_sample.end(),
+                      [&dist]() { return dist(global_rng::instance);});
+        v[i]= difference_of_sums(reference_sample,test_sample);
+    }
+    return v;
 }
 
 
@@ -350,5 +364,4 @@ double test_stat(const std::vector<double> &x1,
 //        Rcpp::function("rnormcpp", &rnormcpp);
 //        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
 //        Rcpp::function("testCrcpp", &testCExact);
-//        Rcpp::function("turbotabc", &T_abc_permtest);
-//}
+//        Rcpp::function("turbotabc", &T_abc_permtest)

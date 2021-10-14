@@ -21,7 +21,8 @@
 
 std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
                                                                            unsigned n,
-                                                                           double LCL,
+                                                                           double limit,
+                                                                           bool upper_limit,
                                                                            const std::vector<double> &shifts,
                                                                            const distribution &ic_distribution,
                                                                            const monitoring_statistic &ms,

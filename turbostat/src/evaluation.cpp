@@ -104,12 +104,19 @@
 
 std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
                                                                            unsigned n,
-                                                                           double LCL,
+                                                                           double limit,
+                                                                           bool upper_limit,
                                                                            const std::vector<double> &shifts,
                                                                            const distribution &ic_distribution,
                                                                            const monitoring_statistic &ms,
                                                                            unsigned nsim,
                                                                            unsigned run_length_cap) {
+    std::function<bool (double&, double&)> comparator;
+    if (upper_limit){
+        comparator = std::less<double>();
+    } else{
+        comparator = std::greater<double>();
+    }
     std::vector<std::vector<unsigned>> rl_matrix(
             shifts.size(),
             std::vector<unsigned>(nsim));
@@ -146,7 +153,7 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
                                    [shift](double x) -> double { return x + shift; });
                     // compute monitoring statistic
                     stat = ms(reference_sample, test_sample, lrng);
-                } while (stat > LCL and run_length <= run_length_cap);
+                } while (comparator(stat, limit) and run_length <= run_length_cap);
                 rl_matrix[shift_index][i] = run_length;
             }
         }

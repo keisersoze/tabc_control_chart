@@ -42,15 +42,24 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
                                                                        unsigned n,
                                                                        const distribution &ic_distribution,
                                                                        const monitoring_statistic &ms,
-                                                                       const std::vector<double> &lcl_seq,
+                                                                       const std::vector<double> &limits_seq,
+                                                                       bool upper_limit,
                                                                        unsigned nsim,
                                                                        unsigned run_length_cap) {
-    std::vector<double> lcl_seq_sorted(lcl_seq);
-    std::sort(lcl_seq_sorted.begin(), lcl_seq_sorted.end(), std::greater<>());
+    std::vector<double> limits_seq_sorted(limits_seq);
+
+    std::function<bool (double&, double&)> comparator;
+    if (upper_limit){
+        comparator = std::greater_equal<double>();
+        std::sort(limits_seq_sorted.begin(), limits_seq_sorted.end(), std::less<>());
+    } else{
+        comparator = std::less_equal<double>();
+        std::sort(limits_seq_sorted.begin(), limits_seq_sorted.end(), std::greater<>());
+    }
 
     std::vector<std::vector<int>> res_matrix(
             nsim,
-            std::vector<int>(lcl_seq_sorted.size()));
+            std::vector<int>(limits_seq_sorted.size()));
     #pragma omp parallel firstprivate(ic_distribution) firstprivate(ms)
     {
         std::vector<double> reference_sample(m);
@@ -72,18 +81,18 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
                               [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
                 stat = ms(reference_sample, test_sample, lrng);
                 // Update rl for limits that have been surpassed
-                while (lcl_idx < lcl_seq_sorted.size() and stat <= lcl_seq_sorted[lcl_idx]) {
+                while (lcl_idx < limits_seq_sorted.size() and comparator(stat, limits_seq_sorted[lcl_idx])) {
                     res_matrix[i][lcl_idx] = run_length;
                     lcl_idx++;
                 }
                 // All limits have been surpassed
-                if (lcl_idx == lcl_seq_sorted.size()){
+                if (lcl_idx == limits_seq_sorted.size()){
                     break;
                 }
                 // If rl threshold is hit before all limits are surpassed then truncate rl
                 // for all remaining limits (this can introduce bias)
                 if (run_length == run_length_cap) {
-                    while (lcl_idx < lcl_seq_sorted.size()) {
+                    while (lcl_idx < limits_seq_sorted.size()) {
                         res_matrix[i][lcl_idx] = run_length_cap;
                         lcl_idx++;
                     }
