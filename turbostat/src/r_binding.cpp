@@ -179,9 +179,11 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
         double mean = distribution_params["mean"];
         double sd = distribution_params["sd"];
         return boost::random::normal_distribution<double>(mean, sd);
-    } else if (dist_s == "t"){
+    } else if (dist_s == "t") {
         unsigned df = distribution_params["df"];
         return boost::random::student_t_distribution<double>(df);
+    }else if (dist_s == "normalized_t_with_two_pont_five_degrees"){
+        return normalized_t_with_two_pont_five_degrees();
     } else if (dist_s == "normalized_rate_one_exponential"){
         return normalized_rate_one_exponential();
     } else {
@@ -326,6 +328,15 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
 // [[Rcpp::export(test.exp)]]
 std::vector<double> test_exp(unsigned n) {
     normalized_rate_one_exponential d;
+    std::vector<double> v(n);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
+    return v;
+}
+
+// [[Rcpp::export(test.t_due_e_mezzo)]]
+std::vector<double> test_t_due_e_mezzo(unsigned n) {
+    normalized_t_with_two_pont_five_degrees d;
     std::vector<double> v(n);
     std::generate(v.begin(), v.end(),
                   [&d]() { return d(global_rng::instance);});
