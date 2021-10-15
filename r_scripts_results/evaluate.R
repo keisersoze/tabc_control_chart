@@ -8,7 +8,7 @@ eval.calibrations = c("results/calibration_results/difference_of_means_250_100_1
 
 eval.nsim = 10000
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "normalized_rate_one_exponential"
+eval.dist = "normalized_t_with_two_pont_five_degrees"
 eval.dist.params = list()
 eval.m = 100
 eval.n = 10

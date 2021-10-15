@@ -10,26 +10,26 @@ library(turbostat)
 
 # Calibration parameters
 
-calib.seed = 324
+calib.seed = 57658
 calib.m = 100
 calib.n = 10
 
 calib.ARL0.target = 250
 
-calib.monitor_stat = "sum-of-sings"
-# calib.monitor_stat.params = list("n_permutations" = 3500)
-calib.monitor_stat.params = list()
+calib.monitor_stat = "tac_pvalue"
+calib.monitor_stat.params = list("n_permutations" = 2500)
+# calib.monitor_stat.params = list()
 
 calib.cap = 25000
 
-calib.nsim = 10000
-# calib.lcl_seq = inverse(seq(20, 50, 0.1))
-calib.limits_seq = seq(0, 9 , 1)
-calib.upper_limit = TRUE
+calib.nsim = 1000
+calib.limits_seq = inverse(seq(4, 4.9, 0.0005))
+# calib.limits_seq = seq(0, 9 , 1)
+calib.is_upper_limit = FALSE
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
-calib.eval.nsim = 10000
+calib.eval.nsim = 1000
 calib.eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
 
 # Calibration script
@@ -45,7 +45,7 @@ calib.rls = calibrate.unconditional(
   monitoring_statistic_key = calib.monitor_stat,
   monitoring_statistic_parameters = calib.monitor_stat.params,
   limits_seq = calib.limits_seq,
-  upper_limit = calib.upper_limit,
+  is_upper_limit = calib.is_upper_limit,
   nsim = calib.nsim,
   run_length_cap = calib.cap
 )
@@ -69,7 +69,7 @@ calib.eval.result = evaluate.unconditional(
   m = calib.m,
   n = calib.n,
   limit = calib.limit,
-  upper_limit = calib.upper_limit,
+  is_upper_limit = calib.is_upper_limit,
   shifts = calib.eval.shifts,
   distribution_key = calib.eval.dist,
   distribution_parameters = calib.eval.dist.params,
@@ -100,7 +100,7 @@ save(calib.m,
      calib.monitor_stat.params,
      calib.nsim,
      calib.limits_seq,
-     calib.upper_limit,
+     calib.is_upper_limit,
      calib.eval.dist,
      calib.eval.dist.params,
      calib.eval.nsim,

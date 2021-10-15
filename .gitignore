@@ -226,3 +226,6 @@ vignettes/*.pdf
 
 # Calibration results
 /r_scripts_results/results
+
+#Rcpp
+*RcppExports*
