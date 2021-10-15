@@ -2,14 +2,18 @@ library(turbostat)
 
 # Evaluation parameters
 
-eval.calibrations = c("results/calibration_results/difference_of_means_250_100_10_10000_324.RData",
-                      "results/calibration_results/mann-whitney_250_100_10_10000_324.RData",
-                      "results/calibration_results/sum-of-sings_250_100_10_10000_324.RData")
+eval.calibrations = c("results/calibration_results/prefinal/difference_of_means_250_100_10_10000_324.RData",
+                      "results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
+                      "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData",
+                      "results/calibration_results/prefinal/tab_obs_stat_250_100_10_10000_47631.RData",
+                      "results/calibration_results/prefinal/tac_obs_stat_250_100_10_10000_47631.RData",
+                      "results/calibration_results/prefinal/tbc_obs_stat_250_100_10_10000_47631.RData",
+                      "results/calibration_results/prefinal/tabc_obs_stat_250_100_10_10000_47631.RData")
 
 eval.nsim = 10000
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "normalized_t_with_two_pont_five_degrees"
-eval.dist.params = list()
+eval.dist = "norm"
+eval.dist.params = list("mean" = 0 , "sd" = 1)
 eval.m = 100
 eval.n = 10
 eval.ARL0.target = 250
@@ -65,7 +69,7 @@ for (i in seq_along(eval.calibrations)){
     m = calib.m,
     n = calib.n,
     limit = calib.limit,
-    upper_limit = calib.upper_limit,
+    is_upper_limit = calib.is_upper_limit,
     shifts = eval.shifts,
     distribution_key = eval.dist,
     distribution_parameters = eval.dist.params,
@@ -90,7 +94,7 @@ filename =  paste(c(format(eval.ARL0.target, nsmall = 0),
                     format(eval.nsim, nsmall = 0),
                     format(eval.seed, nsmall = 0)), collapse = "_")
 
-basepath = paste(c("results/evaluation_results/", filename, ".RData"), collapse = "")
+basepath = paste(c("results/evaluation_results/prefinal/", filename, ".RData"), collapse = "")
 
 save(eval.calibrations,
      eval.m,

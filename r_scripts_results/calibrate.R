@@ -10,27 +10,26 @@ library(turbostat)
 
 # Calibration parameters
 
-calib.seed = 57658
+calib.seed = 47631
 calib.m = 100
 calib.n = 10
 
 calib.ARL0.target = 250
 
-calib.monitor_stat = "tac_pvalue"
-calib.monitor_stat.params = list("n_permutations" = 2500)
-# calib.monitor_stat.params = list()
+calib.monitor_stat = "tabc_obs_stat"
+calib.monitor_stat.params = list("n_permutations" = 3500)
 
 calib.cap = 25000
 
-calib.nsim = 1000
-calib.limits_seq = inverse(seq(4, 4.9, 0.0005))
-# calib.limits_seq = seq(0, 9 , 1)
+calib.nsim = 10000
+calib.limits_seq = inverse(seq(4, 5.2, 0.0005))
 calib.is_upper_limit = FALSE
+
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean" = 0 , "sd" = 1)
-calib.eval.nsim = 1000
-calib.eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
+calib.eval.nsim = 10000
+calib.eval.shifts = c(0, 0.25, 0.5, 1)
 
 # Calibration script
 
@@ -55,7 +54,7 @@ print (duration.time)
 
 calib.arls = colMeans(calib.rls)
 plot(calib.limits_seq ~ calib.arls, pch=20, cex=0.02)
-afn = approxfun(calib.arls,calib.limits_seq)
+afn = approxfun(calib.arls,calib.limits_seq, ties = mean)
 curve(afn, add=TRUE, col="red")
 calib.limit = afn(calib.ARL0.target)
 abline(h = calib.limit)
