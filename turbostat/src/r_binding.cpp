@@ -182,7 +182,11 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
     } else if (dist_s == "t") {
         unsigned df = distribution_params["df"];
         return boost::random::student_t_distribution<double>(df);
-    }else if (dist_s == "normalized_t_with_two_pont_five_degrees"){
+    } else if (dist_s == "laplace") {
+        double location = distribution_params["location"];
+        double scale = distribution_params["scale"];
+        return boost::random::laplace_distribution<double>(location, scale);
+    } else if (dist_s == "normalized_t_with_two_pont_five_degrees"){
         return normalized_t_with_two_pont_five_degrees();
     } else if (dist_s == "normalized_rate_one_exponential"){
         return normalized_rate_one_exponential();
@@ -337,6 +341,15 @@ std::vector<double> test_exp(unsigned n) {
 // [[Rcpp::export(test.t_due_e_mezzo)]]
 std::vector<double> test_t_due_e_mezzo(unsigned n) {
     normalized_t_with_two_pont_five_degrees d;
+    std::vector<double> v(n);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
+    return v;
+}
+
+// [[Rcpp::export(test.laplace)]]
+std::vector<double> test_laplace(unsigned n, double location, double scale) {
+    boost::random::laplace_distribution<double> d (location, scale);
     std::vector<double> v(n);
     std::generate(v.begin(), v.end(),
                   [&d]() { return d(global_rng::instance);});

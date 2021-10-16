@@ -12,8 +12,8 @@ eval.calibrations = c("results/calibration_results/prefinal/difference_of_means_
 
 eval.nsim = 10000
 eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "normalized_rate_one_exponential"
-eval.dist.params = list()
+eval.dist = "laplace"
+eval.dist.params = list("location" = 0, "scale"=-1/sqrt(2) )
 eval.m = 100
 eval.n = 10
 eval.ARL0.target = 250
