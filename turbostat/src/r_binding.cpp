@@ -220,7 +220,9 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"sum-of-sings", simple_monitoring_statistic(sum_of_signs)},
         {"difference_of_sums", simple_monitoring_statistic(difference_of_sums)},
         {"difference_of_means", simple_monitoring_statistic(difference_of_means)},
-        {"sum-of-x2", simple_monitoring_statistic(x2_sum)}
+        {"sum-of-x2", simple_monitoring_statistic(x2_sum)},
+        {"precedence", simple_monitoring_statistic(precedence)}
+
 };
 
 

@@ -8,6 +8,9 @@
 
 #include "numeric" //accumulate
 
+#include "utils.h" //median
+
+
 double wilcoxon_rank_sum (const std::vector<double> &x1,
                           const std::vector<double> &x2){
     unsigned n1 = x1.size();
@@ -60,3 +63,9 @@ double x2_sum (const std::vector<double> &x1,
     return obs_stat;
 }
 
+double precedence (const std::vector<double> &x1,
+                   const std::vector<double> &x2){
+    double m = median(x2);
+    double stat = std::count_if(x1.begin(), x1.end(), [&m](double x) { return x >= m; });
+    return stat;
+}
