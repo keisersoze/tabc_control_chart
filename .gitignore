@@ -229,3 +229,6 @@ vignettes/*.pdf
 
 #Rcpp
 *RcppExports*
+
+# Output doc pdf
+/tmp

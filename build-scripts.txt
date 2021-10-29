@@ -1,1 +1,5 @@
-roxygen2::roxygenize(roclets="rd") generate doc in man folder
+roxygen2::roxygenize(roclets="rd") //generate doc in man folder
+
+R CMD Rd2pdf --title='Test of foo' -o ../tmp/foo.pdf man/*.Rd //outputs doc as PDF
+
+
