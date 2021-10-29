@@ -7,6 +7,8 @@
 
 #include <boost/random/exponential_distribution.hpp>
 #include <boost/random/student_t_distribution.hpp>
+#include <boost/random/cauchy_distribution.hpp>
+
 
 #include <xoshiro.h>
 
@@ -35,6 +37,17 @@ public:
     template<class Engine>
     double operator () (Engine &rng) {
         return t_dist_boost(rng) / 2.0;
+    }
+};
+
+class standard_half_cauchy{
+private:
+    boost::random::cauchy_distribution<double> cauchy_boost;
+public:
+    standard_half_cauchy();
+    template<class Engine>
+    double operator () (Engine &rng) {
+        return std::abs(cauchy_boost(rng));
     }
 };
 
