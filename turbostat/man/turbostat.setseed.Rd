@@ -2,17 +2,13 @@
 % Please edit documentation in R/RcppExports.R
 \name{turbostat.setseed}
 \alias{turbostat.setseed}
-\title{Ta permutation test}
+\title{Set the seed used by this R packet}
 \usage{
-turbostat.setseed(s)
+turbostat.setseed(seed)
 }
 \arguments{
-\item{x1}{An numeric vector}
-
-\item{x2}{An numeric vector}
-
-\item{B}{the number of permutations to be used for estimating the pvalue}
+\item{s}{The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.}
 }
 \description{
-Compute approximated pvalue for the Ta test using a finite number of permutations.
+Set the seed used by this R packet
 }

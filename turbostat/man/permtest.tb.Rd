@@ -7,12 +7,15 @@
 permtest.tb(x1, x2, B)
 }
 \arguments{
-\item{x1}{An numeric vector}
+\item{x1}{The first group's observations provided as a numeric vector.}
 
-\item{x2}{An numeric vector}
+\item{x2}{The second group's observations provided as a numeric vector.}
 
-\item{B}{the number of permutations to be used for estimating the pvalue}
+\item{B}{The number of permutations used for estimating the pvalue}
+}
+\value{
+The estimated permutation pvalue and the observed statistic
 }
 \description{
-Compute approximated pvalue for the Tb test using a finite number of permutations.
+Estimate the right tail permutation pvalue for the Tb test using a finite number of permutations.
 }

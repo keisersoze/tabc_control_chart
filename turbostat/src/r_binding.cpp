@@ -8,6 +8,7 @@
 
 #include <Rcpp.h>
 #include <xoshiro.h>
+#include <convert_seed.h>
 
 #include "global_rng.h"
 
@@ -28,26 +29,24 @@
 
 #include "evaluation.h"
 
-//' Ta permutation test
+//' Set the seed used by this R packet
 //'
-//' Compute approximated pvalue for the Ta test using a finite number of permutations.
-//'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param s The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
 //' @export
 // [[Rcpp::export(turbostat.setseed)]]
-void setseed(unsigned s) {
-    global_rng::instance.seed(s);
+void set_seed(Rcpp::IntegerVector seed) {
+    uint64_t _s = dqrng::convert_seed<uint64_t>(seed);
+    global_rng::instance.seed(_s);
 }
 
 //' Ta permutation test
 //'
-//' Compute approximated pvalue for the Ta test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Ta test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.ta)]]
 Rcpp::DataFrame t_a_binding(const std::vector<double> &x1,
@@ -62,11 +61,12 @@ Rcpp::DataFrame t_a_binding(const std::vector<double> &x1,
 
 //' Tb permutation test
 //'
-//' Compute approximated pvalue for the Tb test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Tb test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tb)]]
 Rcpp::DataFrame t_b_binding(const std::vector<double> &x1,
@@ -81,11 +81,12 @@ Rcpp::DataFrame t_b_binding(const std::vector<double> &x1,
 
 //' Tc permutation test
 //'
-//' Compute approximated pvalue for the Tc test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Tc test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tc)]]
 Rcpp::DataFrame t_c_binding(const std::vector<double> &x1,
@@ -99,13 +100,14 @@ Rcpp::DataFrame t_c_binding(const std::vector<double> &x1,
 }
 
 
-//' Tabc permutation test
+//' Tabc combined permutation test
 //'
-//' Compute approximated pvalue for the Tabc test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Tabc test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tabc)]]
 Rcpp::DataFrame t_abc_binding(const std::vector<double> &x1,
@@ -118,13 +120,14 @@ Rcpp::DataFrame t_abc_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
-//' Tab permutation test
+//' Tab combined permutation test
 //'
-//' Compute approximated pvalue for the Tabc test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Tab test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tab)]]
 Rcpp::DataFrame t_ab_binding(const std::vector<double> &x1,
@@ -137,13 +140,14 @@ Rcpp::DataFrame t_ab_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
-//' Tbc permutation test
+//' Tbc combined permutation test
 //'
-//' Compute approximated pvalue for the Tabc test using a finite number of permutations.
+//' Estimate the right tail permutation pvalue for the Tbc test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tbc)]]
 Rcpp::DataFrame t_bc_binding(const std::vector<double> &x1,
@@ -156,13 +160,14 @@ Rcpp::DataFrame t_bc_binding(const std::vector<double> &x1,
                                    Rcpp::Named("pos") = res.pos);
 }
 
-//' Tac permutation test
+//' Tac combined permutation test
 //'
-//' Compute pvalue estimate for the Tac test.
+//' Estimate the right tail permutation pvalue for the Tac test using a finite number of permutations.
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param x1 The first group's observations provided as a numeric vector.
+//' @param x2 The second group's observations provided as a numeric vector.
+//' @param B The number of permutations used for estimating the pvalue
+//' @return The estimated permutation pvalue and the observed statistic
 //' @export
 // [[Rcpp::export(permtest.tac)]]
 Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
@@ -256,11 +261,19 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
 
 //' Unconditional calibration
 //'
-//' to do
+//' Unconditional calibration for the Stehwart-type charts implemented by this package
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param m The dimension used for the reference sample.
+//' @param n The dimension used for the test samples.
+//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
+//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
+//' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
+//' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
+//' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation.
+//' @param is_upper_limit A boolean parameter used to select the direction of the OOC alternative.
+//' @param nsim The number of simulations
+//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
+//' @return A numeric matrix of size nsim x length(limits_seq).
 //' @export
 // [[Rcpp::export(calibrate.unconditional)]]
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
@@ -297,11 +310,16 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 
 //' Unconditional evaluation
 //'
-//' to do
+//' Unconditional evaluation for the Stehwart-type charts implemented by this package
 //'
-//' @param x1 An numeric vector
-//' @param x2 An numeric vector
-//' @param B the number of permutations to be used for estimating the pvalue
+//' @param m The dimension used for the reference sample.
+//' @param n The dimension used for the test samples.
+//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
+//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
+//' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
+//' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
+//' @param nsim The number of simulations
+//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
 //' @export
 // [[Rcpp::export(evaluate.unconditional)]]
 Rcpp::DataFrame evaluate_unconditional(unsigned m,
