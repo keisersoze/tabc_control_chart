@@ -69,3 +69,11 @@ double precedence (const std::vector<double> &x1,
     double stat = std::count_if(x1.begin(), x1.end(), [&m](double x) { return x >= m; });
     return stat;
 }
+
+double sum_of_signs_v2 (const std::vector<double> &x1,
+                        const std::vector<double> &x2){
+    double m = median(x1);
+    double stat = std::count_if(x2.begin(), x2.end(), [&m](double x) { return x >= m; });
+    return stat;
+}
+

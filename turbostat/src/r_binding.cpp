@@ -20,6 +20,7 @@
 #include <boost/random/cauchy_distribution.hpp>
 #include <boost/random/laplace_distribution.hpp>
 #include <boost/random/student_t_distribution.hpp>
+#include <boost/random/chi_squared_distribution.hpp>
 
 #include "monitoring_statistic_wrappers.h"
 
@@ -186,6 +187,13 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
         double location = distribution_params["location"];
         double scale = distribution_params["scale"];
         return boost::random::laplace_distribution<double>(location, scale);
+    } else if (dist_s == "cauchy") {
+        double location = distribution_params["location"];
+        double scale = distribution_params["scale"];
+        return boost::random::cauchy_distribution<double>(location, scale);
+    } else if  (dist_s == "chi_squared"){
+        double df = distribution_params["df"];
+        return boost::random::chi_squared_distribution<double>(df);
     } else if (dist_s == "normalized_t_with_two_pont_five_degrees"){
         return normalized_t_with_two_pont_five_degrees();
     } else if (dist_s == "normalized_rate_one_exponential"){
@@ -221,8 +229,8 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"difference_of_sums", simple_monitoring_statistic(difference_of_sums)},
         {"difference_of_means", simple_monitoring_statistic(difference_of_means)},
         {"sum-of-x2", simple_monitoring_statistic(x2_sum)},
-        {"precedence", simple_monitoring_statistic(precedence)}
-
+        {"precedence", simple_monitoring_statistic(precedence)},
+        {"sum_of_sings_v2", simple_monitoring_statistic(sum_of_signs_v2)}
 };
 
 
@@ -358,6 +366,15 @@ std::vector<double> test_laplace(unsigned n, double location, double scale) {
     return v;
 }
 
+// [[Rcpp::export(test.cauchy)]]
+std::vector<double> test_cauchy(unsigned n, double location, double scale) {
+    boost::random::cauchy_distribution<double> d (location, scale);
+    std::vector<double> v(n);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
+    return v;
+}
+
 // [[Rcpp::export(test1)]]
 std::vector<double>  test1(unsigned n) {
     std::vector<double> v(n);
@@ -390,4 +407,4 @@ std::vector<double>  test1(unsigned n) {
 //        Rcpp::function("rnormcpp", &rnormcpp);
 //        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
 //        Rcpp::function("testCrcpp", &testCExact);
-//        Rcpp::function("turbotabc", &T_abc_permtest)
+//        Rcpp::function("turbotabc", &T_abc_permtes

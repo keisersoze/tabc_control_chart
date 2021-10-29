@@ -28,5 +28,7 @@ double x2_sum (const std::vector<double> &x1,
 double precedence (const std::vector<double> &x1,
                    const std::vector<double> &x2);
 
+double sum_of_signs_v2 (const std::vector<double> &x1,
+                        const std::vector<double> &x2);
 
 #endif //RACE_SIMPLE_STATS_H
