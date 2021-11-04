@@ -10,7 +10,7 @@
 
 typedef std::function<double (const std::vector<double> &,
                               const std::vector<double> &,
-                              dqrng::xoroshiro128plus &)> monitoring_statistic;
+                              dqrng::xoshiro256plus &)> monitoring_statistic;
 
 #endif //RACE_MONITORING_STATISTIC_H
 

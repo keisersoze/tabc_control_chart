@@ -128,7 +128,7 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
             std::vector<double> test_sample(n);
 
             // make thread local copy of rng
-            dqrng::xoroshiro128plus lrng(global_rng::instance);
+            dqrng::xoshiro256plus lrng(global_rng::instance);
             // advance rng by 1 ... ncores jumps
             lrng.long_jump(omp_get_thread_num() + 1);
 

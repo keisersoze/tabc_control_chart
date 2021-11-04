@@ -213,20 +213,20 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
 // Unidirectional charts unconditional calibration and evaluation
 
 std::map<std::string, permutation_test> permutation_pvalue_monitoring_stat_map = {
-        {"ta_pvalue",   t_a_permtest<dqrng::xoroshiro128plus>},
-        {"tb_pvalue",   t_b_permtest<dqrng::xoroshiro128plus>},
-        {"tc_pvalue",   t_c_permtest<dqrng::xoroshiro128plus>},
-        {"tabc_pvalue", t_abc<dqrng::xoroshiro128plus>},
-        {"tab_pvalue", t_ab<dqrng::xoroshiro128plus>},
-        {"tac_pvalue", t_ac<dqrng::xoroshiro128plus>},
-        {"tbc_pvalue", t_bc<dqrng::xoroshiro128plus>}
+        {"ta_pvalue",   t_a_permtest<dqrng::xoshiro256plus>},
+        {"tb_pvalue",   t_b_permtest<dqrng::xoshiro256plus>},
+        {"tc_pvalue",   t_c_permtest<dqrng::xoshiro256plus>},
+        {"tabc_pvalue", t_abc<dqrng::xoshiro256plus>},
+        {"tab_pvalue", t_ab<dqrng::xoshiro256plus>},
+        {"tac_pvalue", t_ac<dqrng::xoshiro256plus>},
+        {"tbc_pvalue", t_bc<dqrng::xoshiro256plus>}
 };
 
 std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring_stat_map = {
-        {"tabc_obs_stat", t_abc_phase_1<dqrng::xoroshiro128plus>},
-        {"tab_obs_stat", t_ab_phase_1<dqrng::xoroshiro128plus>},
-        {"tac_obs_stat", t_ac_phase_1<dqrng::xoroshiro128plus>},
-        {"tbc_obs_stat", t_bc_phase_1<dqrng::xoroshiro128plus>}
+        {"tabc_obs_stat", t_abc_phase_1<dqrng::xoshiro256plus>},
+        {"tab_obs_stat", t_ab_phase_1<dqrng::xoshiro256plus>},
+        {"tac_obs_stat", t_ac_phase_1<dqrng::xoshiro256plus>},
+        {"tbc_obs_stat", t_bc_phase_1<dqrng::xoshiro256plus>}
 };
 
 std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {

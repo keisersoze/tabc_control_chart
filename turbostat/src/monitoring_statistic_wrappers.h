@@ -13,7 +13,7 @@
 typedef std::function<perm_test_result (const std::vector<double> &,
                                         const std::vector<double> &,
                                         unsigned B,
-                                        dqrng::xoroshiro128plus &)> permutation_test;
+                                        dqrng::xoshiro256plus &)> permutation_test;
 
 
 class permutation_pvalue_monitoring_statistic{
@@ -25,13 +25,13 @@ public:
 
     double operator () (const std::vector<double> &x1,
                         const std::vector<double> &x2,
-                        dqrng::xoroshiro128plus &rng);
+                        dqrng::xoshiro256plus &rng);
 };
 
 typedef std::function<multiaspect_phase_1_result (const std::vector<double> &,
                                                   const std::vector<double> &,
                                                   unsigned B,
-                                                  dqrng::xoroshiro128plus &)> multiaspect_test_phase_1;
+                                                  dqrng::xoshiro256plus &)> multiaspect_test_phase_1;
 
 class multiaspect_obs_value_monitoring_statistic{
 private:
@@ -42,7 +42,7 @@ public:
 
     double operator () (const std::vector<double> &x1,
                         const std::vector<double> &x2,
-                        dqrng::xoroshiro128plus &rng);
+                        dqrng::xoshiro256plus &rng);
 };
 
 
@@ -57,7 +57,7 @@ public:
 
     double operator () (const std::vector<double> &x1,
                         const std::vector<double> &x2,
-                        dqrng::xoroshiro128plus &rng);
+                        dqrng::xoshiro256plus &rng);
 };
 
 

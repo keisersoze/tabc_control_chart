@@ -16,7 +16,7 @@
 #include <cmath>        // std::abs
 #include <vector>
 
-typedef std::function<double (dqrng::xoroshiro128plus &)> distribution;
+typedef std::function<double (dqrng::xoshiro256plus &)> distribution;
 
 class normalized_rate_one_exponential{
 private:

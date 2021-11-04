@@ -5,5 +5,5 @@
 #include "global_rng.h"
 
 namespace global_rng {
-    dqrng::xoroshiro128plus instance;
+    dqrng::xoshiro256plus instance;
 }

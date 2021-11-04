@@ -16,7 +16,7 @@ permutation_pvalue_monitoring_statistic::permutation_pvalue_monitoring_statistic
 
 double permutation_pvalue_monitoring_statistic::operator()(const std::vector<double> &x1,
                                                            const std::vector<double> &x2,
-                                                           dqrng::xoroshiro128plus &rng) {
+                                                           dqrng::xoshiro256plus &rng) {
     perm_test_result res = this->pt(x1, x2, this->B, rng);
     return res.p_value;
 }
@@ -29,7 +29,7 @@ multiaspect_obs_value_monitoring_statistic::multiaspect_obs_value_monitoring_sta
 
 double multiaspect_obs_value_monitoring_statistic::operator()(const std::vector<double> &x1,
                                                               const std::vector<double> &x2,
-                                                              dqrng::xoroshiro128plus &rng) {
+                                                              dqrng::xoshiro256plus &rng) {
     multiaspect_phase_1_result res = this->mtp1(x1, x2, this->B, rng);
     return (double) res.min_pos / (double) (this->B);
 }
@@ -40,6 +40,6 @@ simple_monitoring_statistic::simple_monitoring_statistic(const simple_statistic 
 
 double simple_monitoring_statistic::operator()(const std::vector<double> &x1,
                                                const std::vector<double> &x2,
-                                               dqrng::xoroshiro128plus &rng) {
+                                               dqrng::xoshiro256plus &rng) {
     return s(x1, x2);
 }

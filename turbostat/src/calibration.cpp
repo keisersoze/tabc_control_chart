@@ -65,7 +65,7 @@ std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned 
         std::vector<double> reference_sample(m);
         std::vector<double> test_sample(n);
 
-        dqrng::xoroshiro128plus lrng(global_rng::instance);  // make thread local copy of rng
+        dqrng::xoshiro256plus lrng(global_rng::instance);  // make thread local copy of rng
         lrng.long_jump(omp_get_thread_num() + 1);  // advance rng by 1 ... ncores jumps
 
         #pragma omp for

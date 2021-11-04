@@ -8,7 +8,7 @@
 #include <xoshiro.h>
 
 namespace global_rng {
-    extern dqrng::xoroshiro128plus instance;
+    extern dqrng::xoshiro256plus instance;
 }
 
 #endif //RACE_RNG_H
