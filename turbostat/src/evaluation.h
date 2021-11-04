@@ -19,6 +19,15 @@
 //                                                              const std::string &test,
 //                                                              unsigned run_length_cap);
 
+std::vector<std::vector<unsigned>> conditional_unidirectional_evaluation(const std::vector<double> &reference_sample,
+                                                                         unsigned n,
+                                                                         double limit,
+                                                                         bool upper_limit,
+                                                                         const std::vector<double> &shifts,
+                                                                         const monitoring_statistic &ms,
+                                                                         unsigned nsim,
+                                                                         unsigned run_length_cap);
+
 std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsigned m,
                                                                            unsigned n,
                                                                            double limit,

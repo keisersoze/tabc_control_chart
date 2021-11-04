@@ -38,6 +38,32 @@
 //                              Rcpp::Named("distribution") = counts);
 //}
 
+double conditional_unidirectional_calibration(const std::vector<double> &reference_sample,
+                                              unsigned n,
+                                              const monitoring_statistic &ms,
+                                              bool upper_limit,
+                                              double target_ARL,
+                                              unsigned nsim) {
+    unsigned n_iterations = target_ARL * nsim;
+    std::vector<double> stats(n_iterations, 0);
+    double type_1_error_prob = 1/target_ARL;
+    for (unsigned i = 0; i < n_iterations; ++i) {
+        std::vector<double> test_sample_boot = sample_with_replacement(reference_sample, n, global_rng::instance);
+        double stat = ms(reference_sample, test_sample_boot, global_rng::instance);
+        stats[i]=stat;
+    }
+    std::function<bool (double&, double&)> comparator;
+    if (!upper_limit){
+        comparator = std::greater_equal<double>();
+        std::sort(stats.begin(), stats.end(), std::less<>());
+    } else{
+        comparator = std::less_equal<double>();
+        std::sort(stats.begin(), stats.end(), std::greater<>());
+    }
+    double limit = stats[(int)round(stats.size() * type_1_error_prob)];
+    return limit;
+}
+
 std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
                                                                        unsigned n,
                                                                        const distribution &ic_distribution,

@@ -358,6 +358,56 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
 
 }
 
+// [[Rcpp::export(calibrate.conditional)]]
+double calibrate_conditional(const std::vector<double> &reference_sample,
+                                          unsigned n,
+                                          const std::string &monitoring_statistic_key,
+                                          Rcpp::List monitoring_statistic_parameters,
+                                          unsigned target_ARL,
+                                          bool is_upper_limit,
+                                          unsigned nsim) {
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    double limit = conditional_unidirectional_calibration(reference_sample,
+                                                          n,
+                                                          ms,
+                                                          is_upper_limit,
+                                                          target_ARL,
+                                                          nsim);
+    return limit;
+}
+
+
+// [[Rcpp::export(evaluate.conditional)]]
+Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample,
+                                     unsigned n,
+                                     double limit,
+                                     bool is_upper_limit,
+                                     const std::vector<double> &shifts,
+                                     const std::string &monitoring_statistic_key,
+                                     Rcpp::List monitoring_statistic_parameters,
+                                     unsigned nsim,
+                                     unsigned run_length_cap) {
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    std::vector<std::vector<unsigned>> run_lengths_matrix = conditional_unidirectional_evaluation(reference_sample,
+                                                                                                  n,
+                                                                                                  limit,
+                                                                                                  is_upper_limit,
+                                                                                                  shifts,
+                                                                                                  ms,
+                                                                                                  nsim,
+                                                                                                  run_length_cap);
+    Rcpp::NumericVector arls(shifts.size());
+    Rcpp::NumericVector sds(shifts.size());
+    for (unsigned shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
+        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
+        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
+        arls[shift_index] = Rcpp::mean(run_lengths_r);
+        sds[shift_index] = Rcpp::sd(run_lengths_r);
+    }
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("SD") = sds);
+    return result;
+}
 
 // [[Rcpp::export(test.exp)]]
 std::vector<double> test_exp(unsigned n) {

@@ -17,6 +17,13 @@
 //                                unsigned nperm,
 //                                const std::string &test);
 
+double conditional_unidirectional_calibration(const std::vector<double> &reference_sample,
+                                              unsigned n,
+                                              const monitoring_statistic &ms,
+                                              bool upper_limit,
+                                              double target_ARL,
+                                              unsigned nsim);
+
 std::vector<std::vector<int>> unconditional_unidirectional_calibration(unsigned m,
                                                                        unsigned n,
                                                                        const distribution &ic_distribution,
