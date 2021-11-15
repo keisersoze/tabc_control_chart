@@ -63,6 +63,12 @@ double x2_sum (const std::vector<double> &x1,
     return obs_stat;
 }
 
+double x2_mean (const std::vector<double> &x1,
+                const std::vector<double> &x2){
+    double obs_stat = std::accumulate(x2.begin(), x2.end() , 0.0);
+    return obs_stat / (double) x2.size();
+}
+
 double precedence (const std::vector<double> &x1,
                    const std::vector<double> &x2){
     double m = median(x2);

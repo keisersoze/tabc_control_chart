@@ -25,6 +25,9 @@ double difference_of_means (const std::vector<double> &x1,
 double x2_sum (const std::vector<double> &x1,
                const std::vector<double> &x2);
 
+double x2_mean (const std::vector<double> &x1,
+                const std::vector<double> &x2);
+
 double precedence (const std::vector<double> &x1,
                    const std::vector<double> &x2);
 
