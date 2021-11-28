@@ -1,14 +1,16 @@
-aggregate.calibrations = c("results/calibration_results/standardized_laplace/difference_of_means_laplace_250_100_10_10000_47631.RData",
-                          "results/calibration_results/standardized_laplace/mann-whitney_laplace_250_100_10_10000_47631.RData")
+aggregate.calibrations = c("results/calibration_results/standard_normal/difference_of_means_norm_250_100_10_10000_47631.RData",
+                           "results/calibration_results/standard_normal/mann-whitney_norm_250_100_10_10000_47631.RData",
+                           "results/calibration_results/standard_normal/tac_obs_stat_norm_250_100_10_10000_47631.RData")
 
 
 
 aggregate.m = 100
 aggregate.n = 10
 aggregate.ARL0.target = 250
-aggregate.dist = "laplace"
+aggregate.dist = "norm"
 aggregate.dist.params = list("mean" = 0 , "sd" =  1)
 aggregate.shifts = seq(0, 1, 0.1)
+aggregate.nsim = 10000
 aggregate.charts = rep(NA, length(aggregate.calibrations))
 
 for (i in seq_along(aggregate.calibrations)){
@@ -49,6 +51,12 @@ for (i in seq_along(aggregate.calibrations)){
                  calib.ARL0.target,
                  aggregate.ARL0.target))
   }
+  if (aggregate.nsim != calib.nsim){
+    stop(sprintf("Chart %s has been calibrated with nsim=%i and not for nsim=%i !",
+                 calib.monitor_stat,
+                 calib.nsim,
+                 aggregate.nsim))
+  }
   if (aggregate.dist != calib.dist){
     stop(sprintf("Chart %s has been calibrated for distribution \"%s\" and not for distribution \"%s\" !",
                  calib.monitor_stat,
@@ -63,3 +71,24 @@ for (i in seq_along(aggregate.calibrations)){
 }
 
 print(arl_table)
+
+
+filename =  paste(c(format(aggregate.ARL0.target, nsmall = 0),
+                    aggregate.dist,
+                    format(aggregate.m, nsmall = 0),
+                    format(aggregate.n, nsmall = 0),
+                    format(aggregate.nsim, nsmall = 0)), collapse = "_")
+
+basepath = paste(c("results/evaluation_results/idea/", filename, ".RData"), collapse = "")
+
+save(aggregate.calibrations,
+     aggregate.m,
+     aggregate.n,
+     aggregate.dist,
+     aggregate.dist.params,
+     aggregate.shifts,
+     aggregate.charts,
+     aggregate.ARL0.target,
+     arl_table,
+     sd_table,
+     file = basepath)
