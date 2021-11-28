@@ -15,6 +15,7 @@
 #include "single_aspect.h"
 #include "multiple_aspects.h"
 #include "simple_stats.h"
+#include "fast_permtest.h"
 
 #include "distribution.h"
 #include <boost/random/normal_distribution.hpp>
@@ -242,7 +243,10 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
 };
 
 
-monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s, Rcpp::List monitoring_stat_params){
+monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s,
+                                                Rcpp::List monitoring_stat_params,
+                                                unsigned m,
+                                                unsigned n){
     if (permutation_pvalue_monitoring_stat_map.find(monitoring_stat_s) != permutation_pvalue_monitoring_stat_map.end()){
         permutation_test pt = permutation_pvalue_monitoring_stat_map[monitoring_stat_s];
         unsigned n_permutations = monitoring_stat_params["n_permutations"];
@@ -255,6 +259,9 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         return monitoring_stat;
     } else if (simple_monitoring_stat_map.find(monitoring_stat_s) != simple_monitoring_stat_map.end()){
         return simple_monitoring_stat_map[monitoring_stat_s];
+    } else if (monitoring_stat_s == "mann_whitney_fast_pvalue"){
+        unsigned n_perm = monitoring_stat_params["n_permutations"];
+        return fast_permtest(m, n, n_perm, mann_whitney, global_rng::instance);
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }
@@ -288,7 +295,7 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             unsigned nsim,
                                             unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
                                                                                         ic_distribution,
@@ -335,7 +342,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        unsigned nsim,
                                        unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
     std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
                                                                                                     n,
                                                                                                     limit,
@@ -367,7 +374,7 @@ double calibrate_conditional(const std::vector<double> &reference_sample,
                                           unsigned target_ARL,
                                           bool is_upper_limit,
                                           unsigned nsim) {
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters,reference_sample.size(),n);
     double limit = conditional_unidirectional_calibration(reference_sample,
                                                           n,
                                                           ms,
@@ -388,7 +395,7 @@ Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample
                                      Rcpp::List monitoring_statistic_parameters,
                                      unsigned nsim,
                                      unsigned run_length_cap) {
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters,reference_sample.size(),n);
     std::vector<std::vector<unsigned>> run_lengths_matrix = conditional_unidirectional_evaluation(reference_sample,
                                                                                                   n,
                                                                                                   limit,
@@ -471,6 +478,14 @@ std::vector<double>  test1(unsigned n) {
     return v;
 }
 
+// [[Rcpp::export(test.fasttest)]]
+double  test_fastest(const std::vector<double> &x1,
+                     const std::vector<double> &x2,
+                     unsigned B) {
+    fast_permtest mw_pvalue(x1.size(), x2.size(), B, mann_whitney, global_rng::instance);
+    return mw_pvalue(x1, x2, global_rng::instance);
+}
+
 
 //RCPP_MODULE(test_module) {
 //        class_<TestClass>( "TestClass" )
@@ -487,4 +502,4 @@ std::vector<double>  test1(unsigned n) {
 //        Rcpp::function("rnormcpp", &rnormcpp);
 //        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
 //        Rcpp::function("testCrcpp", &testCExact);
-//        Rcpp::function("turbotabc", &T_abc_permtes
+//        Rcpp::function("turbotabc", &T_abc_permt

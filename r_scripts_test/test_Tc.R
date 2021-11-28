@@ -1,16 +1,21 @@
-source("statistics.R")
+# source("statistics.R")
 seed = 42
 set.seed(seed)
 x1 = rnorm(50, mean = 0)
 x2 = rnorm(50, mean = 0)
 
+# start.time = proc.time()
+# print (Tc.pvalue3(x1,x2,100000))
+# duration.time = proc.time() - start.time
+# print(duration.time)
+
 start.time = proc.time()
-print (Tc.pvalue3(x1,x2,100000))
+print (permtest.tc(x1,x2, 100000))
 duration.time = proc.time() - start.time
 print(duration.time)
 
 start.time = proc.time()
-print (permtest.tc(x1,x2, 100000, 2))
+print (test.fasttest(x1,x2, 100000))
 duration.time = proc.time() - start.time
 print(duration.time)
 
