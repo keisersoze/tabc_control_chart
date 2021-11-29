@@ -34,4 +34,19 @@ double precedence (const std::vector<double> &x1,
 double sum_of_signs_v2 (const std::vector<double> &x1,
                         const std::vector<double> &x2);
 
+double conover_statistic (const std::vector<double> &x1,
+                          const std::vector<double> &x2);
+
+double mood_statistic (const std::vector<double> &x1,
+                       const std::vector<double> &x2);
+
+double ab_statistic (const std::vector<double> &x1,
+                     const std::vector<double> &x2);
+
+double klotz_statistic (const std::vector<double> &x1,
+                        const std::vector<double> &x2);
+
+double fab_statistic (const std::vector<double> &x1,
+                      const std::vector<double> &x2);
+
 #endif //RACE_SIMPLE_STATS_H

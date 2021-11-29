@@ -90,6 +90,11 @@ double median (std::vector<double> len){
     }
 }
 
+double mean(std::vector<double> x){
+    return std::accumulate(x.begin(), x.end() , 0.0) / (double) x.size();
+}
+
+
 //Rcpp::IntegerVector order(Rcpp::NumericVector v) {
 //
 //    // initialize original index locations

@@ -211,5 +211,65 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation(unsig
     return rl_matrix;
 }
 
+std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation_scale(unsigned m,
+                                                                                 unsigned n,
+                                                                                 double limit,
+                                                                                 bool upper_limit,
+                                                                                 const std::vector<double> &scale_multipliers,
+                                                                                 const distribution &ic_distribution,
+                                                                                 const monitoring_statistic &ms,
+                                                                                 unsigned nsim,
+                                                                                 unsigned run_length_cap){
+    std::function<bool (double&, double&)> comparator;
+    if (upper_limit){
+        comparator = std::less<double>();
+    } else{
+        comparator = std::greater<double>();
+    }
+    std::vector<std::vector<unsigned>> rl_matrix(
+            scale_multipliers.size(),
+            std::vector<unsigned>(nsim));
+    for (unsigned multiplier_index = 0; multiplier_index < scale_multipliers.size(); ++multiplier_index) {
+        double scale_multiplier = scale_multipliers[multiplier_index];
+        #pragma omp parallel firstprivate(ic_distribution) firstprivate(ms)
+        {
+            std::vector<double> reference_sample(m);
+            std::vector<double> test_sample(n);
+
+            // make thread local copy of rng
+            dqrng::xoshiro256plus lrng(global_rng::instance);
+            // advance rng by 1 ... ncores jumps
+            lrng.long_jump(omp_get_thread_num() + 1);
+
+            #pragma omp for
+            for (unsigned i = 0; i < nsim; ++i) {
+                // generate reference sample
+                std::generate(reference_sample.begin(), reference_sample.end(),
+                              [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+                // ic_variate_generator(lrng, reference_sample);
+                unsigned run_length = 0;
+                double stat;
+                do {
+                    run_length++;
+                    // generate test sample as if the process was IC
+                    std::generate(test_sample.begin(), test_sample.end(),
+                                  [&ic_distribution, &lrng]() { return ic_distribution(lrng);});
+                    // ic_variate_generator(lrng, test_sample);
+                    // apply shift
+                    std::transform(test_sample.begin(),
+                                   test_sample.end(),
+                                   test_sample.begin(),
+                                   [scale_multiplier](double x) -> double { return x * scale_multiplier; });
+                    // compute monitoring statistic
+                    stat = ms(reference_sample, test_sample, lrng);
+                } while (comparator(stat, limit) and run_length <= run_length_cap);
+                rl_matrix[multiplier_index][i] = run_length;
+            }
+        }
+        global_rng::instance.long_jump(omp_get_max_threads() + 1);
+    }
+    return rl_matrix;
+}
+
 
 

@@ -239,7 +239,12 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"x2_sum", simple_monitoring_statistic(x2_sum)},
         {"x2_mean", simple_monitoring_statistic(x2_mean)},
         {"precedence", simple_monitoring_statistic(precedence)},
-        {"sum_of_sings_v2", simple_monitoring_statistic(sum_of_signs_v2)}
+        {"sum_of_sings_v2", simple_monitoring_statistic(sum_of_signs_v2)},
+        {"conover_statistic", simple_monitoring_statistic(conover_statistic)},
+        {"mood_statistic", simple_monitoring_statistic(mood_statistic)},
+        {"ab_statistic", simple_monitoring_statistic(ab_statistic)},
+        {"klotz_statistic", simple_monitoring_statistic(klotz_statistic)},
+        {"fab_statistic", simple_monitoring_statistic(fab_statistic)}
 };
 
 
@@ -355,6 +360,43 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
     Rcpp::NumericVector arls(shifts.size());
     Rcpp::NumericVector sds(shifts.size());
     for (unsigned shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
+        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
+        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
+        arls[shift_index] = Rcpp::mean(run_lengths_r);
+        sds[shift_index] = Rcpp::sd(run_lengths_r);
+    }
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("SD") = sds);
+    return result;
+
+}
+
+// [[Rcpp::export(evaluate.unconditional.scale)]]
+Rcpp::DataFrame evaluate_unconditional_scale(unsigned m,
+                                       unsigned n,
+                                       double limit,
+                                       bool is_upper_limit,
+                                       const std::vector<double> &scale_multipliers,
+                                       const std::string &distribution_key,
+                                       Rcpp::List distribution_parameters,
+                                       const std::string &monitoring_statistic_key,
+                                       Rcpp::List monitoring_statistic_parameters,
+                                       unsigned nsim,
+                                       unsigned run_length_cap) {
+    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
+    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation_scale(m,
+                                                                                                          n,
+                                                                                                          limit,
+                                                                                                          is_upper_limit,
+                                                                                                          scale_multipliers,
+                                                                                                          ic_distribution,
+                                                                                                          ms,
+                                                                                                          nsim,
+                                                                                                          run_length_cap);
+    Rcpp::NumericVector arls(scale_multipliers.size());
+    Rcpp::NumericVector sds(scale_multipliers.size());
+    for (unsigned shift_index = 0; shift_index < scale_multipliers.size() ; ++shift_index) {
         std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
         Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
         arls[shift_index] = Rcpp::mean(run_lengths_r);
@@ -484,6 +526,12 @@ double  test_fastest(const std::vector<double> &x1,
                      unsigned B) {
     fast_permtest mw_pvalue(x1.size(), x2.size(), B, mann_whitney, global_rng::instance);
     return mw_pvalue(x1, x2, global_rng::instance);
+}
+
+// [[Rcpp::export(test.ansari_bradley)]]
+double  test_ansari_bradley(const std::vector<double> &x1,
+                            const std::vector<double> &x2) {
+    return ab_statistic(x1, x2);
 }
 
 
