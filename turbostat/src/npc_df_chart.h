@@ -32,4 +32,16 @@ public:
                         dqrng::xoshiro256plus &rng);
 };
 
+class npc_df_chart{
+private:
+    std::vector<fast_permtest> perm_tests;
+public:
+    npc_df_chart(const std::vector<fast_permtest> &perm_tests);
+
+    double operator () (const std::vector<double> &x1,
+                        const std::vector<double> &x2,
+                        dqrng::xoshiro256plus &rng);
+};
+
+
 #endif //RACE_FAST_PERMTEST_H

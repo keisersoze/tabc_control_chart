@@ -15,7 +15,7 @@
 #include "single_aspect.h"
 #include "multiple_aspects.h"
 #include "simple_stats.h"
-#include "fast_permtest.h"
+#include "npc_df_chart.h"
 
 #include "distribution.h"
 #include <boost/random/normal_distribution.hpp>
@@ -280,6 +280,35 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         std::string tail_key = monitoring_stat_params["tail"];
         simple_statistic s = stat_map[simple_monitoring_statistic_key];
         return fast_permtest(s, permutation_distribution, tail_key);
+    } else if (monitoring_stat_s == "npc") {
+        Rcpp::List permutation_distributions_r = monitoring_stat_params["permutation_distributions"];
+        std::vector<std::vector<double>> permutation_distributions;
+        for (int i = 0; i < permutation_distributions_r.size() ; ++i) {
+            std::vector<double> permutation_distribution = permutation_distributions_r[i];
+            permutation_distributions.push_back(permutation_distribution);
+        }
+        Rcpp::List statistics_keys_r = monitoring_stat_params["statistics"];
+        std::vector<std::string> statistics_keys;
+        for (int i = 0; i < permutation_distributions_r.size() ; ++i) {
+            std::string statistics_key = statistics_keys_r[i];
+            statistics_keys.push_back(statistics_key);
+        }
+        Rcpp::List tail_keys_r = monitoring_stat_params["tails"];
+        std::vector<std::string> tail_keys;
+        for (int i = 0; i < permutation_distributions_r.size() ; ++i) {
+            std::string tail_key = tail_keys_r[i];
+            tail_keys.push_back(tail_key);
+        }
+        std::vector<fast_permtest> perm_tests;
+        for (int i = 0; i < tail_keys.size(); ++i) {
+            std::vector<double> permutation_distribution = permutation_distributions[i];
+            std::string statistic_key = statistics_keys[i];
+            simple_statistic s = stat_map[statistic_key];
+            std::string tail_key = tail_keys[i];
+            fast_permtest perm_test(s, permutation_distribution, tail_key);
+            perm_tests.push_back(perm_test);
+        }
+        return npc_df_chart(perm_tests);
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }
@@ -558,10 +587,4 @@ std::vector<double>  compute_permutation_distribution_r(std::string statistic,
 //                .constructor<unsigned ,unsigned >()
 //                .method( "stat", &TaRBinding::stat )
 //        ;
-//        Rcpp::function("hello" , &hello);
-//        Rcpp::function("testC", &testC);
-//        Rcpp::function("sumcpp", &sumcpp);
-//        Rcpp::function("rnormcpp", &rnormcpp);
-//        Rcpp::function("uncoditional_run_length", &unconditional_run_length_distribution);
-//        Rcpp::function("testCrcpp", &testCExact);
-//        Rcpp::function("turbotabc", &T_abc_permt
+//        Rcpp::function("hello"

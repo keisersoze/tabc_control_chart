@@ -14,20 +14,32 @@ calib.seed = 45
 calib.m = 100
 calib.n = 10
 
+calib.nsim = 10000
+calib.limits_seq = inverse(seq(2, 6, 0.01))
+calib.is_upper_limit = FALSE
+
 calib.ARL0.target = 250
 
-calib.monitor_stat = "klotz_statistic"
-calib.monitor_stat.params = list()
+calib.monitor_stat = "npc"
+calib.monitor_stat.params = list(
+  "statistics"= list(
+    "ab_statistic",
+    "klotz_statistic"
+  ),
+  "permutation_distributions"=list(
+    compute_permutation_distribution("ab_statistic", calib.m, calib.n, 10000),
+    compute_permutation_distribution("klotz_statistic", calib.m, calib.n, 10000)
+  ),
+  "tails"=list(
+    "right",
+    "right"
+  )
+)
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
 
 calib.cap = 25000
-
-calib.nsim = 10000
-calib.limits_seq = seq(17, 19.5, 0.001)
-calib.is_upper_limit = TRUE
-
 
 calib.eval.dist = "cauchy"
 calib.eval.dist.params = list("location"=0, "scale"= 1)

@@ -2,7 +2,7 @@
 // Created by filip on 28/11/2021.
 //
 
-#include "fast_permtest.h"
+#include "npc_df_chart.h"
 
 #include "Rcpp.h"
 
@@ -52,4 +52,17 @@ double fast_permtest::operator () (const std::vector<double> &x1,
                                       [&obs_stat, this](double x){return comparator(x, obs_stat);});
     double p_value = (double) position / (double) permutation_distribution.size();
     return p_value;
+}
+
+
+npc_df_chart::npc_df_chart(const std::vector<fast_permtest> &perm_tests):perm_tests(perm_tests){}
+
+double npc_df_chart::operator () (const std::vector<double> &x1,
+                                  const std::vector<double> &x2,
+                                  dqrng::xoshiro256plus &rng){
+    std::vector<double> p_values(perm_tests.size());
+    for (int i = 0; i < perm_tests.size(); ++i) {
+        p_values[i] = perm_tests[i](x1,x2,rng);
+    }
+    return *std::min_element(p_values.begin(),p_values.end());
 }
