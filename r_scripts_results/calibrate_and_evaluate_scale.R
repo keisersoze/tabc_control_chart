@@ -10,12 +10,12 @@ library(turbostat)
 
 # Calibration parameters
 
-calib.seed = 45
+calib.seed = 85
 calib.m = 100
 calib.n = 10
 
-calib.nsim = 10000
-calib.limits_seq = inverse(seq(2, 6, 0.01))
+calib.nsim = 100000
+calib.limits_seq = inverse(seq(2, 5.2, 0.001))
 calib.is_upper_limit = FALSE
 
 calib.ARL0.target = 250
@@ -27,8 +27,8 @@ calib.monitor_stat.params = list(
     "klotz_statistic"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("ab_statistic", calib.m, calib.n, 10000),
-    compute_permutation_distribution("klotz_statistic", calib.m, calib.n, 10000)
+    compute_permutation_distribution("ab_statistic", calib.m, calib.n, 100000),
+    compute_permutation_distribution("klotz_statistic", calib.m, calib.n, 100000)
   ),
   "tails"=list(
     "right",
@@ -41,8 +41,8 @@ calib.dist.params = list("mean" = 0 , "sd" =  1)
 
 calib.cap = 25000
 
-calib.eval.dist = "cauchy"
-calib.eval.dist.params = list("location"=0, "scale"= 1)
+calib.eval.dist = "norm"
+calib.eval.dist.params = list("mean"=0, "sd"= 1)
 calib.eval.nsim = calib.nsim
 calib.eval.scale_multipliers = seq(1, 1.2, 0.1)
 

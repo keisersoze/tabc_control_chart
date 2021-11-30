@@ -21,7 +21,7 @@ class fast_permtest{
 private:
     std::vector<double> permutation_distribution;
     simple_statistic s;
-    std::function<bool (double&, double&)> comparator;
+    std::function<bool (const double&, const double&)> comparator;
 public:
     fast_permtest(const simple_statistic &s,
                   const std::vector<double> &permutation_distribution,

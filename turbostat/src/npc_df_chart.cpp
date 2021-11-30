@@ -6,7 +6,7 @@
 
 #include "Rcpp.h"
 
-#include <algorithm>    // std::count_if
+#include <algorithm>    // std::count_if std::upper_bound
 
 #include <boost/random/normal_distribution.hpp>
 
@@ -35,9 +35,11 @@ fast_permtest::fast_permtest(const simple_statistic &s,
                              const std::string &tail_key)
                              :s(s),permutation_distribution(permutation_distribution){
     if(tail_key == "left"){
-        comparator = std::less_equal<double>();
+        comparator = std::less<double>();
+        std::sort(this->permutation_distribution.begin(), this->permutation_distribution.end(), comparator);
     } else if (tail_key == "right"){
-        comparator = std::greater_equal<double>();
+        comparator = std::greater<double>();
+        std::sort(this->permutation_distribution.begin(), this->permutation_distribution.end(), comparator);
     } else {
         throw std::invalid_argument( "tail_key" );
     }
@@ -47,9 +49,11 @@ double fast_permtest::operator () (const std::vector<double> &x1,
                                    const std::vector<double> &x2,
                                    dqrng::xoshiro256plus &rng){
     double obs_stat = s(x1,x2);
-    unsigned position = std::count_if(permutation_distribution.begin(),
-                                      permutation_distribution.end(),
-                                      [&obs_stat, this](double x){return comparator(x, obs_stat);});
+    auto it = std::upper_bound(permutation_distribution.begin(),
+                               permutation_distribution.end(),
+                               obs_stat,
+                               comparator);
+    unsigned position = it - permutation_distribution.begin();
     double p_value = (double) position / (double) permutation_distribution.size();
     return p_value;
 }
