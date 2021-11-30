@@ -11,16 +11,21 @@
 #include "monitoring_statistic_wrappers.h"
 #include "test_interface.h"
 
+std::vector<double> generate_permutation_distribution(unsigned m,
+                                                      unsigned n,
+                                                      unsigned n_perm,
+                                                      const simple_statistic &s,
+                                                      dqrng::xoshiro256plus &rng);
+
 class fast_permtest{
 private:
-    std::vector<double> perm_stats;
+    std::vector<double> permutation_distribution;
     simple_statistic s;
+    std::function<bool (double&, double&)> comparator;
 public:
-    fast_permtest(unsigned m,
-                  unsigned n,
-                  unsigned n_perm,
-                  const simple_statistic &s,
-                  dqrng::xoshiro256plus &rng);
+    fast_permtest(const simple_statistic &s,
+                  const std::vector<double> &permutation_distribution,
+                  const std::string &tail_key);
 
     double operator () (const std::vector<double> &x1,
                         const std::vector<double> &x2,

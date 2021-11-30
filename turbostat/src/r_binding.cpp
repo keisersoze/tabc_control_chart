@@ -247,6 +247,16 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"fab_statistic", simple_monitoring_statistic(fab_statistic)}
 };
 
+std::map<std::string, simple_statistic> stat_map = {
+        {"wilcoxon_rank_sum", wilcoxon_rank_sum},
+        {"mann_whitney", mann_whitney},
+        {"sum_of_sings", sum_of_signs},
+        {"conover_statistic", conover_statistic},
+        {"mood_statistic", mood_statistic},
+        {"ab_statistic", ab_statistic},
+        {"klotz_statistic", klotz_statistic}
+};
+
 
 monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s,
                                                 Rcpp::List monitoring_stat_params,
@@ -264,9 +274,12 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         return monitoring_stat;
     } else if (simple_monitoring_stat_map.find(monitoring_stat_s) != simple_monitoring_stat_map.end()){
         return simple_monitoring_stat_map[monitoring_stat_s];
-    } else if (monitoring_stat_s == "mann_whitney_fast_pvalue"){
-        unsigned n_perm = monitoring_stat_params["n_permutations"];
-        return fast_permtest(m, n, n_perm, mann_whitney, global_rng::instance);
+    } else if (monitoring_stat_s == "fast_pvalue"){
+        std::vector<double> permutation_distribution = monitoring_stat_params["permutation_distribution"];
+        std::string simple_monitoring_statistic_key = monitoring_stat_params["statistic"];
+        std::string tail_key = monitoring_stat_params["tail"];
+        simple_statistic s = stat_map[simple_monitoring_statistic_key];
+        return fast_permtest(s, permutation_distribution, tail_key);
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }
@@ -520,18 +533,19 @@ std::vector<double>  test1(unsigned n) {
     return v;
 }
 
-// [[Rcpp::export(test.fasttest)]]
-double  test_fastest(const std::vector<double> &x1,
-                     const std::vector<double> &x2,
-                     unsigned B) {
-    fast_permtest mw_pvalue(x1.size(), x2.size(), B, mann_whitney, global_rng::instance);
-    return mw_pvalue(x1, x2, global_rng::instance);
-}
-
 // [[Rcpp::export(test.ansari_bradley)]]
 double  test_ansari_bradley(const std::vector<double> &x1,
                             const std::vector<double> &x2) {
     return ab_statistic(x1, x2);
+}
+
+// [[Rcpp::export(compute_permutation_distribution)]]
+std::vector<double>  compute_permutation_distribution_r(std::string statistic,
+                                                        unsigned m,
+                                                        unsigned n,
+                                                        unsigned n_perm) {
+    simple_statistic s = stat_map[statistic];
+    return generate_permutation_distribution(m, n, n_perm, s, global_rng::instance);
 }
 
 
