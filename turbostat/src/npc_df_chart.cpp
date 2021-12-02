@@ -72,13 +72,23 @@ double fast_permtest::operator () (const std::vector<double> &x1,
                                obs_stat,
                                comparator);
     unsigned position = it - permutation_distribution.begin();
-    double p_value = (double) position / (double) permutation_distribution.size();
+    double p_value = (0.5 + (double) position) / (1.0 + (double) permutation_distribution.size());
     return p_value;
 }
 
 double tippet(const std::vector<double> &p_values){
     return *std::min_element(p_values.begin(),p_values.end());
 }
+
+double fisher(const std::vector<double> &p_values){
+    std::vector<double> p_values_copy(p_values.size());
+    std::transform(p_values.begin(),
+                   p_values.end(),
+                   p_values_copy.begin(),
+                   [] (double x) -> double {return std::log(x);});
+    return std::accumulate(p_values_copy.begin(), p_values_copy.end() , 0.0);
+}
+
 
 npc_df_chart::npc_df_chart(const std::vector<fast_permtest> &perm_tests,
                            const combining_function &cf)

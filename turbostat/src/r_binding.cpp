@@ -244,7 +244,8 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"mood_statistic", simple_monitoring_statistic(mood_statistic)},
         {"ab_statistic", simple_monitoring_statistic(ab_statistic)},
         {"klotz_statistic", simple_monitoring_statistic(klotz_statistic)},
-        {"fab_statistic", simple_monitoring_statistic(fab_statistic)}
+        {"fab_statistic", simple_monitoring_statistic(fab_statistic)},
+        {"lepage", simple_monitoring_statistic(lepage)}
 };
 
 std::map<std::string, simple_statistic> stat_map = {
@@ -261,7 +262,8 @@ std::map<std::string, simple_statistic> stat_map = {
 };
 
 std::map<std::string, combining_function> combining_function_map = {
-        {"tippet", tippet}
+        {"tippet", tippet},
+        {"fisher", fisher}
 };
 
 
