@@ -8,6 +8,8 @@
 
 #include <algorithm>    // std::count_if std::upper_bound
 
+#include <cmath>        // std::abs
+
 #include <boost/random/normal_distribution.hpp>
 
 
@@ -35,11 +37,24 @@ fast_permtest::fast_permtest(const simple_statistic &s,
                              const std::string &tail_key)
                              :s(s),permutation_distribution(permutation_distribution){
     if(tail_key == "left"){
+        is_two_sided = false;
         comparator = std::less<double>();
         std::sort(this->permutation_distribution.begin(), this->permutation_distribution.end(), comparator);
-    } else if (tail_key == "right"){
+    } else if (tail_key == "right") {
+        is_two_sided = false;
         comparator = std::greater<double>();
         std::sort(this->permutation_distribution.begin(), this->permutation_distribution.end(), comparator);
+    }else if (tail_key == "two_sided"){
+        is_two_sided = true;
+        comparator = std::greater<double>();
+        std::transform(this->permutation_distribution.begin(),
+                       this->permutation_distribution.end(),
+                       this->permutation_distribution.begin(),
+                       [] (double x) -> double {return std::abs(x);});
+        std::sort(this->permutation_distribution.begin(), this->permutation_distribution.end(), comparator);
+//        for (int i = 0; i < this->permutation_distribution.size(); ++i) {
+//            Rcpp::Rcout << this->permutation_distribution[i] << std::endl;
+//        }
     } else {
         throw std::invalid_argument( "tail_key" );
     }
@@ -49,6 +64,9 @@ double fast_permtest::operator () (const std::vector<double> &x1,
                                    const std::vector<double> &x2,
                                    dqrng::xoshiro256plus &rng){
     double obs_stat = s(x1,x2);
+    if (is_two_sided){
+        obs_stat = std::abs(obs_stat);
+    }
     auto it = std::upper_bound(permutation_distribution.begin(),
                                permutation_distribution.end(),
                                obs_stat,

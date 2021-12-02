@@ -10,6 +10,9 @@
 double wilcoxon_rank_sum (const std::vector<double> &x1,
                           const std::vector<double> &x2);
 
+double difference_of_rank_means (const std::vector<double> &x1,
+                                 const std::vector<double> &x2);
+
 double mann_whitney (const std::vector<double> &x1,
                      const std::vector<double> &x2);
 
@@ -43,8 +46,14 @@ double mood_statistic (const std::vector<double> &x1,
 double ab_statistic (const std::vector<double> &x1,
                      const std::vector<double> &x2);
 
+double difference_of_means_ab_statistic (const std::vector<double> &x1,
+                                         const std::vector<double> &x2);
+
 double klotz_statistic (const std::vector<double> &x1,
                         const std::vector<double> &x2);
+
+double difference_of_means_klotz (const std::vector<double> &x1,
+                                  const std::vector<double> &x2);
 
 double fab_statistic (const std::vector<double> &x1,
                       const std::vector<double> &x2);

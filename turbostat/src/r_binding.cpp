@@ -254,7 +254,10 @@ std::map<std::string, simple_statistic> stat_map = {
         {"conover_statistic", conover_statistic},
         {"mood_statistic", mood_statistic},
         {"ab_statistic", ab_statistic},
-        {"klotz_statistic", klotz_statistic}
+        {"klotz_statistic", klotz_statistic},
+        {"difference_of_rank_means", difference_of_rank_means},
+        {"difference_of_means_klotz", difference_of_means_klotz},
+        {"difference_of_means_ab", difference_of_means_ab_statistic}
 };
 
 std::map<std::string, combining_function> combining_function_map = {
@@ -614,6 +617,12 @@ std::vector<double>  test1(unsigned n) {
 double  test_ansari_bradley(const std::vector<double> &x1,
                             const std::vector<double> &x2) {
     return ab_statistic(x1, x2);
+}
+
+// [[Rcpp::export(test.difference_of_means_klotz)]]
+double  test_difference_of_means_klotz(const std::vector<double> &x1,
+                                       const std::vector<double> &x2) {
+    return difference_of_means_klotz(x1, x2);
 }
 
 // [[Rcpp::export(compute_permutation_distribution)]]

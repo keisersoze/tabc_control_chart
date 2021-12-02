@@ -22,6 +22,7 @@ private:
     std::vector<double> permutation_distribution;
     simple_statistic s;
     std::function<bool (const double&, const double&)> comparator;
+    bool is_two_sided;
 public:
     fast_permtest(const simple_statistic &s,
                   const std::vector<double> &permutation_distribution,

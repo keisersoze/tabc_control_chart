@@ -28,6 +28,17 @@ double wilcoxon_rank_sum (const std::vector<double> &x1,
     return obs_stat;
 }
 
+double difference_of_rank_means (const std::vector<double> &x1,
+                                 const std::vector<double> &x2){
+    unsigned n1 = x1.size();
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> transformed_pooled_sample = c_aspect(pooled_sample);
+    double obs_stat = std::accumulate(transformed_pooled_sample.begin() , transformed_pooled_sample.begin() + n1 , 0.0) / (double) x1.size() -
+                      std::accumulate(transformed_pooled_sample.begin() + n1 , transformed_pooled_sample.end() , 0.0) / (double) x2.size();
+    return obs_stat;
+}
+
 double mann_whitney (const std::vector<double> &x1,
                      const std::vector<double> &x2){
     unsigned n1 = x1.size();
@@ -139,6 +150,22 @@ double ab_statistic (const std::vector<double> &x1,
     return mood_stat;
 }
 
+double difference_of_means_ab_statistic (const std::vector<double> &x1,
+                                         const std::vector<double> &x2){
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+    double ab_stat_x1 = 0;
+    for (int i = 0; i < x1.size(); ++i) {
+        ab_stat_x1 += std::abs(ranks[i] - (x1.size() + x2.size() + 1.0)/2.0);
+    }
+    double ab_stat_x2 = 0;
+    for (int i = x1.size(); i < x1.size() + x2.size(); ++i) {
+        ab_stat_x2 += std::abs(ranks[i] - (x1.size() + x2.size() + 1.0)/2.0);
+    }
+    return ab_stat_x1 / x1.size() - ab_stat_x2 / x2.size();
+}
+
 double klotz_statistic (const std::vector<double> &x1,
                         const std::vector<double> &x2){
     boost::math::normal dist(0.0, 1.0);
@@ -151,6 +178,25 @@ double klotz_statistic (const std::vector<double> &x1,
         klotz_stat += std::pow(_x, 2.0);
     }
     return klotz_stat;
+}
+
+double difference_of_means_klotz (const std::vector<double> &x1,
+                                  const std::vector<double> &x2){
+    boost::math::normal dist(0.0, 1.0);
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+    double klotz_stat_x1 = 0;
+    for (int i = 0; i < x1.size() ; ++i) {
+        double _x = quantile(dist, ranks[i]/(x1.size() + x2.size() + 1));
+        klotz_stat_x1 += std::pow(_x, 2.0);
+    }
+    double klotz_stat_x2 = 0;
+    for (int i = x1.size(); i < x1.size() + x2.size(); ++i) {
+        double _x = quantile(dist, ranks[i]/(x1.size() + x2.size() + 1));
+        klotz_stat_x2 += std::pow(_x, 2.0);
+    }
+    return klotz_stat_x1 / x1.size() - klotz_stat_x2 / x2.size() ;
 }
 
 double fab_statistic (const std::vector<double> &x1,
