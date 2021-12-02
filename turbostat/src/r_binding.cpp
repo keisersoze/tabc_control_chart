@@ -456,6 +456,48 @@ Rcpp::DataFrame evaluate_unconditional_scale(unsigned m,
 
 }
 
+// [[Rcpp::export(evaluate.unconditional.location_scale)]]
+Rcpp::DataFrame evaluate_unconditional_location_scale(unsigned m,
+                                                      unsigned n,
+                                                      double limit,
+                                                      bool is_upper_limit,
+                                                      Rcpp::List location_scale_changes,
+                                                      const std::string &distribution_key,
+                                                      Rcpp::List distribution_parameters,
+                                                      const std::string &monitoring_statistic_key,
+                                                      Rcpp::List monitoring_statistic_parameters,
+                                                      unsigned nsim,
+                                                      unsigned run_length_cap) {
+    std::vector<std::pair<double, double>> location_scale_changes_c;
+    for (int i = 0; i < location_scale_changes.size() ; ++i) {
+        std::vector<double> location_scale_change = location_scale_changes[i];
+        location_scale_changes_c.emplace_back(location_scale_change[0],location_scale_change[1]);
+    }
+    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
+    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation_location_scale(m,
+                                                                                                                   n,
+                                                                                                                   limit,
+                                                                                                                   is_upper_limit,
+                                                                                                                   location_scale_changes_c,
+                                                                                                                   ic_distribution,
+                                                                                                                   ms,
+                                                                                                                   nsim,
+                                                                                                                   run_length_cap);
+    Rcpp::NumericVector arls(location_scale_changes.size());
+    Rcpp::NumericVector sds(location_scale_changes.size());
+    for (unsigned shift_index = 0; shift_index < location_scale_changes.size() ; ++shift_index) {
+        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
+        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
+        arls[shift_index] = Rcpp::mean(run_lengths_r);
+        sds[shift_index] = Rcpp::sd(run_lengths_r);
+    }
+    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
+                                                     Rcpp::Named("SD") = sds);
+    return result;
+
+}
+
 // [[Rcpp::export(calibrate.conditional)]]
 double calibrate_conditional(const std::vector<double> &reference_sample,
                                           unsigned n,

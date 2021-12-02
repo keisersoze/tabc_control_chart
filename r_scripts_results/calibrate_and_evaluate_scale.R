@@ -11,6 +11,7 @@ library(turbostat)
 # Start parameters
 
 calib.seed = 85
+turbostat.setseed(calib.seed)
 calib.m = 100
 calib.n = 10
 
@@ -45,13 +46,11 @@ calib.cap = 25000
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean"=0, "sd"= 1)
 calib.eval.nsim = calib.nsim
-calib.eval.scale_multipliers = seq(1, 1.2, 0.1)
+calib.eval.scale_multipliers = list(c(0,1), c(0,1.1), c(0,1.2))
 
 # End parameters
 
 # Calibration
-
-turbostat.setseed(calib.seed)
 
 start.time = proc.time()
 calib.rls = calibrate.unconditional(
@@ -82,12 +81,12 @@ print(calib.limit)
 # Evaluation
 
 start.time = proc.time()
-calib.eval.result = evaluate.unconditional.scale(
+calib.eval.result = evaluate.unconditional.location_scale(
   m = calib.m,
   n = calib.n,
   limit = calib.limit,
   is_upper_limit = calib.is_upper_limit,
-  scale_multipliers = calib.eval.scale_multipliers,
+  location_scale_changes = calib.eval.scale_multipliers,
   distribution_key = calib.eval.dist,
   distribution_parameters = calib.eval.dist.params,
   monitoring_statistic_key = calib.monitor_stat,

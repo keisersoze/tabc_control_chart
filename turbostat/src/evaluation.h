@@ -48,5 +48,15 @@ std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation_scale
                                                                                  unsigned nsim,
                                                                                  unsigned run_length_cap);
 
+std::vector<std::vector<unsigned>> unconditional_unidirectional_evaluation_location_scale(unsigned m,
+                                                                                          unsigned n,
+                                                                                          double limit,
+                                                                                          bool upper_limit,
+                                                                                          const std::vector<std::pair<double,double>> &location_scale_changes,
+                                                                                          const distribution &ic_distribution,
+                                                                                          const monitoring_statistic &ms,
+                                                                                          unsigned nsim,
+                                                                                          unsigned run_length_cap);
+
 
 #endif //RACE_RUNLENGTH_H
