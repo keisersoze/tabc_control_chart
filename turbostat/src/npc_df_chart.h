@@ -32,11 +32,16 @@ public:
                         dqrng::xoshiro256plus &rng);
 };
 
+typedef std::function<double (const std::vector<double> &)> combining_function;
+
+double tippet(const std::vector<double> &p_values);
+
 class npc_df_chart{
 private:
     std::vector<fast_permtest> perm_tests;
+    combining_function cf;
 public:
-    npc_df_chart(const std::vector<fast_permtest> &perm_tests);
+    npc_df_chart(const std::vector<fast_permtest> &perm_tests, const combining_function &cf);
 
     double operator () (const std::vector<double> &x1,
                         const std::vector<double> &x2,

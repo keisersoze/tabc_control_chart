@@ -8,14 +8,14 @@ inverse = function(x) {
 
 library(turbostat)
 
-# Calibration parameters
+# Start parameters
 
 calib.seed = 85
 calib.m = 100
 calib.n = 10
 
-calib.nsim = 100000
-calib.limits_seq = inverse(seq(2, 5.2, 0.001))
+calib.nsim = 10000
+calib.limits_seq = inverse(seq(2, 5.5, 0.001))
 calib.is_upper_limit = FALSE
 
 calib.ARL0.target = 250
@@ -33,7 +33,8 @@ calib.monitor_stat.params = list(
   "tails"=list(
     "right",
     "right"
-  )
+  ),
+  "combining_function"="tippet"
 )
 
 calib.dist = "norm"
@@ -46,7 +47,9 @@ calib.eval.dist.params = list("mean"=0, "sd"= 1)
 calib.eval.nsim = calib.nsim
 calib.eval.scale_multipliers = seq(1, 1.2, 0.1)
 
-# Calibration script
+# End parameters
+
+# Calibration
 
 turbostat.setseed(calib.seed)
 
@@ -77,7 +80,6 @@ abline(v = calib.ARL0.target)
 print(calib.limit)
 
 # Evaluation
-
 
 start.time = proc.time()
 calib.eval.result = evaluate.unconditional.scale(

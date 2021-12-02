@@ -58,8 +58,13 @@ double fast_permtest::operator () (const std::vector<double> &x1,
     return p_value;
 }
 
+double tippet(const std::vector<double> &p_values){
+    return *std::min_element(p_values.begin(),p_values.end());
+}
 
-npc_df_chart::npc_df_chart(const std::vector<fast_permtest> &perm_tests):perm_tests(perm_tests){}
+npc_df_chart::npc_df_chart(const std::vector<fast_permtest> &perm_tests,
+                           const combining_function &cf)
+                           :perm_tests(perm_tests), cf(cf) {}
 
 double npc_df_chart::operator () (const std::vector<double> &x1,
                                   const std::vector<double> &x2,
@@ -68,5 +73,5 @@ double npc_df_chart::operator () (const std::vector<double> &x1,
     for (int i = 0; i < perm_tests.size(); ++i) {
         p_values[i] = perm_tests[i](x1,x2,rng);
     }
-    return *std::min_element(p_values.begin(),p_values.end());
+    return cf(p_values);
 }

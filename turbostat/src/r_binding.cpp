@@ -257,6 +257,10 @@ std::map<std::string, simple_statistic> stat_map = {
         {"klotz_statistic", klotz_statistic}
 };
 
+std::map<std::string, combining_function> combining_function_map = {
+        {"tippet", tippet}
+};
+
 
 monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s,
                                                 Rcpp::List monitoring_stat_params,
@@ -308,7 +312,9 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
             fast_permtest perm_test(s, permutation_distribution, tail_key);
             perm_tests.push_back(perm_test);
         }
-        return npc_df_chart(perm_tests);
+        std::string combining_function_key = monitoring_stat_params["combining_function"];
+        combining_function c = combining_function_map[combining_function_key];
+        return npc_df_chart(perm_tests, c);
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }
