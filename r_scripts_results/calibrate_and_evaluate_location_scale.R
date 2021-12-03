@@ -15,7 +15,7 @@ turbostat.setseed(calib.seed)
 calib.m = 50
 calib.n = 5
 
-calib.nsim = 50000
+calib.nsim = 10000
 # Tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
 # calib.limits_seq = inverse(seq(2, 6.7, 0.001))
@@ -24,7 +24,9 @@ calib.nsim = 50000
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 # Liptak
-calib.limits_seq = seq(1.5, 1.0102, -0.0001)
+calib.limits_seq = seq(1.02, 1.002, -0.0001)
+# Lepage
+# calib.limits_seq = seq(2, 11, 0.001)
 
 
 calib.is_upper_limit = FALSE
@@ -32,15 +34,16 @@ calib.is_upper_limit = FALSE
 calib.ARL0.target = 500
 
 calib.monitor_stat = "npc"
-# calib.monitor_stat.params = list()
+# calib.monitor_stat.params = list(statistic="lepage")
+#calib.monitor_stat.params = list()
 calib.monitor_stat.params = list(
   "statistics"= list(
     "lepage",
     "cucconi"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("cucconi", calib.m, calib.n, 500000),
-    compute_permutation_distribution("lepage", calib.m, calib.n, 500000)
+    compute_permutation_distribution("lepage", calib.m, calib.n, 500000),
+    compute_permutation_distribution("cucconi", calib.m, calib.n, 500000)
   ),
   "tails"=list(
     "two_sided",
@@ -54,8 +57,8 @@ calib.dist.params = list("mean" = 0 , "sd" =  1)
 
 calib.cap = 50000
 
-calib.eval.dist = "laplace"
-calib.eval.dist.params = list("location"= 0, "scale"= 1)
+calib.eval.dist = "norm"
+calib.eval.dist.params = list("mean"= 0, "sd"= 1)
 calib.eval.nsim = calib.nsim
 # calib.eval.location_shift_scale_multiplier_list = list(c(0.25,1.25), c(0.5,1.5))
 calib.eval.location_shift_scale_multiplier_list = list(c(0,1), c(0.25, 1), c(0.5, 1), c(0.75, 1), c(1, 1), c(0, 1.25), c(0, 1.5), c(0.25,1.25), c(0.5,1.5))
