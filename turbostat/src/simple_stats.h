@@ -58,4 +58,7 @@ double difference_of_means_klotz (const std::vector<double> &x1,
 double fab_statistic (const std::vector<double> &x1,
                       const std::vector<double> &x2);
 
+double lepage (const std::vector<double> &x1,
+               const std::vector<double> &x2);
+
 #endif //RACE_SIMPLE_STATS_H

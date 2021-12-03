@@ -15,6 +15,8 @@
 
 #include <boost/math/distributions/normal.hpp>
 
+#include "Rcpp.h"
+
 
 
 double wilcoxon_rank_sum (const std::vector<double> &x1,
@@ -143,11 +145,11 @@ double ab_statistic (const std::vector<double> &x1,
     std::vector<double> pooled_sample(x1);
     pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
     std::vector<double> ranks = avg_rank(pooled_sample);
-    double mood_stat = 0;
+    double ab_statistic = 0;
     for (int i = x1.size(); i < x1.size() + x2.size(); ++i) {
-        mood_stat += std::abs(ranks[i] - (x1.size() + x2.size() + 1.0)/2.0);
+        ab_statistic += std::abs(ranks[i] - (x1.size() + x2.size() + 1.0)/2.0);
     }
-    return mood_stat;
+    return ab_statistic;
 }
 
 double difference_of_means_ab_statistic (const std::vector<double> &x1,
@@ -209,5 +211,58 @@ double fab_statistic (const std::vector<double> &x1,
         ab_stat += std::abs(ranks[i] - (x1.size() + x2.size() + 1.0)/2.0);
     }
     return (x2.size() * (x1.size() + x2.size() + 1.0))/2.0 - ab_stat;
+}
+
+//double cucconi (const std::vector<double> &x1,
+//                const std::vector<double> &x2){
+//    std::vector<double> vett(x1);
+//    vett.insert(vett.end(), x2.begin(), x2.end());
+//    double enne1 = (double) x1.size();
+//    double enne2 = (double) x2.size();
+//    double enne = (double) vett.size();
+//    std::vector<double> ranghi = avg_rank(vett);
+//    double erre2 = ranghi[(enne1+1):enne]
+//    media=enne2*(enne+1)*(2*enne+1)
+//    scarto=(enne1*enne2*(enne+1)*(2*enne+1)*(8*enne+11)/5)^0.5
+//    u=(6*sum(erre2^2)-media)/scarto
+//    v=(6*sum((enne+1-1*erre2)^2)-media)/scarto
+//    ro=2*(enne^2-4)/(2*enne+1)/(8*enne+11)-1
+//    cuc=(u^2+v^2-2*u*v*ro)/2/(1-ro^2)
+//}
+
+double lepage (const std::vector<double> &x1,
+               const std::vector<double> &x2){
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+
+    double m = (double) x1.size();
+    double n = (double) x2.size();
+    double N = n + m;
+
+    double wilcoxon_rank_sum = std::accumulate(ranks.begin() + x1.size()  , ranks.end() , 0.0);
+    double ab_statistic = 0;
+    for (int i = x1.size(); i < x1.size() + x2.size() ; ++i) {
+        ab_statistic += std::abs(ranks[i] - (m + n + 1.0)/2.0);
+    }
+
+    double wilcoxon_mean = (n/2.0) * (N + 1);
+    double wilcoxon_var = (1.0/12.0) * m * n * (N + 1);
+    double standardized_wilcoxon = std::pow(wilcoxon_rank_sum - wilcoxon_mean, 2.0)/ wilcoxon_var;
+
+    double ab_mean;
+    double ab_var;
+    if ((x1.size() + x2.size()) % 2 == 0) {
+        ab_mean = (n * N) / 4.0;
+        ab_var = (1.0/48.0) * m * n * (std::pow(N, 2.0) - 4.0)/(N - 1) ;
+
+    } else {
+        ab_mean = (n * (std::pow(N, 2.0) - 1))/(4.0 * N);
+        ab_var = (1.0/48.0) * m * n * (N + 1) *  (std::pow(N, 2.0) + 3.0) / std::pow(N, 2.0);
+    }
+    double standardized_ab =  std::pow(ab_statistic - ab_mean, 2.0)/ ab_var;
+
+    return standardized_wilcoxon +  standardized_ab;
+
 }
 
