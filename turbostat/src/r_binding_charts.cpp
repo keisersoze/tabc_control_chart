@@ -30,157 +30,6 @@
 
 #include "evaluation.h"
 
-//' Set the seed used by this R packet
-//'
-//' @param s The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
-//' @export
-// [[Rcpp::export(turbostat.setseed)]]
-void set_seed(Rcpp::IntegerVector seed) {
-    uint64_t _s = dqrng::convert_seed<uint64_t>(seed);
-    global_rng::instance.seed(_s);
-}
-
-//' Ta permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Ta test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.ta)]]
-Rcpp::DataFrame t_a_binding(const std::vector<double> &x1,
-                            const std::vector<double> &x2,
-                            unsigned B) {
-    perm_test_result res = t_a_permtest(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-//' Tb permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tb test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tb)]]
-Rcpp::DataFrame t_b_binding(const std::vector<double> &x1,
-                            const std::vector<double> &x2,
-                            unsigned B) {
-    perm_test_result res = t_b_permtest(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-//' Tc permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tc test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tc)]]
-Rcpp::DataFrame t_c_binding(const std::vector<double> &x1,
-                            const std::vector<double> &x2,
-                            unsigned B) {
-    perm_test_result res = t_c_permtest(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-
-//' Tabc combined permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tabc test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tabc)]]
-Rcpp::DataFrame t_abc_binding(const std::vector<double> &x1,
-                              const std::vector<double> &x2,
-                              unsigned B) {
-    perm_test_result res = t_abc(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-//' Tab combined permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tab test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tab)]]
-Rcpp::DataFrame t_ab_binding(const std::vector<double> &x1,
-                             const std::vector<double> &x2,
-                             unsigned B) {
-    perm_test_result res = t_ab(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-//' Tbc combined permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tbc test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tbc)]]
-Rcpp::DataFrame t_bc_binding(const std::vector<double> &x1,
-                             const std::vector<double> &x2,
-                             unsigned B) {
-    perm_test_result res = t_bc(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
-//' Tac combined permutation test
-//'
-//' Estimate the right tail permutation pvalue for the Tac test using a finite number of permutations.
-//'
-//' @param x1 The first group's observations provided as a numeric vector.
-//' @param x2 The second group's observations provided as a numeric vector.
-//' @param B The number of permutations used for estimating the pvalue
-//' @return The estimated permutation pvalue and the observed statistic
-//' @export
-// [[Rcpp::export(permtest.tac)]]
-Rcpp::DataFrame t_ac_binding(const std::vector<double> &x1,
-                             const std::vector<double> &x2,
-                             unsigned B) {
-    perm_test_result res = t_ac(x1, x2, B, global_rng::instance);
-    return Rcpp::DataFrame::create(Rcpp::Named("pvalue") = res.p_value,
-                                   Rcpp::Named("obsStat") = res.obs_stat,
-                                   Rcpp::Named("nPerm") = res.n_perm,
-                                   Rcpp::Named("pos") = res.pos);
-}
-
 distribution build_distribution(const std::string &dist_s, Rcpp::List distribution_params){
     if (dist_s == "norm"){
         double mean = distribution_params["mean"];
@@ -210,9 +59,6 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
         Rcpp::stop("Monitoring statistic not recognized");
     }
 }
-
-// Unidirectional charts unconditional calibration and evaluation
-
 std::map<std::string, permutation_test> permutation_pvalue_monitoring_stat_map = {
         {"ta_pvalue",   t_a_permtest<dqrng::xoshiro256plus>},
         {"tb_pvalue",   t_b_permtest<dqrng::xoshiro256plus>},
@@ -228,26 +74,6 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
         {"tab_obs_stat", t_ab_phase_1<dqrng::xoshiro256plus>},
         {"tac_obs_stat", t_ac_phase_1<dqrng::xoshiro256plus>},
         {"tbc_obs_stat", t_bc_phase_1<dqrng::xoshiro256plus>}
-};
-
-std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
-        {"wilcoxon", simple_monitoring_statistic(wilcoxon_rank_sum)},
-        {"mann-whitney", simple_monitoring_statistic(mann_whitney)},
-        {"sum-of-sings", simple_monitoring_statistic(sum_of_signs)},
-        {"difference_of_sums", simple_monitoring_statistic(difference_of_sums)},
-        {"difference_of_means", simple_monitoring_statistic(difference_of_means)},
-        {"x2_sum", simple_monitoring_statistic(x2_sum)},
-        {"x2_mean", simple_monitoring_statistic(x2_mean)},
-        {"precedence", simple_monitoring_statistic(precedence)},
-        {"sum_of_sings_v2", simple_monitoring_statistic(sum_of_signs_v2)},
-        {"conover_statistic", simple_monitoring_statistic(conover_statistic)},
-        {"mood_statistic", simple_monitoring_statistic(mood_statistic)},
-        {"ab_statistic", simple_monitoring_statistic(ab_statistic)},
-        {"klotz_statistic", simple_monitoring_statistic(klotz_statistic)},
-        {"fab_statistic", simple_monitoring_statistic(fab_statistic)},
-        {"lepage", simple_monitoring_statistic(lepage)},
-        {"cucconi", simple_monitoring_statistic(cucconi)}
-
 };
 
 std::map<std::string, simple_statistic> stat_map = {
@@ -286,8 +112,10 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         unsigned n_permutations = monitoring_stat_params["n_permutations"];
         multiaspect_obs_value_monitoring_statistic monitoring_stat(mtp1, n_permutations);
         return monitoring_stat;
-    } else if (simple_monitoring_stat_map.find(monitoring_stat_s) != simple_monitoring_stat_map.end()){
-        return simple_monitoring_stat_map[monitoring_stat_s];
+    } else if (monitoring_stat_s == "simple_statistic"){
+        std::string statistic_key = monitoring_stat_params["statistic"];
+        simple_statistic s = stat_map[statistic_key];
+        return simple_monitoring_statistic(s);
     } else if (monitoring_stat_s == "fast_pvalue"){
         std::vector<double> permutation_distribution = monitoring_stat_params["permutation_distribution"];
         std::string simple_monitoring_statistic_key = monitoring_stat_params["statistic"];
@@ -559,92 +387,6 @@ Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample
     return result;
 }
 
-// [[Rcpp::export(test.exp)]]
-std::vector<double> test_exp(unsigned n) {
-    normalized_rate_one_exponential d;
-    std::vector<double> v(n);
-    std::generate(v.begin(), v.end(),
-                  [&d]() { return d(global_rng::instance);});
-    return v;
-}
-
-// [[Rcpp::export(test.t_due_e_mezzo)]]
-std::vector<double> test_t_due_e_mezzo(unsigned n) {
-    normalized_t_with_two_pont_five_degrees d;
-    std::vector<double> v(n);
-    std::generate(v.begin(), v.end(),
-                  [&d]() { return d(global_rng::instance);});
-    return v;
-}
-
-// [[Rcpp::export(test.laplace)]]
-std::vector<double> test_laplace(unsigned n, double location, double scale) {
-    boost::random::laplace_distribution<double> d (location, scale);
-    std::vector<double> v(n);
-    std::generate(v.begin(), v.end(),
-                  [&d]() { return d(global_rng::instance);});
-    return v;
-}
-
-// [[Rcpp::export(test.cauchy)]]
-std::vector<double> test_cauchy(unsigned n, double location, double scale) {
-    boost::random::cauchy_distribution<double> d (location, scale);
-    std::vector<double> v(n);
-    std::generate(v.begin(), v.end(),
-                  [&d]() { return d(global_rng::instance);});
-    return v;
-}
-
-// [[Rcpp::export(test.standard_half_cauchy)]]
-std::vector<double> test_standard_half_cauchy(unsigned n) {
-    standard_half_cauchy d;
-    std::vector<double> v(n);
-    std::generate(v.begin(), v.end(),
-                  [&d]() { return d(global_rng::instance);});
-    return v;
-}
-
-// [[Rcpp::export(test1)]]
-std::vector<double>  test1(unsigned n) {
-    std::vector<double> v(n);
-    for (unsigned i = 0; i < n; ++i) {
-        boost::random::normal_distribution<double> dist(0.0, 1.0);
-        std::vector<double> reference_sample(100);
-        std::vector<double> test_sample(10);
-        std::generate(reference_sample.begin(), reference_sample.end(),
-                      [&dist]() { return dist(global_rng::instance);});
-        std::generate(test_sample.begin(), test_sample.end(),
-                      [&dist]() { return dist(global_rng::instance);});
-        v[i]= difference_of_sums(reference_sample,test_sample);
-    }
-    return v;
-}
-
-// [[Rcpp::export(test.ansari_bradley)]]
-double  test_ansari_bradley(const std::vector<double> &x1,
-                            const std::vector<double> &x2) {
-    return ab_statistic(x1, x2);
-}
-
-// [[Rcpp::export(test.difference_of_means_klotz)]]
-double  test_difference_of_means_klotz(const std::vector<double> &x1,
-                                       const std::vector<double> &x2) {
-    return difference_of_means_klotz(x1, x2);
-}
-
-// [[Rcpp::export(test.lepage)]]
-double  test_lepage(const std::vector<double> &x1,
-                    const std::vector<double> &x2) {
-    return lepage(x1, x2);
-}
-
-// [[Rcpp::export(test.cucconi)]]
-double  test_cucconi(const std::vector<double> &x1,
-                    const std::vector<double> &x2) {
-    return cucconi(x1, x2);
-}
-
-
 // [[Rcpp::export(compute_permutation_distribution)]]
 std::vector<double>  compute_permutation_distribution_r(std::string statistic,
                                                         unsigned m,
@@ -655,13 +397,3 @@ std::vector<double>  compute_permutation_distribution_r(std::string statistic,
 }
 
 
-//RCPP_MODULE(test_module) {
-//        class_<TestClass>( "TestClass" )
-//                .constructor<int>()
-//                .method( "returnA", &TestClass::returnA )
-//        ;
-//        class_<TaRBinding>( "TaRBinding" )
-//                .constructor<unsigned ,unsigned >()
-//                .method( "stat", &TaRBinding::stat )
-//        ;
-//        Rcpp::function("hello"
