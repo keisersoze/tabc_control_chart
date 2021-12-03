@@ -10,47 +10,61 @@ library(turbostat)
 
 # Start parameters
 
-calib.seed = 85
+calib.seed = 45678
 turbostat.setseed(calib.seed)
-calib.m = 100
-calib.n = 10
+calib.m = 50
+calib.n = 5
 
 calib.nsim = 10000
-calib.limits_seq = inverse(seq(2, 6.7, 0.001))
+# Tippet
+# calib.limits_seq = inverse(seq(2, 9.5, 0.001))
+# calib.limits_seq = inverse(seq(2, 6.7, 0.001))
+# Fisher
+# calib.limits_seq = seq(-2, -5, -0.001)
+calib.limits_seq = seq(-2, -13.2, -0.0005)
+# calib.limits_seq = seq(-2, -13.2, -0.0005)
+# Liptak
+# calib.limits_seq = seq(1.5, 1.01, -0.0001)
+
+
+
+# calib.limits_seq = seq(2, 11, 0.1)
+
 calib.is_upper_limit = FALSE
 
 calib.ARL0.target = 500
 
 calib.monitor_stat = "npc"
+# calib.monitor_stat.params = list()
 calib.monitor_stat.params = list(
   "statistics"= list(
-    "difference_of_rank_means",
-    "difference_of_means_ab"
+    "lepage",
+    "cucconi"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("difference_of_rank_means", calib.m, calib.n, 10000),
-    compute_permutation_distribution("difference_of_means_ab", calib.m, calib.n, 10000)
+    compute_permutation_distribution("cucconi", calib.m, calib.n, 50000),
+    compute_permutation_distribution("lepage", calib.m, calib.n, 50000)
   ),
   "tails"=list(
     "two_sided",
     "two_sided"
   ),
-  "combining_function"="tippet"
+  "combining_function"="fisher"
 )
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
 
-calib.cap = 12500
+calib.cap = 50000
 
 calib.eval.dist = "laplace"
-calib.eval.dist.params = list("location"=0, "scale"= 1)
+calib.eval.dist.params = list("location"= 0, "scale"= 1)
 calib.eval.nsim = calib.nsim
-calib.eval.scale_multipliers = list(c(0.25,1.25), c(0.5,1.5))
-# calib.eval.scale_multipliers = list(c(0,1), c(0.25, 1), c(0.5, 1), c(0.75, 1), c(1, 1), c(0, 1.25), c(0, 1.5), c(0.25,1.25))
-# calib.eval.scale_multipliers = list(c(0,1), c(-0.25, 1), c(-0.5, 1), c(-0.75, 1), c(-1, 1), c(0, 0.75), c(0, 0.5))
-# calib.eval.scale_multipliers = list(c(0,1), c(0, 1.1), c(0, 1.2), c(0, 1.3), c(0, 1.4))
-# calib.eval.scale_multipliers = list(c(0,1), c(0, 0.9), c(0, 0.8), c(0, 0.7), c(0, 0.6))
+# calib.eval.location_shift_scale_multiplier_list = list(c(0.25,1.25), c(0.5,1.5))
+calib.eval.location_shift_scale_multiplier_list = list(c(0,1), c(0.25, 1), c(0.5, 1), c(0.75, 1), c(1, 1), c(0, 1.25), c(0, 1.5), c(0.25,1.25), c(0.5,1.5))
+# calib.eval.location_shift_scale_multiplier_list = list(c(0,1), c(-0.25, 1), c(-0.5, 1), c(-0.75, 1), c(-1, 1), c(0, 0.75), c(0, 0.5))
+# calib.eval.location_shift_scale_multiplier_list = list(c(0,1), c(0, 1.1), c(0, 1.2), c(0, 1.3), c(0, 1.4))
+# calib.eval.location_shift_scale_multiplier_list = list(c(0,1), c(0.25, 1), c(0.5, 1), c(0, 0.9), c(0, 0.8), c(0, 0.7), c(0, 0.6), c(0, 0.5))
 
 # End parameters
 
@@ -90,7 +104,7 @@ calib.eval.result = evaluate.unconditional.location_scale(
   n = calib.n,
   limit = calib.limit,
   is_upper_limit = calib.is_upper_limit,
-  location_scale_changes = calib.eval.scale_multipliers,
+  location_scale_changes = calib.eval.location_shift_scale_multiplier_list,
   distribution_key = calib.eval.dist,
   distribution_parameters = calib.eval.dist.params,
   monitoring_statistic_key = calib.monitor_stat,

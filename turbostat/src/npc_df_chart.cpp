@@ -11,6 +11,8 @@
 #include <cmath>        // std::abs
 
 #include <boost/random/normal_distribution.hpp>
+#include <boost/math/distributions/normal.hpp>
+
 
 
 std::vector<double> generate_permutation_distribution(unsigned m,
@@ -86,6 +88,16 @@ double fisher(const std::vector<double> &p_values){
                    p_values.end(),
                    p_values_copy.begin(),
                    [] (double x) -> double {return std::log(x);});
+    return std::accumulate(p_values_copy.begin(), p_values_copy.end() , 0.0);
+}
+
+double liptak(const std::vector<double> &p_values){
+    std::vector<double> p_values_copy(p_values.size());
+    boost::math::normal dist(0.0, 1.0);
+    std::transform(p_values.begin(),
+                   p_values.end(),
+                   p_values_copy.begin(),
+                   [&dist] (double x) -> double {return cdf(dist,x);});
     return std::accumulate(p_values_copy.begin(), p_values_copy.end() , 0.0);
 }
 

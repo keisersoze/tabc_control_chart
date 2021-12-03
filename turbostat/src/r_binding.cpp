@@ -245,7 +245,9 @@ std::map<std::string, monitoring_statistic> simple_monitoring_stat_map = {
         {"ab_statistic", simple_monitoring_statistic(ab_statistic)},
         {"klotz_statistic", simple_monitoring_statistic(klotz_statistic)},
         {"fab_statistic", simple_monitoring_statistic(fab_statistic)},
-        {"lepage", simple_monitoring_statistic(lepage)}
+        {"lepage", simple_monitoring_statistic(lepage)},
+        {"cucconi", simple_monitoring_statistic(cucconi)}
+
 };
 
 std::map<std::string, simple_statistic> stat_map = {
@@ -258,12 +260,15 @@ std::map<std::string, simple_statistic> stat_map = {
         {"klotz_statistic", klotz_statistic},
         {"difference_of_rank_means", difference_of_rank_means},
         {"difference_of_means_klotz", difference_of_means_klotz},
-        {"difference_of_means_ab", difference_of_means_ab_statistic}
+        {"difference_of_means_ab", difference_of_means_ab_statistic},
+        {"lepage", lepage},
+        {"cucconi", cucconi}
 };
 
 std::map<std::string, combining_function> combining_function_map = {
         {"tippet", tippet},
-        {"fisher", fisher}
+        {"fisher", fisher},
+        {"liptak", liptak}
 };
 
 
@@ -626,6 +631,19 @@ double  test_difference_of_means_klotz(const std::vector<double> &x1,
                                        const std::vector<double> &x2) {
     return difference_of_means_klotz(x1, x2);
 }
+
+// [[Rcpp::export(test.lepage)]]
+double  test_lepage(const std::vector<double> &x1,
+                    const std::vector<double> &x2) {
+    return lepage(x1, x2);
+}
+
+// [[Rcpp::export(test.cucconi)]]
+double  test_cucconi(const std::vector<double> &x1,
+                    const std::vector<double> &x2) {
+    return cucconi(x1, x2);
+}
+
 
 // [[Rcpp::export(compute_permutation_distribution)]]
 std::vector<double>  compute_permutation_distribution_r(std::string statistic,

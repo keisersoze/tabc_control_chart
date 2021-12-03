@@ -37,7 +37,7 @@ typedef std::function<double (const std::vector<double> &)> combining_function;
 
 double tippet(const std::vector<double> &p_values);
 double fisher(const std::vector<double> &p_values);
-
+double liptak(const std::vector<double> &p_values);
 
 class npc_df_chart{
 private:

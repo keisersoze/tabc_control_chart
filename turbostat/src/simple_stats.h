@@ -61,4 +61,7 @@ double fab_statistic (const std::vector<double> &x1,
 double lepage (const std::vector<double> &x1,
                const std::vector<double> &x2);
 
+double cucconi (const std::vector<double> &x1,
+                const std::vector<double> &x2);
+
 #endif //RACE_SIMPLE_STATS_H

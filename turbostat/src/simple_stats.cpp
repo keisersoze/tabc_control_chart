@@ -213,22 +213,40 @@ double fab_statistic (const std::vector<double> &x1,
     return (x2.size() * (x1.size() + x2.size() + 1.0))/2.0 - ab_stat;
 }
 
-//double cucconi (const std::vector<double> &x1,
-//                const std::vector<double> &x2){
-//    std::vector<double> vett(x1);
-//    vett.insert(vett.end(), x2.begin(), x2.end());
-//    double enne1 = (double) x1.size();
-//    double enne2 = (double) x2.size();
-//    double enne = (double) vett.size();
-//    std::vector<double> ranghi = avg_rank(vett);
-//    double erre2 = ranghi[(enne1+1):enne]
-//    media=enne2*(enne+1)*(2*enne+1)
-//    scarto=(enne1*enne2*(enne+1)*(2*enne+1)*(8*enne+11)/5)^0.5
-//    u=(6*sum(erre2^2)-media)/scarto
-//    v=(6*sum((enne+1-1*erre2)^2)-media)/scarto
-//    ro=2*(enne^2-4)/(2*enne+1)/(8*enne+11)-1
-//    cuc=(u^2+v^2-2*u*v*ro)/2/(1-ro^2)
-//}
+double cucconi (const std::vector<double> &x1,
+                const std::vector<double> &x2){
+    std::vector<double> vett(x1);
+    vett.insert(vett.end(), x2.begin(), x2.end());
+    double enne1 = (double) x1.size();
+    double enne2 = (double) x2.size();
+    double enne = (double) vett.size();
+    double media = enne2 * (enne + 1.0) * (2.0 * enne + 1.0);
+    double scarto = std::sqrt(enne1 * enne2 * (enne + 1.0) * (2.0 * enne + 1.0) * (8.0 * enne + 11.0)/5.0);
+    double ro = 2.0 * (std::pow(enne, 2.0) - 4.0)/(2.0 * enne + 1.0)/(8.0 * enne + 11.0) - 1.0;
+
+
+    std::vector<double> ranghi = avg_rank(vett);
+
+    std::vector<double> squared_ranks(enne2);
+    std::transform(ranghi.begin() + enne1,
+                   ranghi.end(),
+                   squared_ranks.begin(),
+                   [] (double x) -> double { return std::pow(x, 2.0); });
+    double sum_of_squared_ranks = std::accumulate(squared_ranks.begin() , squared_ranks.end() , 0.0);
+
+    std::vector<double> squared_contrary_ranks(enne2);
+    std::transform(ranghi.begin() + enne1,
+                   ranghi.end(),
+                   squared_contrary_ranks.begin(),
+                   [enne] (double x) -> double { return std::pow(enne + 1.0 - x,2.0); });
+    double sum_of_squared_contrary_ranks = std::accumulate(squared_contrary_ranks.begin() , squared_contrary_ranks.end() , 0.0);
+
+    double u = (6.0 * sum_of_squared_ranks - media)/scarto;
+    double v = (6.0 * sum_of_squared_contrary_ranks-media)/scarto;
+    double cuc = (std::pow(u,2.0)+std::pow(v,2.0)-2.0*u*v*ro)/2.0/(1.0-std::pow(ro, 2.0));
+
+    return cuc;
+}
 
 double lepage (const std::vector<double> &x1,
                const std::vector<double> &x2){
