@@ -10,14 +10,14 @@
 #include <xoshiro.h>
 #include <convert_seed.h>
 
-#include "global_rng.h"
+#include "rng/global_rng.h"
 
-#include "single_aspect.h"
-#include "multiple_aspects.h"
-#include "simple_stats.h"
-#include "npc_df_chart.h"
+#include "stat/tests/single_aspect.h"
+#include "stat/tests/multiple_aspects.h"
+#include "stat/simple_stats.h"
+#include "charts/npc/npc_df_chart.h"
 
-#include "distribution.h"
+#include "stat/distribution.h"
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/cauchy_distribution.hpp>
 #include <boost/random/laplace_distribution.hpp>
@@ -107,6 +107,11 @@ double  test_lepage(const std::vector<double> &x1,
 double  test_cucconi(const std::vector<double> &x1,
                      const std::vector<double> &x2) {
     return cucconi(x1, x2);
+}
+
+// [[Rcpp::export(hello)]]
+double hello() {
+    return 3.0;
 }
 
 

@@ -5,8 +5,8 @@
 #ifndef RACE_RUNLENGTH_H
 #define RACE_RUNLENGTH_H
 
-#include "distribution.h"
-#include "monitoring_statistic.h"
+#include "../../stat/distribution.h"
+#include "../monitoring_statistic.h"
 
 #include <vector>
 

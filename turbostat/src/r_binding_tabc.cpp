@@ -2,10 +2,10 @@
 // Created by filip on 03/12/2021.
 //
 
-#include "single_aspect.h"
-#include "multiple_aspects.h"
+#include "stat/tests/single_aspect.h"
+#include "stat/tests/multiple_aspects.h"
 
-#include "global_rng.h"
+#include "rng/global_rng.h"
 
 #include <Rcpp.h>
 

@@ -8,27 +8,25 @@
 
 #include <Rcpp.h>
 #include <xoshiro.h>
-#include <convert_seed.h>
 
-#include "global_rng.h"
+#include "rng/global_rng.h"
 
-#include "single_aspect.h"
-#include "multiple_aspects.h"
-#include "simple_stats.h"
-#include "npc_df_chart.h"
+#include "stat/tests/single_aspect.h"
+#include "stat/tests/multiple_aspects.h"
+#include "stat/simple_stats.h"
+#include "stat/distribution.h"
 
-#include "distribution.h"
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/cauchy_distribution.hpp>
 #include <boost/random/laplace_distribution.hpp>
 #include <boost/random/student_t_distribution.hpp>
 #include <boost/random/chi_squared_distribution.hpp>
 
-#include "monitoring_statistic_wrappers.h"
+#include "charts/monitoring_statistic_wrappers.h"
+#include "charts/calibration/calibration.h"
+#include "charts/evaluation/evaluation.h"
+#include "charts/npc/npc_df_chart.h"
 
-#include "calibration.h"
-
-#include "evaluation.h"
 
 distribution build_distribution(const std::string &dist_s, Rcpp::List distribution_params){
     if (dist_s == "norm"){

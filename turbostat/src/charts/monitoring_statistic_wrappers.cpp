@@ -4,8 +4,8 @@
 
 #include "monitoring_statistic_wrappers.h"
 
-#include "single_aspect.h"
-#include "multiple_aspects.h"
+#include "../stat/tests/single_aspect.h"
+#include "../stat/tests/multiple_aspects.h"
 
 #include <map>
 

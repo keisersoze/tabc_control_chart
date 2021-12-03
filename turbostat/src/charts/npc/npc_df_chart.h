@@ -8,8 +8,8 @@
 #include <vector>
 
 
-#include "monitoring_statistic_wrappers.h"
-#include "test_interface.h"
+#include "../monitoring_statistic_wrappers.h"
+#include "../../stat/test_interface.h"
 
 std::vector<double> generate_permutation_distribution(unsigned m,
                                                       unsigned n,

@@ -5,7 +5,7 @@
 #include <xoshiro.h>
 #include <convert_seed.h>
 
-#include "global_rng.h"
+#include "rng/global_rng.h"
 
 #include <Rcpp.h>
 

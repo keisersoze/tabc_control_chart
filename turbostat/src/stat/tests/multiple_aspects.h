@@ -9,9 +9,9 @@
 #include <algorithm>
 #include <vector>
 
-# include "test_interface.h"
+# include "../test_interface.h"
 # include "data_aspects.h"
-# include "utils.h"
+# include "../utils.h"
 
 template<class RNG>
 multiaspect_phase_1_result multiple_aspect_phase_1(const std::vector<double> &x1,

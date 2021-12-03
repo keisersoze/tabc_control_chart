@@ -10,11 +10,11 @@ find_package(OpenMP REQUIRED)
 # add_executable(test_Test_class old/TestClass.cpp old/TestClass.h)
 # add_executable(test TaRBinding.cpp TaRBinding.h )
 
-add_executable(data_aspects tests/test_data_aspects.cpp data_aspects.h data_aspects.cpp utils.h utils.cpp test_interface.h test_interface.cpp)
-add_executable(single_aspect_tests tests/test_single_aspects.cpp data_aspects.h data_aspects.cpp utils.h utils.cpp test_interface.h test_interface.cpp single_aspect.h)
-add_executable(multi_aspects_tests tests/test_multiple_aspects.cpp data_aspects.h data_aspects.cpp utils.h utils.cpp test_interface.h test_interface.cpp multiple_aspects.h)
+add_executable(data_aspects tests/test_data_aspects.cpp stat/tests/data_aspects.h stat/tests/data_aspects.cpp stat/utils.h stat/utils.cpp stat/test_interface.h stat/test_interface.cpp)
+add_executable(single_aspect_tests tests/test_single_aspects.cpp stat/tests/data_aspects.h stat/tests/data_aspects.cpp stat/utils.h stat/utils.cpp stat/test_interface.h stat/test_interface.cpp stat/tests/single_aspect.h)
+add_executable(multi_aspects_tests tests/test_multiple_aspects.cpp stat/tests/data_aspects.h stat/tests/data_aspects.cpp stat/utils.h stat/utils.cpp stat/test_interface.h stat/test_interface.cpp stat/tests/multiple_aspects.h)
 
-add_executable(test_sample_with_replacement tests/test_sample_with_replacement.cpp utils.h utils.cpp )
+add_executable(test_sample_with_replacement tests/test_sample_with_replacement.cpp stat/utils.h stat/utils.cpp)
 
 
 

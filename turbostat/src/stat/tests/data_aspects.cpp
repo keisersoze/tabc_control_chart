@@ -5,7 +5,7 @@
 #include <algorithm>    // std::transform
 
 #include "data_aspects.h"
-#include "utils.h"
+#include "../utils.h"
 
 std::vector<double> a_aspect(const std::vector<double> &pooled_sample){
     return pooled_sample;

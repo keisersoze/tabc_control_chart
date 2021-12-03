@@ -1,3 +1,26 @@
 PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS) $(SHLIB_OPENMP_CFLAGS)
 PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
+
+SOURCES = $(wildcard rng/*.cpp)\
+$(wildcard stat/*.cpp)\
+$(wildcard stat/tests/*.cpp)\
+$(wildcard charts/*.cpp) \
+$(wildcard charts/calibration/*.cpp)\
+$(wildcard charts/evaluation/*.cpp)\
+$(wildcard charts/npc/*.cpp)\
+r_binding_rng.cpp\
+r_binding_tabc.cpp\
+r_binding_testing.cpp\
+r_binding_charts.cpp\
+RcppExports.cpp
+
+# Obtain the object files
+OBJECTS=$(SOURCES:.cpp=.o)
+
+# Make the shared object
+all: $(SHLIB)
+
+# Provide recipe to remove all objects
+clean:
+	@rm -f $(OBJECTS)

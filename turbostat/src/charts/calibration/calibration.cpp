@@ -4,8 +4,8 @@
 
 #include "calibration.h"
 
-#include "utils.h"
-#include "global_rng.h"
+#include "../../stat/utils.h"
+#include "../../rng/global_rng.h"
 
 #include <xoshiro.h>
 

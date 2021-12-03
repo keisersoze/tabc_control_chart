@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "monitoring_statistic.h"
-#include "test_interface.h"
+#include "../stat/test_interface.h"
 
 typedef std::function<perm_test_result (const std::vector<double> &,
                                         const std::vector<double> &,

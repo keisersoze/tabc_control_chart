@@ -4,7 +4,7 @@
 
 #include "simple_stats.h"
 
-#include "data_aspects.h"
+#include "tests/data_aspects.h"
 
 #include "numeric" //accumulate
 

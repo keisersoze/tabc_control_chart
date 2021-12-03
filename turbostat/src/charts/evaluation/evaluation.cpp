@@ -4,9 +4,9 @@
 
 #include "evaluation.h"
 
-#include "global_rng.h"
+#include "../../rng/global_rng.h"
 
-#include "utils.h" //sample_with_replacement
+#include "../../stat/utils.h" //sample_with_replacement
 
 #include <xoshiro.h>
 
