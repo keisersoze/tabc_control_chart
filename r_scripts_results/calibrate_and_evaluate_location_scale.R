@@ -15,20 +15,17 @@ turbostat.setseed(calib.seed)
 calib.m = 50
 calib.n = 5
 
-calib.nsim = 10000
+calib.nsim = 50000
 # Tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
 # calib.limits_seq = inverse(seq(2, 6.7, 0.001))
 # Fisher
 # calib.limits_seq = seq(-2, -5, -0.001)
-calib.limits_seq = seq(-2, -13.2, -0.0005)
+# calib.limits_seq = seq(-2, -13.2, -0.0005)
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 # Liptak
-# calib.limits_seq = seq(1.5, 1.01, -0.0001)
+calib.limits_seq = seq(1.5, 1.0102, -0.0001)
 
-
-
-# calib.limits_seq = seq(2, 11, 0.1)
 
 calib.is_upper_limit = FALSE
 
@@ -42,14 +39,14 @@ calib.monitor_stat.params = list(
     "cucconi"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("cucconi", calib.m, calib.n, 50000),
-    compute_permutation_distribution("lepage", calib.m, calib.n, 50000)
+    compute_permutation_distribution("cucconi", calib.m, calib.n, 500000),
+    compute_permutation_distribution("lepage", calib.m, calib.n, 500000)
   ),
   "tails"=list(
     "two_sided",
     "two_sided"
   ),
-  "combining_function"="fisher"
+  "combining_function"="liptak"
 )
 
 calib.dist = "norm"
