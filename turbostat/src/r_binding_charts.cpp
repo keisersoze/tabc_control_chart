@@ -78,6 +78,7 @@ std::map<std::string, simple_statistic> stat_map = {
         {"wilcoxon_rank_sum", wilcoxon_rank_sum},
         {"mann_whitney", mann_whitney},
         {"sum_of_sings", sum_of_signs},
+        {"van_de_warden", van_de_warden},
         {"conover_statistic", conover_statistic},
         {"mood_statistic", mood_statistic},
         {"ab_statistic", ab_statistic},
@@ -219,119 +220,31 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 //' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
 //' @export
 // [[Rcpp::export(evaluate.unconditional)]]
-Rcpp::DataFrame evaluate_unconditional(unsigned m,
-                                       unsigned n,
-                                       double limit,
-                                       bool is_upper_limit,
-                                       const std::vector<double> &shifts,
-                                       const std::string &distribution_key,
-                                       Rcpp::List distribution_parameters,
-                                       const std::string &monitoring_statistic_key,
-                                       Rcpp::List monitoring_statistic_parameters,
-                                       unsigned nsim,
-                                       unsigned run_length_cap) {
+std::vector<unsigned> evaluate_unconditional(unsigned m,
+                                             unsigned n,
+                                             double limit,
+                                             bool is_upper_limit,
+                                             double location_shift,
+                                             double scale_multiplier,
+                                             const std::string &distribution_key,
+                                             Rcpp::List distribution_parameters,
+                                             const std::string &monitoring_statistic_key,
+                                             Rcpp::List monitoring_statistic_parameters,
+                                             unsigned nsim,
+                                             unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
     monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
-    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation(m,
-                                                                                                    n,
-                                                                                                    limit,
-                                                                                                    is_upper_limit,
-                                                                                                    shifts,
-                                                                                                    ic_distribution,
-                                                                                                    ms,
-                                                                                                    nsim,
-                                                                                                    run_length_cap);
-    Rcpp::NumericVector arls(shifts.size());
-    Rcpp::NumericVector sds(shifts.size());
-    for (unsigned shift_index = 0; shift_index < shifts.size() ; ++shift_index) {
-        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
-        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
-        arls[shift_index] = Rcpp::mean(run_lengths_r);
-        sds[shift_index] = Rcpp::sd(run_lengths_r);
-    }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
-                                                     Rcpp::Named("SD") = sds);
-    return result;
-
-}
-
-// [[Rcpp::export(evaluate.unconditional.scale)]]
-Rcpp::DataFrame evaluate_unconditional_scale(unsigned m,
-                                       unsigned n,
-                                       double limit,
-                                       bool is_upper_limit,
-                                       const std::vector<double> &scale_multipliers,
-                                       const std::string &distribution_key,
-                                       Rcpp::List distribution_parameters,
-                                       const std::string &monitoring_statistic_key,
-                                       Rcpp::List monitoring_statistic_parameters,
-                                       unsigned nsim,
-                                       unsigned run_length_cap) {
-    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
-    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation_scale(m,
-                                                                                                          n,
-                                                                                                          limit,
-                                                                                                          is_upper_limit,
-                                                                                                          scale_multipliers,
-                                                                                                          ic_distribution,
-                                                                                                          ms,
-                                                                                                          nsim,
-                                                                                                          run_length_cap);
-    Rcpp::NumericVector arls(scale_multipliers.size());
-    Rcpp::NumericVector sds(scale_multipliers.size());
-    for (unsigned shift_index = 0; shift_index < scale_multipliers.size() ; ++shift_index) {
-        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
-        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
-        arls[shift_index] = Rcpp::mean(run_lengths_r);
-        sds[shift_index] = Rcpp::sd(run_lengths_r);
-    }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
-                                                     Rcpp::Named("SD") = sds);
-    return result;
-
-}
-
-// [[Rcpp::export(evaluate.unconditional.location_scale)]]
-Rcpp::DataFrame evaluate_unconditional_location_scale(unsigned m,
-                                                      unsigned n,
-                                                      double limit,
-                                                      bool is_upper_limit,
-                                                      Rcpp::List location_scale_changes,
-                                                      const std::string &distribution_key,
-                                                      Rcpp::List distribution_parameters,
-                                                      const std::string &monitoring_statistic_key,
-                                                      Rcpp::List monitoring_statistic_parameters,
-                                                      unsigned nsim,
-                                                      unsigned run_length_cap) {
-    std::vector<std::pair<double, double>> location_scale_changes_c;
-    for (int i = 0; i < location_scale_changes.size() ; ++i) {
-        std::vector<double> location_scale_change = location_scale_changes[i];
-        location_scale_changes_c.emplace_back(location_scale_change[0],location_scale_change[1]);
-    }
-    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
-    std::vector<std::vector<unsigned>> run_lengths_matrix = unconditional_unidirectional_evaluation_location_scale(m,
-                                                                                                                   n,
-                                                                                                                   limit,
-                                                                                                                   is_upper_limit,
-                                                                                                                   location_scale_changes_c,
-                                                                                                                   ic_distribution,
-                                                                                                                   ms,
-                                                                                                                   nsim,
-                                                                                                                   run_length_cap);
-    Rcpp::NumericVector arls(location_scale_changes.size());
-    Rcpp::NumericVector sds(location_scale_changes.size());
-    for (unsigned shift_index = 0; shift_index < location_scale_changes.size() ; ++shift_index) {
-        std::vector<unsigned> &run_lengths = run_lengths_matrix[shift_index];
-        Rcpp::NumericVector run_lengths_r = Rcpp::wrap(run_lengths);
-        arls[shift_index] = Rcpp::mean(run_lengths_r);
-        sds[shift_index] = Rcpp::sd(run_lengths_r);
-    }
-    Rcpp::DataFrame result = Rcpp::DataFrame::create(Rcpp::Named("ARLs") = arls,
-                                                     Rcpp::Named("SD") = sds);
-    return result;
-
+    std::vector<unsigned> run_lengths = unconditional_unidirectional_evaluation(m,
+                                                                                n,
+                                                                                limit,
+                                                                                is_upper_limit,
+                                                                                location_shift,
+                                                                                scale_multiplier,
+                                                                                ic_distribution,
+                                                                                ms,
+                                                                                nsim,
+                                                                                run_length_cap);
+    return run_lengths;
 }
 
 // [[Rcpp::export(calibrate.conditional)]]
@@ -385,6 +298,11 @@ Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample
     return result;
 }
 
+//' Compute permutation distribution
+//'
+//' Used for precomputing permutation distribution of distribution free statistics
+//'
+//' @export
 // [[Rcpp::export(compute_permutation_distribution)]]
 std::vector<double>  compute_permutation_distribution_r(std::string statistic,
                                                         unsigned m,

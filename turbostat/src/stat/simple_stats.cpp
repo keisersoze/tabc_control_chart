@@ -17,7 +17,7 @@
 
 #include "Rcpp.h"
 
-
+// Location
 
 double wilcoxon_rank_sum (const std::vector<double> &x1,
                           const std::vector<double> &x2){
@@ -100,6 +100,20 @@ double sum_of_signs_v2 (const std::vector<double> &x1,
     double m = median(x1);
     double stat = std::count_if(x2.begin(), x2.end(), [&m](double x) { return x >= m; });
     return stat;
+}
+
+double van_de_warden (const std::vector<double> &x1,
+                      const std::vector<double> &x2){
+    boost::math::normal dist(0.0, 1.0);
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+    double van_de_warden_stat = 0;
+    for (int i = x1.size(); i < x1.size() + x2.size(); ++i) {
+        double _x = quantile(dist, ranks[i]/(x1.size() + x2.size() + 1));
+        van_de_warden_stat += _x;
+    }
+    return van_de_warden_stat;
 }
 
 // Scale
@@ -212,6 +226,8 @@ double fab_statistic (const std::vector<double> &x1,
     }
     return (x2.size() * (x1.size() + x2.size() + 1.0))/2.0 - ab_stat;
 }
+
+// Location-scale
 
 double cucconi (const std::vector<double> &x1,
                 const std::vector<double> &x2){

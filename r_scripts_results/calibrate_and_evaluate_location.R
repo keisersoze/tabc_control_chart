@@ -8,45 +8,67 @@ inverse = function(x) {
 
 library(turbostat)
 
-# Calibration parameters
+# Start parameters
 
 calib.seed = 45
 calib.m = 100
-calib.n = 10
+calib.n = 5
 
 calib.nsim = 10000
-calib.limits_seq = inverse(seq(2, 5.2, 0.001))
-calib.is_upper_limit = FALSE
+# npc tippet
+# calib.limits_seq = inverse(seq(2, 9.5, 0.001))
+# calib.limits_seq = inverse(seq(2, 6.2, 0.001))
+# npc fisher
+# calib.limits_seq = seq(-2, -5, -0.001)
+# calib.limits_seq = seq(-2, -11, -0.001)
+# calib.limits_seq = seq(-2, -13.2, -0.0005)
+# npc liptak
+# calib.limits_seq = seq(1.02, 1.002, -0.0001)
+# lepage
+# calib.limits_seq = seq(2, 11, 0.001)
+# cucconi
+# calib.limits_seq = seq(2, 5.7, 0.001)
+# van_de_warden
+# calib.limits_seq = seq(4, 5.6, 0.001)
+# calib.is_upper_limit = TRUE
+# mann_whitney
+# calib.limits_seq = seq(400,430,1)
+calib.is_upper_limit = TRUE
 
-calib.ARL0.target = 250
+calib.ARL0.target = 500
 
-calib.monitor_stat = "npc"
-calib.monitor_stat.params = list(
-  "statistics"= list(
-    "mann_whitney",
-    "sum_of_sings"
-  ),
-  "permutation_distributions"=list(
-    compute_permutation_distribution("mann_whitney", calib.m, calib.n, 10000),
-    compute_permutation_distribution("sum_of_sings", calib.m, calib.n, 10000)
-  ),
-  "tails"=list(
-    "left",
-    "right"
-  )
-)
+calib.monitor_stat = "simple_statistic"
+calib.monitor_stat.params = list(statistic="mann_whitney")
+# calib.monitor_stat.params = list(
+#   "statistics"= list(
+#     "mann_whitney",
+#     "sum_of_sings"
+#   ),
+#   "permutation_distributions"=list(
+#     compute_permutation_distribution("mann_whitney", calib.m, calib.n, 10000),
+#     compute_permutation_distribution("sum_of_sings", calib.m, calib.n, 10000)
+#   ),
+#   "tails"=list(
+#     "left",
+#     "right"
+#   )
+# )
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
 
 calib.cap = 25000
 
-calib.eval.dist = "normalized_rate_one_exponential"
-calib.eval.dist.params = list()
+calib.eval.dist = "norm"
+calib.eval.dist.params = list("mean"= 0, "sd"= 1)
 calib.eval.nsim = calib.nsim
-calib.eval.shifts = seq(0, 1, 0.1)
+calib.eval.location_shifts = seq(0, -1, -0.1)
+calib.eval.scale_multipliers = c(1)
+calib.eval.metrics = c("mean", "sd")
 
-# Calibration script
+# End parameters
+
+# Calibration
 
 turbostat.setseed(calib.seed)
 
@@ -79,22 +101,46 @@ print(calib.limit)
 # Evaluation
 
 start.time = proc.time()
-calib.eval.result = evaluate.unconditional(
-  m = calib.m,
-  n = calib.n,
-  limit = calib.limit,
-  is_upper_limit = calib.is_upper_limit,
-  shifts = calib.eval.shifts,
-  distribution_key = calib.eval.dist,
-  distribution_parameters = calib.eval.dist.params,
-  monitoring_statistic_key = calib.monitor_stat,
-  monitoring_statistic_parameters = calib.monitor_stat.params,
-  nsim = calib.eval.nsim,
-  run_length_cap = calib.cap
-)
+nrow = length(calib.eval.location_shifts) * length(calib.eval.scale_multipliers)
+ncol = length(calib.eval.metrics) + 2
+result_matrix = matrix(nrow=nrow,ncol=(ncol))
+col_names = rep(NA, ncol)
+col_names[1] = "location_shift"
+col_names[2] = "scale_multiplier"
+for (k in seq_along(calib.eval.metrics)){
+  metric_func_key = calib.eval.metrics[k]
+  col_names[k + 2] = metric_func_key
+}
+for (i in seq_along(calib.eval.scale_multipliers)){
+  scale_multiplier = calib.eval.scale_multipliers[i]
+  for (j in seq_along(calib.eval.location_shifts)){
+    location_shift = calib.eval.location_shifts[j]
+    result_matrix[i * j, 1] = location_shift
+    result_matrix[i * j, 2] = scale_multiplier
+    arls = evaluate.unconditional(
+      m = calib.m,
+      n = calib.n,
+      limit = calib.limit,
+      is_upper_limit = calib.is_upper_limit,
+      location_shift =location_shift,
+      scale_multiplier = scale_multiplier,
+      distribution_key = calib.eval.dist,
+      distribution_parameters = calib.eval.dist.params,
+      monitoring_statistic_key = calib.monitor_stat,
+      monitoring_statistic_parameters = calib.monitor_stat.params,
+      nsim = calib.eval.nsim,
+      run_length_cap = calib.cap
+    )
+    for (k in seq_along(calib.eval.metrics)){
+      metric_func = get(calib.eval.metrics[k])
+      result_matrix[i * j, k + 2] = metric_func(arls)
+    }
+  }
+}
+
 duration.time = proc.time() - start.time
 print(duration.time)
-print (calib.eval.result)
+print(result_matrix)
 
 # Save results
 

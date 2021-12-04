@@ -1,5 +1,9 @@
 roxygen2::roxygenize(roclets="rd") //generate doc in man folder
 
+devtools::document() // generate NAMESPACE file
+
 R CMD Rd2pdf --title='Test of foo' -o ../tmp/foo.pdf man/*.Rd //outputs doc as PDF
+
+Rememeber to change Makevar and Makevar.win when creating/deleteing new src subfolders!
 
 
