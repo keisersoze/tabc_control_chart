@@ -14,7 +14,7 @@ calib.seed = 45
 calib.m = 100
 calib.n = 5
 
-calib.nsim = 50000
+calib.nsim = 10000
 
 # npc tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
@@ -39,6 +39,7 @@ calib.limits_seq = inverse(seq(2, 5.8, 0.001))
 
 # mann_whitney
 # calib.limits_seq = seq(400,430,1)
+
 calib.is_upper_limit = FALSE
 
 calib.ARL0.target = 370
@@ -47,12 +48,15 @@ calib.monitor_stat = "npc"
 # calib.monitor_stat.params = list(statistic="mann_whitney")
 calib.monitor_stat.params = list(
   "statistics"= list(
-    "centered_wilcoxon_rank_sum"
+    "centered_wilcoxon_rank_sum",
+    "van_de_warden"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("centered_wilcoxon_rank_sum", calib.m, calib.n, 10000)
+    compute_permutation_distribution("centered_wilcoxon_rank_sum", calib.m, calib.n, 10000),
+    compute_permutation_distribution("van_de_warden", calib.m, calib.n, 10000),
   ),
   "tails"=list(
+    "two_sided",
     "two_sided"
   ),
   "combining_function"="tippet"
@@ -115,6 +119,7 @@ for (k in seq_along(calib.eval.metrics)){
   metric_func_key = calib.eval.metrics[k]
   col_names[k + 2] = metric_func_key
 }
+colnames(result_matrix) = col_names
 for (i in seq_along(calib.eval.scale_multipliers)){
   scale_multiplier = calib.eval.scale_multipliers[i]
   for (j in seq_along(calib.eval.location_shifts)){
