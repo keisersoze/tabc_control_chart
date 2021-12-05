@@ -10,6 +10,9 @@
 double wilcoxon_rank_sum (const std::vector<double> &x1,
                           const std::vector<double> &x2);
 
+double centered_wilcoxon_rank_sum (const std::vector<double> &x1,
+                                   const std::vector<double> &x2);
+
 double difference_of_rank_means (const std::vector<double> &x1,
                                  const std::vector<double> &x2);
 
