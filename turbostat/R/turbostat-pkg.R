@@ -1,3 +1,3 @@
 #' @useDynLib turbostat, .registration = TRUE
-#' @import methods Rcpp
+#' @importFrom Rcpp evalCpp
 "_PACKAGE"

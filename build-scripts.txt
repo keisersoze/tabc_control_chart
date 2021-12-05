@@ -1,9 +1,30 @@
-roxygen2::roxygenize(roclets="rd") //generate doc in man folder
 
-devtools::document() // generate NAMESPACE file
+Roxygen:
 
-R CMD Rd2pdf --title='Test of foo' -o ../tmp/foo.pdf man/*.Rd //outputs doc as PDF
+- roxygen2::roxygenize(roclets="rd") //generate doc in man folder
 
-Rememeber to change Makevar and Makevar.win when creating/deleteing new src subfolders!
+- devtools::document() // generate doc in man folder and the NAMESPACE file
+
+Makevar and Makevar.win:
+
+- Defines compilation and linking
+
+- Rememeber to change Makevar and Makevar.win when creating/deleteing new src subfolders!
+
+Rcpp:
+
+- Rcpp::compileAttributes() Scan the source files within a package for attributes and generate code as required. Generates the bindings required to call C++ functions from R for functions adorned with the Rcpp::export attribute.
+
+RCMD:
+
+- Rcmd.exe INSTALL --no-multiarch --with-keep.source turbostat: Compiles and link sources and load everything
+
+- R CMD Rd2pdf --title='Test of foo' -o ../tmp/foo.pdf man/*.Rd //outputs doc as PDF
+
+Rstudio:
+
+- Install and restart = Rcpp::compileAttributes()  -> Rcmd.exe INSTALL --no-multiarch --with-keep.source turbostat
+
+
 
 
