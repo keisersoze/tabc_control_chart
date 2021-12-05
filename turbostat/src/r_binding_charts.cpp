@@ -76,6 +76,7 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
 
 std::map<std::string, simple_statistic> stat_map = {
         {"wilcoxon_rank_sum", wilcoxon_rank_sum},
+        {"centered_wilcoxon_rank_sum", centered_wilcoxon_rank_sum},
         {"mann_whitney", mann_whitney},
         {"sum_of_sings", sum_of_signs},
         {"van_de_warden", van_de_warden},
