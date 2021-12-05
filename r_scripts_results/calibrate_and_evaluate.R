@@ -11,6 +11,7 @@ library(turbostat)
 # Start parameters
 
 calib.seed = 45
+turbostat.setseed(calib.seed)
 calib.m = 100
 calib.n = 5
 
@@ -18,7 +19,7 @@ calib.nsim = 10000
 
 # npc tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
-calib.limits_seq = inverse(seq(2, 5.8, 0.001))
+calib.limits_seq = inverse(seq(2, 6, 0.001))
 
 # npc fisher
 # calib.limits_seq = seq(-2, -5, -0.001)
@@ -53,7 +54,7 @@ calib.monitor_stat.params = list(
   ),
   "permutation_distributions"=list(
     compute_permutation_distribution("centered_wilcoxon_rank_sum", calib.m, calib.n, 10000),
-    compute_permutation_distribution("van_de_warden", calib.m, calib.n, 10000),
+    compute_permutation_distribution("van_de_warden", calib.m, calib.n, 10000)
   ),
   "tails"=list(
     "two_sided",
@@ -77,8 +78,6 @@ calib.eval.metrics = c("mean", "sd")
 # End parameters
 
 # Calibration
-
-turbostat.setseed(calib.seed)
 
 start.time = proc.time()
 calib.rls = calibrate.unconditional(
