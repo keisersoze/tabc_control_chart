@@ -12,18 +12,18 @@ library(turbostat)
 
 calib.seed = 45
 turbostat.setseed(calib.seed)
-calib.m = 100
+calib.m = 50
 calib.n = 5
 
 calib.nsim = 10000
 
 # npc tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
-calib.limits_seq = inverse(seq(2, 6, 0.001))
+# calib.limits_seq = inverse(seq(2, 6, 0.001))
 
 # npc fisher
 # calib.limits_seq = seq(-2, -5, -0.001)
-# calib.limits_seq = seq(-2, -11, -0.001)
+calib.limits_seq = seq(-5, -12, -0.001)
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 
 # npc liptak
@@ -43,24 +43,24 @@ calib.limits_seq = inverse(seq(2, 6, 0.001))
 
 calib.is_upper_limit = FALSE
 
-calib.ARL0.target = 370
+calib.ARL0.target = 500
 
 calib.monitor_stat = "npc"
 # calib.monitor_stat.params = list(statistic="mann_whitney")
 calib.monitor_stat.params = list(
   "statistics"= list(
-    "centered_wilcoxon_rank_sum",
-    "van_de_warden"
+    "cucconi",
+    "lepage"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("centered_wilcoxon_rank_sum", calib.m, calib.n, 10000),
-    compute_permutation_distribution("van_de_warden", calib.m, calib.n, 10000)
+    compute_permutation_distribution("cucconi", calib.m, calib.n, 10000),
+    compute_permutation_distribution("lepage", calib.m, calib.n, 10000)
   ),
   "tails"=list(
     "two_sided",
     "two_sided"
   ),
-  "combining_function"="tippet"
+  "combining_function"="fisher"
 )
 
 calib.dist = "norm"
@@ -71,8 +71,8 @@ calib.cap = 25000
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean"= 0, "sd"= 1)
 calib.eval.nsim = calib.nsim
-calib.eval.location_shifts = seq(0, 1, 0.1)
-calib.eval.scale_multipliers = c(1)
+calib.eval.location_shifts = c(0, 0.25, 0.5, 1.0, 1.5, 2.0)
+calib.eval.scale_multipliers = c(1, 1.25, 1.5)
 calib.eval.metrics = c("mean", "sd")
 
 # End parameters
@@ -108,7 +108,9 @@ print(calib.limit)
 # Evaluation
 
 start.time = proc.time()
-nrow = length(calib.eval.location_shifts) * length(calib.eval.scale_multipliers)
+n_shifts = length(calib.eval.location_shifts)
+n_scale_multipliers = length(calib.eval.scale_multipliers)
+nrow = n_shifts * n_scale_multipliers
 ncol = length(calib.eval.metrics) + 2
 result_matrix = matrix(nrow=nrow,ncol=(ncol))
 col_names = rep(NA, ncol)
@@ -123,8 +125,8 @@ for (i in seq_along(calib.eval.scale_multipliers)){
   scale_multiplier = calib.eval.scale_multipliers[i]
   for (j in seq_along(calib.eval.location_shifts)){
     location_shift = calib.eval.location_shifts[j]
-    result_matrix[i * j, 1] = location_shift
-    result_matrix[i * j, 2] = scale_multiplier
+    result_matrix[((i-1) * n_shifts) + j, 1] = location_shift
+    result_matrix[((i-1) * n_shifts) + j, 2] = scale_multiplier
     arls = evaluate.unconditional(
       m = calib.m,
       n = calib.n,
@@ -141,7 +143,7 @@ for (i in seq_along(calib.eval.scale_multipliers)){
     )
     for (k in seq_along(calib.eval.metrics)){
       metric_func = get(calib.eval.metrics[k])
-      result_matrix[i * j, k + 2] = metric_func(arls)
+      result_matrix[((i-1) * n_shifts) + j, k + 2] = metric_func(arls)
     }
   }
 }
