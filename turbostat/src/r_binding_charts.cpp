@@ -83,6 +83,7 @@ std::map<std::string, simple_statistic> stat_map = {
         {"conover_statistic", conover_statistic},
         {"mood_statistic", mood_statistic},
         {"ab_statistic", ab_statistic},
+        {"centered_ab_statistic", centered_ab_statistic},
         {"klotz_statistic", klotz_statistic},
         {"difference_of_rank_means", difference_of_rank_means},
         {"difference_of_means_klotz", difference_of_means_klotz},

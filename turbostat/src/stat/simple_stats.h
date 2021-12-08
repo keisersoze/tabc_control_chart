@@ -54,6 +54,9 @@ double mood_statistic (const std::vector<double> &x1,
 double ab_statistic (const std::vector<double> &x1,
                      const std::vector<double> &x2);
 
+double centered_ab_statistic (const std::vector<double> &x1,
+                              const std::vector<double> &x2);
+
 double difference_of_means_ab_statistic (const std::vector<double> &x1,
                                          const std::vector<double> &x2);
 

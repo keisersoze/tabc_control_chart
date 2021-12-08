@@ -173,6 +173,27 @@ double ab_statistic (const std::vector<double> &x1,
     return ab_statistic;
 }
 
+double centered_ab_statistic (const std::vector<double> &x1,
+                              const std::vector<double> &x2){
+
+    double ab_stat = ab_statistic(x1,x2);
+
+    double m = (double) x1.size();
+    double n = (double) x2.size();
+    double N = n + m;
+
+    double ab_mean;
+
+    if ((x1.size() + x2.size()) % 2 == 0) {
+        ab_mean = (n * N) / 4.0;
+    } else {
+        ab_mean = (n * (std::pow(N, 2.0) - 1))/(4.0 * N);
+    }
+
+    return ab_stat - ab_mean;
+}
+
+
 double difference_of_means_ab_statistic (const std::vector<double> &x1,
                                          const std::vector<double> &x2){
     std::vector<double> pooled_sample(x1);
