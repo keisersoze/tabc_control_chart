@@ -15,7 +15,7 @@ turbostat.setseed(calib.seed)
 calib.m = 50
 calib.n = 5
 
-calib.nsim = 10000
+calib.nsim = 50000
 
 # npc tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
@@ -23,17 +23,17 @@ calib.nsim = 10000
 
 # npc fisher
 # calib.limits_seq = seq(-2, -5, -0.001)
-calib.limits_seq = seq(-5, -12, -0.001)
+calib.limits_seq = seq(-10, -11, -0.001)
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 
 # npc liptak
 # calib.limits_seq = seq(1.02, 1.002, -0.0001)
 
 # lepage
-# calib.limits_seq = seq(2, 11, 0.001)
+# calib.limits_seq = seq(9, 11, 0.001)
 
 # cucconi
-# calib.limits_seq = seq(2, 5.7, 0.001)
+# calib.limits_seq = seq(4.2, 5.7, 0.001)
 
 # van_de_warden
 # calib.limits_seq = seq(4, 5.6, 0.001)
@@ -46,7 +46,7 @@ calib.is_upper_limit = FALSE
 calib.ARL0.target = 500
 
 calib.monitor_stat = "npc"
-# calib.monitor_stat.params = list(statistic="mann_whitney")
+# calib.monitor_stat.params = list(statistic="lepage")
 calib.monitor_stat.params = list(
   "statistics"= list(
     "cucconi",
@@ -62,11 +62,12 @@ calib.monitor_stat.params = list(
   ),
   "combining_function"="fisher"
 )
+calib.chart_id="npc_lepage_cucconi"
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
 
-calib.cap = 25000
+calib.cap = 50000
 
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean"= 0, "sd"= 1)
@@ -112,7 +113,7 @@ n_shifts = length(calib.eval.location_shifts)
 n_scale_multipliers = length(calib.eval.scale_multipliers)
 nrow = n_shifts * n_scale_multipliers
 ncol = length(calib.eval.metrics) + 2
-result_matrix = matrix(nrow=nrow,ncol=(ncol))
+calib.eval.result_matrix = matrix(nrow=nrow,ncol=(ncol))
 col_names = rep(NA, ncol)
 col_names[1] = "location_shift"
 col_names[2] = "scale_multiplier"
@@ -120,13 +121,13 @@ for (k in seq_along(calib.eval.metrics)){
   metric_func_key = calib.eval.metrics[k]
   col_names[k + 2] = metric_func_key
 }
-colnames(result_matrix) = col_names
+colnames(calib.eval.result_matrix) = col_names
 for (i in seq_along(calib.eval.scale_multipliers)){
   scale_multiplier = calib.eval.scale_multipliers[i]
   for (j in seq_along(calib.eval.location_shifts)){
     location_shift = calib.eval.location_shifts[j]
-    result_matrix[((i-1) * n_shifts) + j, 1] = location_shift
-    result_matrix[((i-1) * n_shifts) + j, 2] = scale_multiplier
+    calib.eval.result_matrix[((i-1) * n_shifts) + j, 1] = location_shift
+    calib.eval.result_matrix[((i-1) * n_shifts) + j, 2] = scale_multiplier
     arls = evaluate.unconditional(
       m = calib.m,
       n = calib.n,
@@ -143,47 +144,50 @@ for (i in seq_along(calib.eval.scale_multipliers)){
     )
     for (k in seq_along(calib.eval.metrics)){
       metric_func = get(calib.eval.metrics[k])
-      result_matrix[((i-1) * n_shifts) + j, k + 2] = metric_func(arls)
+      calib.eval.result_matrix[((i-1) * n_shifts) + j, k + 2] = metric_func(arls)
     }
   }
 }
 
 duration.time = proc.time() - start.time
 print(duration.time)
-print(result_matrix)
+print(calib.eval.result_matrix)
 
 # Save results
 
-# filename =  paste(c(calib.monitor_stat,
-#                     calib.dist,
-#                     format(calib.ARL0.target, nsmall = 0),
-#                     format(calib.m, nsmall = 0),
-#                     format(calib.n, nsmall = 0),
-#                     format(calib.nsim, nsmall = 0),
-#                     format(calib.seed, nsmall = 0)), collapse = "_")
+filename =  paste(c(calib.chart_id,
+                    calib.dist,
+                    format(calib.ARL0.target, nsmall = 0),
+                    format(calib.m, nsmall = 0),
+                    format(calib.n, nsmall = 0),
+                    format(calib.nsim, nsmall = 0),
+                    format(calib.seed, nsmall = 0)), collapse = "_")
 
 # basepath = paste(c("results/calibration_results/standard_normal/", filename, ".RData"), collapse = "")
 
-# basepath = paste(c("results/calibration_results/prefinal/", filename, ".RData"), collapse = "")
-#
-# save(calib.m,
-#      calib.n,
-#      calib.ARL0.target,
-#      calib.monitor_stat,
-#      calib.monitor_stat.params,
-#      calib.dist,
-#      calib.dist.params,
-#      calib.nsim,
-#      calib.limits_seq,
-#      calib.is_upper_limit,
-#      calib.eval.dist,
-#      calib.eval.dist.params,
-#      calib.eval.nsim,
-#      calib.eval.shifts,
-#      calib.cap,
-#      calib.seed,
-#      calib.rls,
-#      calib.arls,
-#      calib.limit,
-#      calib.eval.result,
-#      file = basepath)
+basepath = paste(c("results_new/calibration/normal/", filename, ".RData"), collapse = "")
+
+save(calib.m,
+     calib.n,
+     calib.ARL0.target,
+     calib.chart_id,
+     calib.monitor_stat,
+     calib.monitor_stat.params,
+     calib.dist,
+     calib.dist.params,
+     calib.nsim,
+     calib.limits_seq,
+     calib.is_upper_limit,
+     calib.cap,
+     calib.seed,
+     calib.rls,
+     calib.arls,
+     calib.limit,
+     calib.eval.dist,
+     calib.eval.dist.params,
+     calib.eval.nsim,
+     calib.eval.location_shifts,
+     calib.eval.scale_multipliers,
+     calib.eval.metrics,
+     calib.eval.result_matrix,
+     file = basepath)

@@ -2,46 +2,51 @@ library(turbostat)
 
 # Evaluation parameters
 
-eval.calibrations = c("results/calibration_results/prefinal/difference_of_means_250_100_10_10000_324.RData",
-                      "results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
-                      "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData",
-                      "results/calibration_results/prefinal/tab_obs_stat_250_100_10_10000_47631.RData",
-                      "results/calibration_results/prefinal/tac_obs_stat_250_100_10_10000_47631.RData",
-                      "results/calibration_results/prefinal/tbc_obs_stat_250_100_10_10000_47631.RData",
-                      "results/calibration_results/prefinal/tabc_obs_stat_250_100_10_10000_47631.RData")
+eval.calibrations = c("results_new/calibration/normal/cucconi_norm_500_50_5_50000_45.RData",
+                      "results_new/calibration/normal/lepage_norm_500_50_5_50000_45.RData",
+                      "results_new/calibration/normal/npc_lepage_cucconi_norm_500_50_5_50000_45.RData")
 
-eval.nsim = 10000
-eval.shifts = c(0, 0.25, 0.5, 0.75, 1)
-eval.dist = "laplace"
-eval.dist.params = list("location" = 0, "scale"=-1/sqrt(2) )
-eval.m = 100
-eval.n = 10
-eval.ARL0.target = 250
-eval.seed = 4637
+# eval.calibrations = c("results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
+#                       "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData")
+
+eval.nsim = 50000
+eval.location_shifts = c(0, 0.25, 0.5, 1.0, 1.5, 2.0)
+eval.scale_multipliers = c(1, 1.25, 1.5)
+eval.dist = "normalized_t_with_two_pont_five_degrees"
+eval.dist.params = list()
+eval.m = 50
+eval.n = 5
+eval.ARL0.target = 500
+eval.seed = 646789
 
 # Evaluation script
 
 turbostat.setseed(eval.seed)
 
-eval.charts = rep(NA, length(eval.calibrations))
+n_shifts = length(eval.location_shifts)
+n_scale_multipliers = length(eval.scale_multipliers)
+nrow = n_shifts * n_scale_multipliers
+ncol = length(eval.calibrations) + 2
+
+col_names = rep(NA, ncol)
+col_names[1] = "location_shift"
+col_names[2] = "scale_multiplier"
 
 for (i in seq_along(eval.calibrations)){
   load(eval.calibrations[i])
-  eval.charts[i] = calib.monitor_stat
+  col_names[i + 2] = calib.chart_id
 }
 
-arl_table = matrix(nrow=length(eval.shifts),ncol=(length(eval.charts)))
-rownames(arl_table) = eval.shifts
-colnames(arl_table) = eval.charts
+arl_table = matrix(nrow=nrow,ncol=ncol)
+colnames(arl_table) = col_names
 
-sd_table = matrix(nrow=length(eval.shifts),ncol=(length(eval.charts)))
-rownames(sd_table) = eval.shifts
-colnames(sd_table) = eval.charts
+sd_table = matrix(nrow=nrow,ncol=ncol)
+colnames(sd_table) = col_names
 
-for (i in seq_along(eval.calibrations)){
-  load(eval.calibrations[i])
+for (k in seq_along(eval.calibrations)){
+  load(eval.calibrations[k])
 
-  print(sprintf("Processing chart %s", calib.monitor_stat))
+  print(sprintf("Processing chart %s", calib.chart_id))
 
   # Prevent mistakes
   if (eval.m != calib.m){
@@ -65,26 +70,36 @@ for (i in seq_along(eval.calibrations)){
 
   # Evaluation
   start.time = proc.time()
-  result = evaluate.unconditional(
-    m = calib.m,
-    n = calib.n,
-    limit = calib.limit,
-    is_upper_limit = calib.is_upper_limit,
-    shifts = eval.shifts,
-    distribution_key = eval.dist,
-    distribution_parameters = eval.dist.params,
-    monitoring_statistic_key = calib.monitor_stat,
-    monitoring_statistic_parameters = calib.monitor_stat.params,
-    nsim = eval.nsim,
-    run_length_cap = calib.cap
-  )
+  
+  for (i in seq_along(eval.scale_multipliers)){
+    scale_multiplier = eval.scale_multipliers[i]
+    for (j in seq_along(eval.location_shifts)){
+      location_shift = eval.location_shifts[j]
+      arl_table[((i-1) * n_shifts) + j, 1] = location_shift
+      arl_table[((i-1) * n_shifts) + j, 2] = scale_multiplier
+      sd_table[((i-1) * n_shifts) + j, 1] = location_shift
+      sd_table[((i-1) * n_shifts) + j, 2] = scale_multiplier
+      arls = evaluate.unconditional(
+        m = eval.m,
+        n = eval.n,
+        limit = calib.limit,
+        is_upper_limit = calib.is_upper_limit,
+        location_shift =location_shift,
+        scale_multiplier = scale_multiplier,
+        distribution_key = eval.dist,
+        distribution_parameters = eval.dist.params,
+        monitoring_statistic_key = calib.monitor_stat,
+        monitoring_statistic_parameters = calib.monitor_stat.params,
+        nsim = eval.nsim,
+        run_length_cap = calib.cap
+      )
+      arl_table[((i-1) * n_shifts) + j, 2 + k] = mean(arls)
+      sd_table[((i-1) * n_shifts) + j, 2 + k] = sd(arls)
+    }
+  }
+  
   duration.time = proc.time() - start.time
   print(duration.time)
-  for (j in seq_along(eval.shifts)){
-    arl_table[j,i] = result$ARLs[j]
-    sd_table[j,i] = result$SD[j]
-  }
-  print(result)
 }
 
 filename =  paste(c(format(eval.ARL0.target, nsmall = 0),
@@ -94,16 +109,16 @@ filename =  paste(c(format(eval.ARL0.target, nsmall = 0),
                     format(eval.nsim, nsmall = 0),
                     format(eval.seed, nsmall = 0)), collapse = "_")
 
-basepath = paste(c("results/evaluation_results/prefinal/", filename, ".RData"), collapse = "")
+basepath = paste(c("results_new/evaluation/npc_cucconi_lepage/", filename, ".RData"), collapse = "")
 
 save(eval.calibrations,
      eval.m,
      eval.n,
      eval.dist,
      eval.dist.params,
-     eval.shifts,
+     eval.location_shifts,
+     eval.scale_multipliers,
      eval.seed,
-     eval.charts,
      eval.ARL0.target,
      arl_table,
      sd_table,
