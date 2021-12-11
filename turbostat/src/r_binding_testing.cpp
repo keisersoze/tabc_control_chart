@@ -109,6 +109,16 @@ double  test_cucconi(const std::vector<double> &x1,
     return cucconi(x1, x2);
 }
 
+//' @export
+// [[Rcpp::export(test.percentiles)]]
+double  test_percentiles(const std::vector<double> &x1,
+                     const std::vector<double> &x2,
+                     double r,
+                     double s) {
+    return wilcoxon_percentiles(x1, x2, r, s);
+}
+
+
 // [[Rcpp::export(hello)]]
 double hello() {
     return 3.0;

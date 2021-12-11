@@ -9,6 +9,7 @@
 
 #include "monitoring_statistic.h"
 #include "../stat/test_interface.h"
+#include "../stat/statistic_interface.h"
 
 typedef std::function<perm_test_result (const std::vector<double> &,
                                         const std::vector<double> &,
@@ -44,10 +45,6 @@ public:
                         const std::vector<double> &x2,
                         dqrng::xoshiro256plus &rng);
 };
-
-
-typedef std::function<double (const std::vector<double> &,
-                              const std::vector<double> &)> simple_statistic;
 
 class simple_monitoring_statistic{
 private:

@@ -321,6 +321,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_percentiles
+double test_percentiles(const std::vector<double>& x1, const std::vector<double>& x2, double r, double s);
+RcppExport SEXP _turbostat_test_percentiles(SEXP x1SEXP, SEXP x2SEXP, SEXP rSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< double >::type s(sSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_percentiles(x1, x2, r, s));
+    return rcpp_result_gen;
+END_RCPP
+}
 // hello
 double hello();
 RcppExport SEXP _turbostat_hello() {
@@ -356,6 +370,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_test_difference_of_means_klotz", (DL_FUNC) &_turbostat_test_difference_of_means_klotz, 2},
     {"_turbostat_test_lepage", (DL_FUNC) &_turbostat_test_lepage, 2},
     {"_turbostat_test_cucconi", (DL_FUNC) &_turbostat_test_cucconi, 2},
+    {"_turbostat_test_percentiles", (DL_FUNC) &_turbostat_test_percentiles, 4},
     {"_turbostat_hello", (DL_FUNC) &_turbostat_hello, 0},
     {NULL, NULL, 0}
 };

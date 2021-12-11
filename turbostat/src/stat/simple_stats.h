@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "statistic_interface.h"
+
 double wilcoxon_rank_sum (const std::vector<double> &x1,
                           const std::vector<double> &x2);
 
@@ -43,6 +45,12 @@ double sum_of_signs_v2 (const std::vector<double> &x1,
 double van_de_warden (const std::vector<double> &x1,
                       const std::vector<double> &x2);
 
+double wilcoxon_percentiles (const std::vector<double> &x1,
+                             const std::vector<double> &x2,
+                             double r,
+                             double s);
+
+simple_statistic build_wilcoxon_percentiles_statistic (double r, double s);
 
 
 double conover_statistic (const std::vector<double> &x1,

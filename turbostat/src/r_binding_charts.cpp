@@ -13,6 +13,7 @@
 
 #include "stat/tests/single_aspect.h"
 #include "stat/tests/multiple_aspects.h"
+#include "stat/statistic_interface.h"
 #include "stat/simple_stats.h"
 #include "stat/distribution.h"
 
@@ -80,14 +81,19 @@ std::map<std::string, simple_statistic> stat_map = {
         {"mann_whitney", mann_whitney},
         {"sum_of_sings", sum_of_signs},
         {"van_de_warden", van_de_warden},
+        {"difference_of_rank_means", difference_of_rank_means},
+        {"percentiles_50_50", build_wilcoxon_percentiles_statistic(0.5,0.5)},
+        {"percentiles_42_42", build_wilcoxon_percentiles_statistic(0.42,0.42)},
+
+
         {"conover_statistic", conover_statistic},
         {"mood_statistic", mood_statistic},
         {"ab_statistic", ab_statistic},
         {"centered_ab_statistic", centered_ab_statistic},
         {"klotz_statistic", klotz_statistic},
-        {"difference_of_rank_means", difference_of_rank_means},
         {"difference_of_means_klotz", difference_of_means_klotz},
         {"difference_of_means_ab", difference_of_means_ab_statistic},
+
         {"lepage", lepage},
         {"cucconi", cucconi}
 };

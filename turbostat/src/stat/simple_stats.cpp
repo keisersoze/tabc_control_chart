@@ -123,6 +123,57 @@ double van_de_warden (const std::vector<double> &x1,
     return van_de_warden_stat;
 }
 
+double wilcoxon_percentiles (const std::vector<double> &x1,
+                             const std::vector<double> &x2,
+                             double r,
+                             double s){
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+
+    double m = (double) x1.size();
+    double n = (double) x2.size();
+    double N = n + m;
+    double R = std::trunc(N * r) + 1.0;
+    double S = std::trunc(N * s) + 1.0;
+    double Br = 0.0;
+    double Ts = 0.0;
+
+    // Rcpp::Rcout << "R " << R << std::endl;
+    // Rcpp::Rcout << "S " << S << std::endl;
+
+    if ((x1.size() + x2.size()) % 2 == 0) {
+        for (unsigned i = x1.size(); i < x1.size() + x2.size() ; ++i) {
+            if(ranks[i] <= R){
+                Br += R - ranks[i] + 1.0;
+            }
+            if(ranks[i] >= N - S + 1){
+                Ts += ranks[i] - (N - S);
+            }
+        }
+    } else {
+        for (unsigned i = x1.size(); i < x1.size() + x2.size() ; ++i) {
+            if(ranks[i] <= R){
+                Br += R - ranks[i] + 0.5;
+            }
+            if(ranks[i] >= N - S + 1){
+                Ts += ranks[i] - (N - S) - 0.5;
+            }
+        }
+    }
+
+    double obs_stat = Ts - Br;
+    return obs_stat;
+}
+
+simple_statistic build_wilcoxon_percentiles_statistic (double r, double s){
+    return [r, s] (const std::vector<double> &x1,
+                   const std::vector<double> &x2) {
+        return wilcoxon_percentiles(x1,x2,r,s);
+    };
+}
+
+
 // Scale
 
 double conover_statistic (const std::vector<double> &x1,

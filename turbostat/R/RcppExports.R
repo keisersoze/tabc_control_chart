@@ -194,6 +194,11 @@ test.cucconi <- function(x1, x2) {
     .Call(`_turbostat_test_cucconi`, x1, x2)
 }
 
+#' @export
+test.percentiles <- function(x1, x2, r, s) {
+    .Call(`_turbostat_test_percentiles`, x1, x2, r, s)
+}
+
 hello <- function() {
     .Call(`_turbostat_hello`)
 }
