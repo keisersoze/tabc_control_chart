@@ -76,14 +76,28 @@ std::map<std::string, multiaspect_test_phase_1> multiaspect_obs_value_monitoring
 };
 
 std::map<std::string, simple_statistic> stat_map = {
+        {"x2_mean", x2_mean},
         {"wilcoxon_rank_sum", wilcoxon_rank_sum},
         {"centered_wilcoxon_rank_sum", centered_wilcoxon_rank_sum},
         {"mann_whitney", mann_whitney},
         {"sum_of_sings", sum_of_signs},
         {"van_de_warden", van_de_warden},
         {"difference_of_rank_means", difference_of_rank_means},
+
         {"percentiles_50_50", build_wilcoxon_percentiles_statistic(0.5,0.5)},
+        {"percentiles_48_48", build_wilcoxon_percentiles_statistic(0.48,0.48)},
+        {"percentiles_46_46", build_wilcoxon_percentiles_statistic(0.46,0.46)},
         {"percentiles_42_42", build_wilcoxon_percentiles_statistic(0.42,0.42)},
+        {"percentiles_38_38", build_wilcoxon_percentiles_statistic(0.38,0.38)},
+        {"percentiles_35_35", build_wilcoxon_percentiles_statistic(0.35,0.35)},
+        {"percentiles_30_30", build_wilcoxon_percentiles_statistic(0.30,0.30)},
+
+        {"percentiles_0_42", build_wilcoxon_percentiles_statistic(0,0.42)},
+        {"percentiles_42_0", build_wilcoxon_percentiles_statistic(0.42,0)},
+        {"percentiles_42_48", build_wilcoxon_percentiles_statistic(0.42,0.48)},
+        {"percentiles_48_42", build_wilcoxon_percentiles_statistic(0.48,0.42)},
+        {"percentiles_40_48", build_wilcoxon_percentiles_statistic(0.40,0.48)},
+        {"percentiles_48_40", build_wilcoxon_percentiles_statistic(0.48,0.40)},
 
 
         {"conover_statistic", conover_statistic},
