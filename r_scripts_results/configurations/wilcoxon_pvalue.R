@@ -51,7 +51,7 @@ calib.monitor_stat.params = list(
   ),
   "combining_function"="fisher"
 )
-calib.chart_id="npc_wilcoxon__klotz"
+calib.chart_id="npc_wilcoxon"
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
