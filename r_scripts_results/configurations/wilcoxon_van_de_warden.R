@@ -5,10 +5,10 @@ turbostat.setseed(calib.seed)
 calib.m = 100
 calib.n = 5
 
-calib.nsim = 10000
+calib.nsim = 30000
 
 # npc tippet
-# calib.limits_seq = inverse(seq(2, 9.5, 0.001))
+# calib.limits_seq = inverse(seq(5, 6.5, 0.001))
 # calib.limits_seq = inverse(seq(2, 6, 0.001))
 
 # npc fisher
@@ -35,7 +35,7 @@ calib.limits_seq = seq(-9.5, -12, -0.001)
 
 calib.is_upper_limit = FALSE
 
-calib.ARL0.target = 500
+calib.ARL0.target = 370
 
 calib.monitor_stat = "npc"
 # calib.monitor_stat.params = list(statistic="lepage")

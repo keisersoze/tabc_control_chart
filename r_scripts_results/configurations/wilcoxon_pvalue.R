@@ -9,10 +9,10 @@ calib.nsim = 10000
 
 # npc tippet
 # calib.limits_seq = inverse(seq(2, 9.5, 0.001))
-# calib.limits_seq = inverse(seq(2, 6, 0.001))
+calib.limits_seq = inverse(seq(4, 6, 0.001))
 
 # npc fisher
-calib.limits_seq = seq(-4.5, -5.9, -0.001)
+# calib.limits_seq = seq(-4.5, -5.9, -0.001)
 # calib.limits_seq = seq(-7, -9.2, -0.001)
 # calib.limits_seq = seq(-7, -8.2, -0.001)
 # calib.limits_seq = seq(-15, -18, -0.001)
@@ -35,7 +35,7 @@ calib.limits_seq = seq(-4.5, -5.9, -0.001)
 
 calib.is_upper_limit = FALSE
 
-calib.ARL0.target = 500
+calib.ARL0.target = 370
 
 calib.monitor_stat = "npc"
 # calib.monitor_stat.params = list(statistic="lepage")
@@ -49,9 +49,9 @@ calib.monitor_stat.params = list(
   "tails"=list(
     "two_sided"
   ),
-  "combining_function"="fisher"
+  "combining_function"="tippet"
 )
-calib.chart_id="npc_wilcoxon"
+calib.chart_id="wilcoxon_pvalue"
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
@@ -61,7 +61,7 @@ calib.cap = 50000
 calib.eval.dist = "norm"
 calib.eval.dist.params = list("mean"= 0, "sd"= 1)
 calib.eval.nsim = calib.nsim
-calib.eval.location_shifts = c(0, 0.25, 0.5, 1.0, 1.5, 2.0)
+calib.eval.location_shifts = seq(0, 1, 0.1)
 calib.eval.scale_multipliers = c(1)
 calib.eval.metrics = c("mean", "sd")
 

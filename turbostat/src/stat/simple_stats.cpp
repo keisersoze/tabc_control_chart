@@ -115,9 +115,11 @@ double van_de_warden (const std::vector<double> &x1,
     std::vector<double> pooled_sample(x1);
     pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
     std::vector<double> ranks = avg_rank(pooled_sample);
+    double m = (double) x1.size();
+    double n = (double) x2.size();
     double van_de_warden_stat = 0;
     for (int i = x1.size(); i < x1.size() + x2.size(); ++i) {
-        double _x = quantile(dist, ranks[i]/(x1.size() + x2.size() + 1));
+        double _x = quantile(dist, ranks[i]/(n + m + 1.0));
         van_de_warden_stat += _x;
     }
     return van_de_warden_stat;

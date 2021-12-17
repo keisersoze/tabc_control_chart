@@ -47,11 +47,11 @@ calib.monitor_stat.params = list(
     compute_permutation_distribution("van_de_warden", calib.m, calib.n, 10000)
   ),
   "tails"=list(
-    "right"
+    "two_sided"
   ),
   "combining_function"="tippet"
 )
-calib.chart_id="npc_wilcoxon"
+calib.chart_id="van_de_warden_pvalue"
 
 calib.dist = "norm"
 calib.dist.params = list("mean" = 0 , "sd" =  1)
