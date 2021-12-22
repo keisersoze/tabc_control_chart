@@ -98,7 +98,7 @@ duration.time = proc.time() - start.time
 print (duration.time)
 
 calib.arls = colMeans(calib.rls)
-plot(calib.limits_seq ~ calib.arls, pch=20, cex=0.02)
+plot(calib.limits_seq ~ calib.arls, pch=20, cex=0.02, xlab="ARL", ylab ="UCL")
 afn = approxfun(calib.arls,calib.limits_seq, ties = mean)
 curve(afn, add=TRUE, col="red")
 calib.limit = afn(calib.ARL0.target)
