@@ -226,6 +226,7 @@ vignettes/*.pdf
 
 # Calibration results
 /r_scripts_results/results
+/r_scripts_results/results_new
 
 
 # Output doc pdf
