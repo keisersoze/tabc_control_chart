@@ -2,22 +2,28 @@ library(turbostat)
 
 # Evaluation parameters
 
-eval.calibrations = c("results_new/calibration/normal/cucconi_norm_500_50_5_50000_45.RData",
-                      "results_new/calibration/normal/lepage_norm_500_50_5_50000_45.RData",
-                      "results_new/calibration/normal/npc_lepage_cucconi_norm_500_50_5_50000_45.RData")
+# eval.calibrations = c("results_new/calibration/normal/wilcoxon_pvalue_norm_370_100_5_10000_45.RData",
+#                       "results_new/calibration/normal/van_de_warden_pvalue_norm_370_100_5_10000_45.RData",
+#                       "results_new/calibration/normal/npc_percentiles_42_46_norm_370_100_5_10000_42.RData",
+#                       "results_new/calibration/normal/npc_wilcoxon_van_de_warden_norm_370_100_5_30000_45.RData")
+eval.calibrations = c("results_new/calibration/normal/cucconi_norm_500_100_5_50000_8989.RData",
+                      "results_new/calibration/normal/lepage_norm_500_100_5_50000_8989.RData",
+                      "results_new/calibration/normal/npc_lepage_cucconi_norm_500_100_5_50000_45.RData",
+                      "results_new/calibration/normal/npc_wilcoxon_klotz_norm_500_100_5_50000_8989.RData")
 
 # eval.calibrations = c("results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
 #                       "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData")
 
 eval.nsim = 50000
 eval.location_shifts = c(0, 0.25, 0.5, 1.0, 1.5, 2.0)
-eval.scale_multipliers = c(1, 1.25, 1.5)
-eval.dist = "normalized_t_with_two_pont_five_degrees"
-eval.dist.params = list()
-eval.m = 50
+eval.scale_multipliers = c(1, 1.25, 1.5, 1.75)
+# eval.location_shifts = seq(0, 1, 0.1)
+eval.dist = "laplace"
+eval.dist.params = list("location"= 0, "scale"= 1/sqrt(2))
+eval.m = 100
 eval.n = 5
 eval.ARL0.target = 500
-eval.seed = 646789
+eval.seed = 343434
 
 # Evaluation script
 
@@ -42,6 +48,15 @@ colnames(arl_table) = col_names
 
 sd_table = matrix(nrow=nrow,ncol=ncol)
 colnames(sd_table) = col_names
+
+quantile_tables.zerofive = matrix(nrow=nrow,ncol=ncol)
+colnames(quantile_tables.zerofive) = col_names
+
+quantile_tables.five = matrix(nrow=nrow,ncol=ncol)
+colnames(quantile_tables.five) = col_names
+
+quantile_tables.ninetyfive = matrix(nrow=nrow,ncol=ncol)
+colnames(quantile_tables.ninetyfive) = col_names
 
 for (k in seq_along(eval.calibrations)){
   load(eval.calibrations[k])
@@ -70,7 +85,7 @@ for (k in seq_along(eval.calibrations)){
 
   # Evaluation
   start.time = proc.time()
-  
+
   for (i in seq_along(eval.scale_multipliers)){
     scale_multiplier = eval.scale_multipliers[i]
     for (j in seq_along(eval.location_shifts)){
@@ -95,9 +110,13 @@ for (k in seq_along(eval.calibrations)){
       )
       arl_table[((i-1) * n_shifts) + j, 2 + k] = mean(arls)
       sd_table[((i-1) * n_shifts) + j, 2 + k] = sd(arls)
+      quantiles = as.numeric(quantile(arls, probs=c(0.05, 0.5, 0.95)))
+      quantile_tables.zerofive[((i-1) * n_shifts) + j, 2 + k] = quantiles[1]
+      quantile_tables.five[((i-1) * n_shifts) + j, 2 + k] = quantiles[2]
+      quantile_tables.ninetyfive[((i-1) * n_shifts) + j, 2 + k] = quantiles[3]
     }
   }
-  
+
   duration.time = proc.time() - start.time
   print(duration.time)
 }
@@ -109,7 +128,7 @@ filename =  paste(c(format(eval.ARL0.target, nsmall = 0),
                     format(eval.nsim, nsmall = 0),
                     format(eval.seed, nsmall = 0)), collapse = "_")
 
-basepath = paste(c("results_new/evaluation/npc_cucconi_lepage/", filename, ".RData"), collapse = "")
+basepath = paste(c("results_new/evaluation/location_scale/", filename, ".RData"), collapse = "")
 
 save(eval.calibrations,
      eval.m,
@@ -122,4 +141,7 @@ save(eval.calibrations,
      eval.ARL0.target,
      arl_table,
      sd_table,
+     quantile_tables.zerofive,
+     quantile_tables.five,
+     quantile_tables.ninetyfive,
      file = basepath)
