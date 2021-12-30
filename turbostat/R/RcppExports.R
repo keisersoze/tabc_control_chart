@@ -154,6 +154,11 @@ permtest.tac <- function(x1, x2, B) {
     .Call(`_turbostat_t_ac_binding`, x1, x2, B)
 }
 
+#' @export
+test.gamma <- function(n) {
+    .Call(`_turbostat_gamma_with_shape_equal_to_four`, n)
+}
+
 test.exp <- function(n) {
     .Call(`_turbostat_test_exp`, n)
 }

@@ -52,8 +52,10 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
         return normalized_t_with_two_pont_five_degrees();
     } else if (dist_s == "normalized_rate_one_exponential"){
         return normalized_rate_one_exponential();
-    }else if (dist_s == "standard_half_cauchy"){
+    } else if (dist_s == "standard_half_cauchy") {
         return standard_half_cauchy();
+    } else if (dist_s == "centered_gamma_with_shape_equal_four") {
+        return centered_gamma_with_shape_equal_four();
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }

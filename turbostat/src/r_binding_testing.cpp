@@ -24,6 +24,16 @@
 #include <boost/random/student_t_distribution.hpp>
 #include <boost/random/chi_squared_distribution.hpp>
 
+//' @export
+// [[Rcpp::export(test.gamma)]]
+std::vector<double> gamma_with_shape_equal_to_four(unsigned n) {
+    centered_gamma_with_shape_equal_four d;
+    std::vector<double> v(n);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
+    return v;
+}
+
 // [[Rcpp::export(test.exp)]]
 std::vector<double> test_exp(unsigned n) {
     normalized_rate_one_exponential d;

@@ -8,7 +8,7 @@
 #include <boost/random/exponential_distribution.hpp>
 #include <boost/random/student_t_distribution.hpp>
 #include <boost/random/cauchy_distribution.hpp>
-
+#include <boost/random/gamma_distribution.hpp>
 
 #include <xoshiro.h>
 
@@ -48,6 +48,17 @@ public:
     template<class Engine>
     double operator () (Engine &rng) {
         return std::abs(cauchy_boost(rng));
+    }
+};
+
+class centered_gamma_with_shape_equal_four{
+private:
+    boost::random::gamma_distribution<double> gamma_boost;
+public:
+    centered_gamma_with_shape_equal_four();
+    template<class Engine>
+    double operator () (Engine &rng) {
+        return gamma_boost(rng) - 2.0;
     }
 };
 

@@ -10,4 +10,7 @@ normalized_t_with_two_pont_five_degrees::normalized_t_with_two_pont_five_degrees
 
 standard_half_cauchy::standard_half_cauchy(): cauchy_boost(0,1){}
 
+centered_gamma_with_shape_equal_four::centered_gamma_with_shape_equal_four(): gamma_boost(4.0, 0.5){}
+
+
 
