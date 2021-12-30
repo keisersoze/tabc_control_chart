@@ -26,8 +26,18 @@
 
 //' @export
 // [[Rcpp::export(test.gamma)]]
-std::vector<double> gamma_with_shape_equal_to_four(unsigned n) {
+std::vector<double> centered_gamma_with_shape_equal_four_r_test(unsigned n) {
     centered_gamma_with_shape_equal_four d;
+    std::vector<double> v(n);
+    std::generate(v.begin(), v.end(),
+                  [&d]() { return d(global_rng::instance);});
+    return v;
+}
+
+//' @export
+// [[Rcpp::export(test.gamma2)]]
+std::vector<double> mirrored_centered_gamma_with_shape_equal_four_r_test(unsigned n) {
+    mirrored_centered_gamma_with_shape_equal_four d;
     std::vector<double> v(n);
     std::generate(v.begin(), v.end(),
                   [&d]() { return d(global_rng::instance);});

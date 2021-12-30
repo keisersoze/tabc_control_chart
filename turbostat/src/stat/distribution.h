@@ -62,7 +62,15 @@ public:
     }
 };
 
-
-
+class mirrored_centered_gamma_with_shape_equal_four{
+private:
+    boost::random::gamma_distribution<double> gamma_boost;
+public:
+    mirrored_centered_gamma_with_shape_equal_four();
+    template<class Engine>
+    double operator () (Engine &rng) {
+        return -(gamma_boost(rng) - 2.0);
+    }
+};
 
 #endif //RACE_DISTRRIBUTION_DISPATCHING_H

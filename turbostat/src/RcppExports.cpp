@@ -203,14 +203,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gamma_with_shape_equal_to_four
-std::vector<double> gamma_with_shape_equal_to_four(unsigned n);
-RcppExport SEXP _turbostat_gamma_with_shape_equal_to_four(SEXP nSEXP) {
+// centered_gamma_with_shape_equal_four_r_test
+std::vector<double> centered_gamma_with_shape_equal_four_r_test(unsigned n);
+RcppExport SEXP _turbostat_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(gamma_with_shape_equal_to_four(n));
+    rcpp_result_gen = Rcpp::wrap(centered_gamma_with_shape_equal_four_r_test(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mirrored_centered_gamma_with_shape_equal_four_r_test
+std::vector<double> mirrored_centered_gamma_with_shape_equal_four_r_test(unsigned n);
+RcppExport SEXP _turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(mirrored_centered_gamma_with_shape_equal_four_r_test(n));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -371,7 +382,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_t_ab_binding", (DL_FUNC) &_turbostat_t_ab_binding, 3},
     {"_turbostat_t_bc_binding", (DL_FUNC) &_turbostat_t_bc_binding, 3},
     {"_turbostat_t_ac_binding", (DL_FUNC) &_turbostat_t_ac_binding, 3},
-    {"_turbostat_gamma_with_shape_equal_to_four", (DL_FUNC) &_turbostat_gamma_with_shape_equal_to_four, 1},
+    {"_turbostat_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_turbostat_centered_gamma_with_shape_equal_four_r_test, 1},
+    {"_turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test, 1},
     {"_turbostat_test_exp", (DL_FUNC) &_turbostat_test_exp, 1},
     {"_turbostat_test_t_due_e_mezzo", (DL_FUNC) &_turbostat_test_t_due_e_mezzo, 1},
     {"_turbostat_test_laplace", (DL_FUNC) &_turbostat_test_laplace, 3},

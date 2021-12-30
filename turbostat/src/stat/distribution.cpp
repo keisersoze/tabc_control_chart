@@ -12,5 +12,4 @@ standard_half_cauchy::standard_half_cauchy(): cauchy_boost(0,1){}
 
 centered_gamma_with_shape_equal_four::centered_gamma_with_shape_equal_four(): gamma_boost(4.0, 0.5){}
 
-
-
+mirrored_centered_gamma_with_shape_equal_four::mirrored_centered_gamma_with_shape_equal_four(): gamma_boost(4.0, 0.5){}

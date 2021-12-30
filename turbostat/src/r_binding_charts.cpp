@@ -56,6 +56,8 @@ distribution build_distribution(const std::string &dist_s, Rcpp::List distributi
         return standard_half_cauchy();
     } else if (dist_s == "centered_gamma_with_shape_equal_four") {
         return centered_gamma_with_shape_equal_four();
+    } else if (dist_s == "mirrored_centered_gamma_with_shape_equal_four") {
+        return mirrored_centered_gamma_with_shape_equal_four();
     } else {
         Rcpp::stop("Monitoring statistic not recognized");
     }

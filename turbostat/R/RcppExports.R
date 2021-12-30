@@ -156,7 +156,12 @@ permtest.tac <- function(x1, x2, B) {
 
 #' @export
 test.gamma <- function(n) {
-    .Call(`_turbostat_gamma_with_shape_equal_to_four`, n)
+    .Call(`_turbostat_centered_gamma_with_shape_equal_four_r_test`, n)
+}
+
+#' @export
+test.gamma2 <- function(n) {
+    .Call(`_turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test`, n)
 }
 
 test.exp <- function(n) {
