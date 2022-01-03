@@ -273,6 +273,40 @@ std::vector<unsigned> evaluate_unconditional(unsigned m,
     return run_lengths;
 }
 
+
+//' @export
+// [[Rcpp::export(evaluate.unconditional2)]]
+Rcpp::DataFrame evaluate_unconditional_with_stats(unsigned m,
+                                                        unsigned n,
+                                                        double limit,
+                                                        bool is_upper_limit,
+                                                        double location_shift,
+                                                        double scale_multiplier,
+                                                        const std::string &distribution_key,
+                                                        Rcpp::List distribution_parameters,
+                                                        const std::string &monitoring_statistic_key,
+                                                        Rcpp::List monitoring_statistic_parameters,
+                                                        unsigned nsim,
+                                                        unsigned run_length_cap) {
+    distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
+    uncoditional_evaluation_result res = unconditional_unidirectional_evaluation_with_stats(m,
+                                                                                            n,
+                                                                                            limit,
+                                                                                            is_upper_limit,
+                                                                                            location_shift,
+                                                                                            scale_multiplier,
+                                                                                            ic_distribution,
+                                                                                            ms,
+                                                                                            nsim,
+                                                                                            run_length_cap);
+    Rcpp::DataFrame res_r = Rcpp::DataFrame::create(Rcpp::Named("run_lengths") = Rcpp::wrap(res.run_lengths),
+                                                    Rcpp::Named("reference_sample_means") = Rcpp::wrap(res.reference_sample_means),
+                                                    Rcpp::Named("reference_sample_sds") = Rcpp::wrap(res.reference_sample_sds)
+    );
+    return res_r;
+}
+
 // [[Rcpp::export(calibrate.conditional)]]
 double calibrate_conditional(const std::vector<double> &reference_sample,
                                           unsigned n,

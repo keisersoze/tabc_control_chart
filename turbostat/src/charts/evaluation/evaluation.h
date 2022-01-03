@@ -31,5 +31,26 @@ std::vector<unsigned> unconditional_unidirectional_evaluation(unsigned m,
                                                               unsigned nsim,
                                                               unsigned run_length_cap);
 
+struct uncoditional_evaluation_result {
+    std::vector<unsigned> run_lengths;
+    std::vector<double> reference_sample_means;
+    std::vector<double> reference_sample_sds;
+
+    uncoditional_evaluation_result(std::vector<unsigned int> &&run_lengths,
+                                   std::vector<double> &&reference_sample_means,
+                                   std::vector<double> &&reference_sample_sds);
+};
+
+uncoditional_evaluation_result unconditional_unidirectional_evaluation_with_stats(unsigned m,
+                                                                                  unsigned n,
+                                                                                  double limit,
+                                                                                  bool upper_limit,
+                                                                                  double location_shift,
+                                                                                  double scale_multiplier,
+                                                                                  const distribution &ic_distribution,
+                                                                                  const monitoring_statistic &ms,
+                                                                                  unsigned nsim,
+                                                                                  unsigned run_length_cap);
+
 
 #endif //RACE_RUNLENGTH_H

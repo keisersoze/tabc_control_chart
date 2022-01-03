@@ -13,7 +13,9 @@ std::vector<double> avg_rank(const std::vector<double> &v);
 
 double median(std::vector<double> len);
 
-double mean(std::vector<double> x);
+double mean(const std::vector<double> &x);
+
+double standard_deviation(const std::vector<double> &v);
 
 template<class T, class RNG>
 std::vector<T> sample_with_replacement(const std::vector<T> &v, unsigned sample_size, RNG &rng) {

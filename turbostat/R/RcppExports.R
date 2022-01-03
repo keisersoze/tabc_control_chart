@@ -38,6 +38,11 @@ evaluate.unconditional <- function(m, n, limit, is_upper_limit, location_shift, 
     .Call(`_turbostat_evaluate_unconditional`, m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
 }
 
+#' @export
+evaluate.unconditional2 <- function(m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
+    .Call(`_turbostat_evaluate_unconditional_with_stats`, m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
+}
+
 calibrate.conditional <- function(reference_sample, n, monitoring_statistic_key, monitoring_statistic_parameters, target_ARL, is_upper_limit, nsim) {
     .Call(`_turbostat_calibrate_conditional`, reference_sample, n, monitoring_statistic_key, monitoring_statistic_parameters, target_ARL, is_upper_limit, nsim)
 }

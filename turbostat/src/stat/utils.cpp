@@ -90,8 +90,17 @@ double median (std::vector<double> len){
     }
 }
 
-double mean(std::vector<double> x){
+double mean(const std::vector<double> &x){
     return std::accumulate(x.begin(), x.end() , 0.0) / (double) x.size();
+}
+
+double standard_deviation(const std::vector<double> &v){
+    double m = mean(v);
+    std::vector<double> diff(v.size());
+    std::transform(v.begin(), v.end(), diff.begin(), [m](double x) { return x - m; });
+    double sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    double stdev = std::sqrt(sq_sum / (double) v.size());
+    return stdev;
 }
 
 

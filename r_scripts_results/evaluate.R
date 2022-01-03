@@ -18,12 +18,12 @@ eval.nsim = 50000
 eval.location_shifts = c(0, 0.25, 0.5, 1.0, 1.5, 2.0)
 eval.scale_multipliers = c(1, 1.25, 1.5, 1.75)
 # eval.location_shifts = seq(0, 1, 0.1)
-eval.dist = "laplace"
-eval.dist.params = list("location"= 0, "scale"= 1/sqrt(2))
+eval.dist = "mirrored_centered_gamma_with_shape_equal_four"
+eval.dist.params = list()
 eval.m = 100
 eval.n = 5
 eval.ARL0.target = 500
-eval.seed = 343434
+eval.seed = 6476
 
 # Evaluation script
 
@@ -90,6 +90,7 @@ for (k in seq_along(eval.calibrations)){
     scale_multiplier = eval.scale_multipliers[i]
     for (j in seq_along(eval.location_shifts)){
       location_shift = eval.location_shifts[j]
+      print(sprintf("Processing shift %f and scale multiplier %f", location_shift, scale_multiplier))
       arl_table[((i-1) * n_shifts) + j, 1] = location_shift
       arl_table[((i-1) * n_shifts) + j, 2] = scale_multiplier
       sd_table[((i-1) * n_shifts) + j, 1] = location_shift
