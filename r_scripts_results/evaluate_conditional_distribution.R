@@ -11,7 +11,7 @@ eval.calibration = c("results_new/calibration/normal/cucconi_norm_500_100_5_5000
 # eval.calibrations = c("results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
 #                       "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData")
 
-eval.nsim = 50000
+eval.nsim = 1000
 # eval.location_shifts = seq(0, 1, 0.1)
 eval.dist = "norm"
 eval.dist.params = list(mean=0, sd=1)
@@ -95,5 +95,28 @@ for(i in 1:7) {
     proportion_table[i,j] = length(crl_table[[i,j]])/eval.nsim
   }
 }
+
+filename =  paste(c(calib.chart_id,
+                    format(eval.ARL0.target, nsmall = 0),
+                    eval.dist,
+                    format(eval.m, nsmall = 0),
+                    format(eval.n, nsmall = 0),
+                    format(eval.nsim, nsmall = 0),
+                    format(eval.seed, nsmall = 0)), collapse = "_")
+
+basepath = paste(c("results_new/evaluation/location_scale/crl/", filename, ".RData"), collapse = "")
+
+save(calib.chart_id,
+     eval.calibration,
+     eval.m,
+     eval.n,
+     eval.dist,
+     eval.dist.params,
+     eval.seed,
+     eval.ARL0.target,
+     carl_table,
+     csd_table,
+     proportion_table,
+     file = basepath)
 
 
