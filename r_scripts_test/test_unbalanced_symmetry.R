@@ -43,7 +43,7 @@ test=function(x1,x2,alt,K=1000) {
 
 
   plot(density(t.perm))
-  hist(t.perm, breaks = 50, main = "" , xlab = "Value of test statistic")
+  hist(t.perm, breaks = 50, main = "" , xlab = "Difference of means")
   abline(v = t.ob, col = "blue", lwd = 2)
 
 
@@ -52,6 +52,9 @@ test=function(x1,x2,alt,K=1000) {
   pv.r=length(t.perm[t.perm<=t.ob])/K
   if (alt=="two.sided") pv.t=length(t.perm[abs(t.perm)>=abs(t.ob)])/K
   if (alt=="two.sided-2") pv.t=min(pv.l,pv.r)
+  if (alt=="greater") pv.t=length(t.perm[t.perm>=t.ob])/K
+  if (alt=="less") pv.t=length(t.perm[t.perm<=t.ob])/K
+  if (alt=="greater") pv.t=length(t.perm[t.perm>=t.ob])/K
 
   print(pv.t)
 
@@ -62,5 +65,5 @@ set.seed(42)
 x1 = rexp(25)
 x2 = rexp(9) - 1
 
-t.perm = test(x1,x2,"two.sided-2", 10000)
+t.perm = test(x1,x2,"greater", 10000)
 
