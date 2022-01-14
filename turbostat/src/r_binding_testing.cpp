@@ -138,6 +138,14 @@ double  test_percentiles(const std::vector<double> &x1,
     return wilcoxon_percentiles(x1, x2, r, s);
 }
 
+//' @export
+// [[Rcpp::export(test.centered_percentiles)]]
+double  test_centered_percentiles(const std::vector<double> &x1,
+                         const std::vector<double> &x2,
+                         double r,
+                         double s) {
+    return centered_wilcoxon_percentiles(x1, x2, r, s);
+}
 
 // [[Rcpp::export(hello)]]
 double hello() {

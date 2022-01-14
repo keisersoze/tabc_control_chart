@@ -50,7 +50,13 @@ double wilcoxon_percentiles (const std::vector<double> &x1,
                              double r,
                              double s);
 
+double centered_wilcoxon_percentiles(const std::vector<double> &x1,
+                                     const std::vector<double> &x2,
+                                     double r,
+                                     double s);
+
 simple_statistic build_wilcoxon_percentiles_statistic (double r, double s);
+simple_statistic build_centered_wilcoxon_percentiles_statistic (double r, double s);
 
 
 double conover_statistic (const std::vector<double> &x1,

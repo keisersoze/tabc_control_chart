@@ -168,10 +168,72 @@ double wilcoxon_percentiles (const std::vector<double> &x1,
     return obs_stat;
 }
 
+double centered_wilcoxon_percentiles(const std::vector<double> &x1,
+                                     const std::vector<double> &x2,
+                                     double r,
+                                     double s) {
+    std::vector<double> pooled_sample(x1);
+    pooled_sample.insert(pooled_sample.end(), x2.begin(), x2.end());
+    std::vector<double> ranks = avg_rank(pooled_sample);
+
+    double m = (double) x1.size();
+    double n = (double) x2.size();
+    double N = n + m;
+    double R = std::trunc(N * r) + 1.0;
+    double S = std::trunc(N * s) + 1.0;
+    double Br = 0.0;
+    double Ts = 0.0;
+    double acc_Br = 0.0;
+    double acc_Ts = 0.0;
+
+    // Rcpp::Rcout << "R " << R << std::endl;
+    // Rcpp::Rcout << "S " << S << std::endl;
+
+    if ((x1.size() + x2.size()) % 2 != 0) {
+        for (unsigned i = 1; i < (unsigned) R + 1; ++i) {
+            acc_Br += R - (double)i + 1.0;
+        }
+        for (unsigned i = (unsigned)(N - S + 1.0); i < (unsigned) N  + 1; ++i) {
+            acc_Ts += (double)i - (N - S);
+        }
+        for (unsigned i = 0; i < x1.size() ; ++i) {
+            if(ranks[i] <= R){
+                Br += R - ranks[i] + 1.0;
+            }
+            if(ranks[i] >= N - S + 1.0){
+                Ts += ranks[i] - (N - S);
+            }
+        }
+    } else {
+        for (unsigned i = x1.size(); i < x1.size() + x2.size() ; ++i) {
+            if(ranks[i] <= R){
+                Br += R - ranks[i] + 0.5;
+            }
+            if(ranks[i] >= N - S + 1){
+                Ts += ranks[i] - (N - S) - 0.5;
+            }
+        }
+    }
+
+    // Rcpp::Rcout << "acc_Br " << acc_Br << std::endl;
+    // Rcpp::Rcout << "acc_Ts " << acc_Ts << std::endl;
+    double mean = (acc_Ts - acc_Br) * m / N ;
+    // Rcpp::Rcout << "mean " << mean << std::endl;
+    double obs_stat = Ts - Br - mean;
+    return obs_stat;
+}
+
 simple_statistic build_wilcoxon_percentiles_statistic (double r, double s){
     return [r, s] (const std::vector<double> &x1,
                    const std::vector<double> &x2) {
         return wilcoxon_percentiles(x1,x2,r,s);
+    };
+}
+
+simple_statistic build_centered_wilcoxon_percentiles_statistic (double r, double s){
+    return [r, s] (const std::vector<double> &x1,
+                   const std::vector<double> &x2) {
+        return centered_wilcoxon_percentiles(x1,x2,r,s);
     };
 }
 

@@ -103,6 +103,11 @@ std::map<std::string, simple_statistic> stat_map = {
         {"percentiles_40_48", build_wilcoxon_percentiles_statistic(0.40,0.48)},
         {"percentiles_48_40", build_wilcoxon_percentiles_statistic(0.48,0.40)},
 
+        {"centered_percentiles_42_48", build_centered_wilcoxon_percentiles_statistic(0.42,0.48)},
+        {"centered_percentiles_48_42", build_centered_wilcoxon_percentiles_statistic(0.48,0.42)},
+        {"centered_percentiles_40_48", build_centered_wilcoxon_percentiles_statistic(0.40,0.48)},
+        {"centered_percentiles_48_40", build_centered_wilcoxon_percentiles_statistic(0.48,0.40)},
+        {"centered_percentiles_40_30", build_centered_wilcoxon_percentiles_statistic(0.40,0.30)},
 
         {"conover_statistic", conover_statistic},
         {"mood_statistic", mood_statistic},

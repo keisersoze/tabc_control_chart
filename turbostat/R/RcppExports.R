@@ -214,6 +214,11 @@ test.percentiles <- function(x1, x2, r, s) {
     .Call(`_turbostat_test_percentiles`, x1, x2, r, s)
 }
 
+#' @export
+test.centered_percentiles <- function(x1, x2, r, s) {
+    .Call(`_turbostat_test_centered_percentiles`, x1, x2, r, s)
+}
+
 hello <- function() {
     .Call(`_turbostat_hello`)
 }
