@@ -6,19 +6,21 @@ library(turbostat)
 #                       "results_new/calibration/normal/van_de_warden_pvalue_norm_370_100_5_10000_45.RData",
 #                       "results_new/calibration/normal/npc_percentiles_42_46_norm_370_100_5_10000_42.RData",
 #                       "results_new/calibration/normal/npc_wilcoxon_van_de_warden_norm_370_100_5_30000_45.RData")
-eval.calibration = c("results_new/calibration/normal/cucconi_norm_500_100_5_50000_8989.RData")
 
-# eval.calibrations = c("results/calibration_results/prefinal/mann-whitney_250_100_10_10000_324.RData",
-#                       "results/calibration_results/prefinal/sum-of-sings_250_100_10_10000_324.RData")
+# eval.calibrations = c("results_new/calibration/normal/cucconi_norm_500_100_5_50000_8989.RData",
+#                       "results_new/calibration/normal/lepage_norm_500_100_5_50000_8989.RData",
+#                       "results_new/calibration/normal/npc_lepage_cucconi_norm_500_100_5_50000_45.RData",
+#                       "results_new/calibration/normal/npc_wilcoxon_klotz_norm_500_100_5_50000_8989.RData")
 
-eval.nsim = 1000
-# eval.location_shifts = seq(0, 1, 0.1)
-eval.dist = "norm"
-eval.dist.params = list(mean=0, sd=1)
+eval.calibration = c("results_new/calibration/normal/wilcoxon_pvalue_norm_370_100_5_10000_45.RData")
+
+eval.nsim = 50000
+eval.dist = "laplace"
+eval.dist.params = list("location"=0, "scale"=1/sqrt(2))
 eval.m = 100
 eval.n = 5
-eval.ARL0.target = 500
-eval.seed = 4367
+eval.ARL0.target = 370
+eval.seed = 3546
 
 # Evaluation script
 
@@ -36,11 +38,37 @@ for(i in 1:7) {
 
 load(eval.calibration)
 
-res = evaluate.unconditional2(
+# Prevent mistakes
+if (eval.m != calib.m){
+  stop(sprintf("Chart %s has been calibrated for m=%i and not m=%i !",
+               calib.monitor_stat,
+               calib.m,
+               eval.m))
+}
+if (eval.n != calib.n){
+  stop(sprintf("Chart %s has been calibrated for n=%i and not n=%i !",
+               calib.monitor_stat,
+               calib.n,
+               eval.n))
+}
+if (eval.ARL0.target != calib.ARL0.target){
+  stop(sprintf("Chart %s has been calibrated for ARL0=%i and not ARL0=%i !",
+               calib.monitor_stat,
+               calib.ARL0.target,
+               eval.ARL0.target))
+}
+
+if (calib.is_upper_limit){
+  limits = list("ucl"=calib.limit)
+} else {
+  limits = list("lcl"=calib.limit)
+}
+
+start.time = proc.time()
+res = evaluate.unconditional(
   m = eval.m,
   n = eval.n,
-  limit = calib.limit,
-  is_upper_limit = calib.is_upper_limit,
+  limits = limits,
   location_shift = 0,
   scale_multiplier = 1,
   distribution_key = eval.dist,
@@ -50,6 +78,8 @@ res = evaluate.unconditional2(
   nsim = eval.nsim,
   run_length_cap = calib.cap
 )
+duration.time = proc.time() - start.time
+print(duration.time)
 
 rls = res$run_lengths
 reference_sample_means = res$reference_sample_means
@@ -104,19 +134,19 @@ filename =  paste(c(calib.chart_id,
                     format(eval.nsim, nsmall = 0),
                     format(eval.seed, nsmall = 0)), collapse = "_")
 
-basepath = paste(c("results_new/evaluation/location_scale/crl/", filename, ".RData"), collapse = "")
-
-save(calib.chart_id,
-     eval.calibration,
-     eval.m,
-     eval.n,
-     eval.dist,
-     eval.dist.params,
-     eval.seed,
-     eval.ARL0.target,
-     carl_table,
-     csd_table,
-     proportion_table,
-     file = basepath)
+# basepath = paste(c("results_new/evaluation/location_scale/crl/laplace/", filename, ".RData"), collapse = "")
+#
+# save(calib.chart_id,
+#      eval.calibration,
+#      eval.m,
+#      eval.n,
+#      eval.dist,
+#      eval.dist.params,
+#      eval.seed,
+#      eval.ARL0.target,
+#      carl_table,
+#      csd_table,
+#      proportion_table,
+#      file = basepath)
 
 

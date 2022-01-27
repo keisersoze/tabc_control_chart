@@ -34,13 +34,8 @@ calibrate.unconditional <- function(m, n, distribution_key, distribution_paramet
 #' @param nsim The number of simulations
 #' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
 #' @export
-evaluate.unconditional <- function(m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
-    .Call(`_turbostat_evaluate_unconditional`, m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
-}
-
-#' @export
-evaluate.unconditional2 <- function(m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
-    .Call(`_turbostat_evaluate_unconditional_with_stats`, m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
+evaluate.unconditional <- function(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
+    .Call(`_turbostat_evaluate_unconditional`, m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
 }
 
 calibrate.conditional <- function(reference_sample, n, monitoring_statistic_key, monitoring_statistic_parameters, target_ARL, is_upper_limit, nsim) {

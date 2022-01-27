@@ -31,15 +31,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // evaluate_unconditional
-std::vector<unsigned> evaluate_unconditional(unsigned m, unsigned n, double limit, bool is_upper_limit, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _turbostat_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitSEXP, SEXP is_upper_limitSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+Rcpp::DataFrame evaluate_unconditional(unsigned m, unsigned n, Rcpp::List limits, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
+RcppExport SEXP _turbostat_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitsSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type limit(limitSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_upper_limit(is_upper_limitSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type limits(limitsSEXP);
     Rcpp::traits::input_parameter< double >::type location_shift(location_shiftSEXP);
     Rcpp::traits::input_parameter< double >::type scale_multiplier(scale_multiplierSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type distribution_key(distribution_keySEXP);
@@ -48,29 +47,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type monitoring_statistic_parameters(monitoring_statistic_parametersSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional(m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap));
-    return rcpp_result_gen;
-END_RCPP
-}
-// evaluate_unconditional_with_stats
-Rcpp::DataFrame evaluate_unconditional_with_stats(unsigned m, unsigned n, double limit, bool is_upper_limit, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _turbostat_evaluate_unconditional_with_stats(SEXP mSEXP, SEXP nSEXP, SEXP limitSEXP, SEXP is_upper_limitSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< unsigned >::type m(mSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type limit(limitSEXP);
-    Rcpp::traits::input_parameter< bool >::type is_upper_limit(is_upper_limitSEXP);
-    Rcpp::traits::input_parameter< double >::type location_shift(location_shiftSEXP);
-    Rcpp::traits::input_parameter< double >::type scale_multiplier(scale_multiplierSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type distribution_key(distribution_keySEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type distribution_parameters(distribution_parametersSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_key(monitoring_statistic_keySEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type monitoring_statistic_parameters(monitoring_statistic_parametersSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
-    Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional_with_stats(m, n, limit, is_upper_limit, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -406,8 +383,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_turbostat_calibrate_unconditional", (DL_FUNC) &_turbostat_calibrate_unconditional, 10},
-    {"_turbostat_evaluate_unconditional", (DL_FUNC) &_turbostat_evaluate_unconditional, 12},
-    {"_turbostat_evaluate_unconditional_with_stats", (DL_FUNC) &_turbostat_evaluate_unconditional_with_stats, 12},
+    {"_turbostat_evaluate_unconditional", (DL_FUNC) &_turbostat_evaluate_unconditional, 11},
     {"_turbostat_calibrate_conditional", (DL_FUNC) &_turbostat_calibrate_conditional, 7},
     {"_turbostat_evaluate_conditional", (DL_FUNC) &_turbostat_evaluate_conditional, 9},
     {"_turbostat_compute_permutation_distribution_r", (DL_FUNC) &_turbostat_compute_permutation_distribution_r, 4},
