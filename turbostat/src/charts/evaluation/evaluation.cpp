@@ -196,8 +196,8 @@ uncoditional_evaluation_result unconditional_unidirectional_evaluation_with_stat
 
 uncoditional_evaluation_result unconditional_evaluation(unsigned m,
                                                         unsigned n,
-                                                        std::optional<double> lcl,
-                                                        std::optional<double> ucl,
+                                                        const std::optional<double> &lcl,
+                                                        const std::optional<double> &ucl,
                                                         double location_shift,
                                                         double scale_multiplier,
                                                         const distribution &ic_distribution,
