@@ -9,6 +9,7 @@
 #include "../monitoring_statistic.h"
 
 #include <vector>
+#include <optional>
 
 std::vector<std::vector<unsigned>> conditional_unidirectional_evaluation(const std::vector<double> &reference_sample,
                                                                          unsigned n,
@@ -51,6 +52,18 @@ uncoditional_evaluation_result unconditional_unidirectional_evaluation_with_stat
                                                                                   const monitoring_statistic &ms,
                                                                                   unsigned nsim,
                                                                                   unsigned run_length_cap);
+
+
+uncoditional_evaluation_result unconditional_evaluation(unsigned m,
+                                                        unsigned n,
+                                                        std::optional<double> lcl,
+                                                        std::optional<double> ucl,
+                                                        double location_shift,
+                                                        double scale_multiplier,
+                                                        const distribution &ic_distribution,
+                                                        const monitoring_statistic &ms,
+                                                        unsigned nsim,
+                                                        unsigned run_length_cap);
 
 
 #endif //RACE_RUNLENGTH_H

@@ -10,5 +10,5 @@ Encoding: UTF-8
 LazyData: true
 Imports: Rcpp (>= 1.0.7), methods
 LinkingTo: Rcpp, dqrng, BH
-SystemRequirements: C++14
+SystemRequirements: C++17
 RoxygenNote: 7.1.1
