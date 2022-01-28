@@ -194,9 +194,18 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
 //' @param x1 The reference sample
 //' @param x2 The test sample
 //' @param monitoring_statistic_type Either "npc" or "simple_statistic"
-//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-//' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
-//' (required) parameters are "statistics", "permutation_distributions" and "tails".
+//' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+//' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+//' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+//' which should be three lists of the same length. See details for consulting the available statistics and the keys
+//' to be used.
+//' @returns the monitoring statistic value
+//' @details The supported statistics and the respective keys to be used are:
+//' \itemize{
+//'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+//'  \item{Mann-Whitney - "mann_whitney"}
+//'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+//' }
 //' @export
 // [[Rcpp::export(compute_monitoring_statistic)]]
 double compute_monitoring_statistic(const std::vector<double> &x1,
@@ -213,17 +222,35 @@ double compute_monitoring_statistic(const std::vector<double> &x1,
 //'
 //' @param m The dimension used for the reference sample
 //' @param n The dimension used for the test samples
-//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution
+//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination
+//' with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+//' the available distributions and the respective keys.
 //' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)
 //' @param monitoring_statistic_type Either "npc" or "simple_statistic"
-//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-//' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
-//' (required) parameters are "statistics", "permutation_distributions" and "tails".
-//' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation.
-//' @param is_upper_limit A boolean parameter used to select the direction of the OOC alternative.
+//' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+//' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+//' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+//' which should be three lists of the same length. See details for consulting the available statistics and the keys
+//' to be used.
+//' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation
+//' @param is_upper_limit A boolean parameter used to select whether the chart uses an upper limit or a lower limit
 //' @param nsim The number of simulations
-//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
-//' @return A numeric matrix of size nsim x length(limits_seq).
+//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm
+//' @return A numeric matrix of size nsim x length(limits_seq)
+//' @details The supported distributions and the respective parameters are:
+//' \itemize{
+//'  \item{Normal - key:"norm", params:"mean" and "sd"}
+//'  \item{Laplace - key:"laplace", params:"location" and "scale"}
+//'  \item{Student's T - key:"t", params:"df"}
+//'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+//' }
+//' The supported statistics and the respective keys to be used are:
+//' \itemize{
+//'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+//'  \item{Mann-Whitney - "mann_whitney"}
+//'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+//' }
+//' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
 //' @export
 // [[Rcpp::export(calibrate.unconditional)]]
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
@@ -262,16 +289,37 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 //'
 //' Unconditional evaluation for Stehwart-type charts
 //'
-//' @param m The dimension used for the reference sample.
-//' @param n The dimension used for the test samples.
-//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
-//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
+//' @param m The dimension used for the reference sample
+//' @param n The dimension used for the test samples
+//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination
+//' with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+//' the available distributions and the respective keys.
+//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)
 //' @param monitoring_statistic_type Either "npc" or "simple_statistic"
-//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+//' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+//' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+//' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+//' which should be three lists of the same length. See details for consulting the available statistics and the keys
+//' to be used.
 //' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
-//' (required) parameters are "statistics", "permutation_distributions" and "tails".
+//' (required) parameters are "statistics", "permutation_distributions" and "tails"
 //' @param nsim The number of simulations
-//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
+//' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm
+//' @returns A data frame whose columns are "run_lengths", "reference_sample_means" and "reference_sample_sds"
+//' @details The supported distributions and the respective parameters are:
+//' \itemize{
+//'  \item{Normal - key:"norm", params:"mean" and "sd"}
+//'  \item{Laplace - key:"laplace", params:"location" and "scale"}
+//'  \item{Student's T - key:"t", params:"df"}
+//'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+//' }
+//' The supported statistics and the respective keys to be used are:
+//' \itemize{
+//'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+//'  \item{Mann-Whitney - "mann_whitney"}
+//'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+//' }
+//' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
 //' @export
 // [[Rcpp::export(evaluate.unconditional)]]
 Rcpp::DataFrame evaluate_unconditional(unsigned m,

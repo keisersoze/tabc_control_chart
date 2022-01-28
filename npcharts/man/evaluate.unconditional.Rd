@@ -12,28 +12,30 @@ evaluate.unconditional(
   scale_multiplier,
   distribution_key,
   distribution_parameters,
-  monitoring_statistic_key,
+  monitoring_statistic_type,
   monitoring_statistic_parameters,
   nsim,
   run_length_cap
 )
 }
 \arguments{
-\item{m}{The dimension used for the reference sample.}
+\item{m}{The dimension used for the reference sample}
 
-\item{n}{The dimension used for the test samples.}
+\item{n}{The dimension used for the test samples}
 
-\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.}
+\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution}
 
-\item{distribution_parameters}{A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).}
+\item{distribution_parameters}{A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)}
 
-\item{monitoring_statistic_key}{A string used to select the monitoring statistic of the chart to be calibrated.}
+\item{monitoring_statistic_type}{Either "npc" or "simple_statistic"}
 
-\item{monitoring_statistic_parameters}{A list with the parameters to be supplied for the selected monitoring statistic.}
+\item{monitoring_statistic_parameters}{Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
+(required) parameters are "statistics", "permutation_distributions" and "tails"}
 
 \item{nsim}{The number of simulations}
 
-\item{run_length_cap}{A limit for the run length in the simulations used to guarantee convergence of the algorithm.}
+\item{run_length_cap}{A limit for the run length in the simulations used to guarantee convergence of the algorithm}
 }
 \description{
 Unconditional evaluation for Stehwart-type charts

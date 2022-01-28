@@ -6,5 +6,5 @@
 \alias{npcharts-package}
 \title{npcharts: NPC control charts}
 \description{
-TODO
+The npcharts R package have been designed with the specific goal of making calibration and evaluation of multi-aspects NPC charts possible in practice.
 }

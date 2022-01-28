@@ -6,12 +6,12 @@ inverse = function(x) {
   return (-(exp(-x) *  (exp(x) - exp(10))) / (exp(10) - 1))
 }
 
-library(turbostat)
+library(npcharts)
 
 # Start parameters
 
 calib.seed = 8989
-turbostat.setseed(calib.seed)
+npcharts.setseed(calib.seed)
 calib.m = 100
 calib.n = 5
 
@@ -76,7 +76,7 @@ calib.rls = calibrate.unconditional(
   n = calib.n,
   distribution_key = calib.dist,
   distribution_parameters = calib.dist.params,
-  monitoring_statistic_key = calib.monitor_stat,
+  monitoring_statistic_type = calib.monitor_stat,
   monitoring_statistic_parameters = calib.monitor_stat.params,
   limits_seq = calib.limits_seq,
   is_upper_limit = calib.is_upper_limit,
@@ -131,7 +131,7 @@ for (i in seq_along(calib.eval.scale_multipliers)){
       scale_multiplier = scale_multiplier,
       distribution_key = calib.eval.dist,
       distribution_parameters = calib.eval.dist.params,
-      monitoring_statistic_key = calib.monitor_stat,
+      monitoring_statistic_type = calib.monitor_stat,
       monitoring_statistic_parameters = calib.monitor_stat.params,
       nsim = calib.eval.nsim,
       run_length_cap = calib.cap

@@ -5,12 +5,21 @@
 #'
 #' Compute the observed value of the monitoring statistic
 #'
-#' @param m The dimension used for the reference sample.
-#' @param n The dimension used for the test samples.
+#' @param x1 The reference sample
+#' @param x2 The test sample
 #' @param monitoring_statistic_type Either "npc" or "simple_statistic"
-#' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-#' the only parameter is "statistic" which should be set to a valid statistic key (see package doc). For the "npc" type the three
-#' (required) parameters are "statistics", "permutation_distributions" and "tails".
+#' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+#' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+#' which should be three lists of the same length. See details for consulting the available statistics and the keys
+#' to be used.
+#' @returns the monitoring statistic value
+#' @details The supported statistics and the respective keys to be used are:
+#' \itemize{
+#'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+#'  \item{Mann-Whitney - "mann_whitney"}
+#'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#' }
 #' @export
 compute_monitoring_statistic <- function(x1, x2, monitoring_statistic_type, monitoring_statistic_parameters) {
     .Call(`_npcharts_compute_monitoring_statistic`, x1, x2, monitoring_statistic_type, monitoring_statistic_parameters)
@@ -20,37 +29,80 @@ compute_monitoring_statistic <- function(x1, x2, monitoring_statistic_type, moni
 #'
 #' Unconditional calibration for the Stehwart-type charts implemented by this package
 #'
-#' @param m The dimension used for the reference sample.
-#' @param n The dimension used for the test samples.
-#' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
-#' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
-#' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
-#' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
-#' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation.
-#' @param is_upper_limit A boolean parameter used to select the direction of the OOC alternative.
+#' @param m The dimension used for the reference sample
+#' @param n The dimension used for the test samples
+#' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination
+#' with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+#' the available distributions and the respective keys.
+#' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)
+#' @param monitoring_statistic_type Either "npc" or "simple_statistic"
+#' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+#' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+#' which should be three lists of the same length. See details for consulting the available statistics and the keys
+#' to be used.
+#' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation
+#' @param is_upper_limit A boolean parameter used to select whether the chart uses an upper limit or a lower limit
 #' @param nsim The number of simulations
-#' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
-#' @return A numeric matrix of size nsim x length(limits_seq).
+#' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm
+#' @return A numeric matrix of size nsim x length(limits_seq)
+#' @details The supported distributions and the respective parameters are:
+#' \itemize{
+#'  \item{Normal - key:"norm", params:"mean" and "sd"}
+#'  \item{Laplace - key:"laplace", params:"location" and "scale"}
+#'  \item{Student's T - key:"t", params:"df"}
+#'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+#' }
+#' The supported statistics and the respective keys to be used are:
+#' \itemize{
+#'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+#'  \item{Mann-Whitney - "mann_whitney"}
+#'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#' }
+#' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
 #' @export
-calibrate.unconditional <- function(m, n, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap) {
-    .Call(`_npcharts_calibrate_unconditional`, m, n, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap)
+calibrate.unconditional <- function(m, n, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap) {
+    .Call(`_npcharts_calibrate_unconditional`, m, n, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap)
 }
 
 #' Unconditional evaluation
 #'
 #' Unconditional evaluation for Stehwart-type charts
 #'
-#' @param m The dimension used for the reference sample.
-#' @param n The dimension used for the test samples.
-#' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
-#' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
-#' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
-#' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
+#' @param m The dimension used for the reference sample
+#' @param n The dimension used for the test samples
+#' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination
+#' with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+#' the available distributions and the respective keys.
+#' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)
+#' @param monitoring_statistic_type Either "npc" or "simple_statistic"
+#' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
+#' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+#' which should be three lists of the same length. See details for consulting the available statistics and the keys
+#' to be used.
+#' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
+#' (required) parameters are "statistics", "permutation_distributions" and "tails"
 #' @param nsim The number of simulations
-#' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
+#' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm
+#' @returns A data frame whose columns are "run_lengths", "reference_sample_means" and "reference_sample_sds"
+#' @details The supported distributions and the respective parameters are:
+#' \itemize{
+#'  \item{Normal - key:"norm", params:"mean" and "sd"}
+#'  \item{Laplace - key:"laplace", params:"location" and "scale"}
+#'  \item{Student's T - key:"t", params:"df"}
+#'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+#' }
+#' The supported statistics and the respective keys to be used are:
+#' \itemize{
+#'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+#'  \item{Mann-Whitney - "mann_whitney"}
+#'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#' }
+#' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
 #' @export
-evaluate.unconditional <- function(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap) {
-    .Call(`_npcharts_evaluate_unconditional`, m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap)
+evaluate.unconditional <- function(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, nsim, run_length_cap) {
+    .Call(`_npcharts_evaluate_unconditional`, m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, nsim, run_length_cap)
 }
 
 calibrate.conditional <- function(reference_sample, n, monitoring_statistic_key, monitoring_statistic_parameters, target_ARL, is_upper_limit, nsim) {

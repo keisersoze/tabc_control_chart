@@ -25,8 +25,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // calibrate_unconditional
-Rcpp::NumericMatrix calibrate_unconditional(unsigned m, unsigned n, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, const std::vector<double>& limits_seq, bool is_upper_limit, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _npcharts_calibrate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP limits_seqSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+Rcpp::NumericMatrix calibrate_unconditional(unsigned m, unsigned n, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_type, Rcpp::List monitoring_statistic_parameters, const std::vector<double>& limits_seq, bool is_upper_limit, unsigned nsim, unsigned run_length_cap);
+RcppExport SEXP _npcharts_calibrate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_typeSEXP, SEXP monitoring_statistic_parametersSEXP, SEXP limits_seqSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -34,19 +34,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< unsigned >::type n(nSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type distribution_key(distribution_keySEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type distribution_parameters(distribution_parametersSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_key(monitoring_statistic_keySEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_type(monitoring_statistic_typeSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type monitoring_statistic_parameters(monitoring_statistic_parametersSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type limits_seq(limits_seqSEXP);
     Rcpp::traits::input_parameter< bool >::type is_upper_limit(is_upper_limitSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(calibrate_unconditional(m, n, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(calibrate_unconditional(m, n, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }
 // evaluate_unconditional
-Rcpp::DataFrame evaluate_unconditional(unsigned m, unsigned n, Rcpp::List limits, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _npcharts_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitsSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+Rcpp::DataFrame evaluate_unconditional(unsigned m, unsigned n, Rcpp::List limits, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_type, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
+RcppExport SEXP _npcharts_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitsSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_typeSEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -57,11 +57,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type scale_multiplier(scale_multiplierSEXP);
     Rcpp::traits::input_parameter< const std::string& >::type distribution_key(distribution_keySEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type distribution_parameters(distribution_parametersSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_key(monitoring_statistic_keySEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_type(monitoring_statistic_typeSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type monitoring_statistic_parameters(monitoring_statistic_parametersSEXP);
     Rcpp::traits::input_parameter< unsigned >::type nsim(nsimSEXP);
     Rcpp::traits::input_parameter< unsigned >::type run_length_cap(run_length_capSEXP);
-    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_key, monitoring_statistic_parameters, nsim, run_length_cap));
+    rcpp_result_gen = Rcpp::wrap(evaluate_unconditional(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, nsim, run_length_cap));
     return rcpp_result_gen;
 END_RCPP
 }

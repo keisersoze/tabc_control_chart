@@ -12,15 +12,15 @@ compute_monitoring_statistic(
 )
 }
 \arguments{
+\item{x1}{The reference sample}
+
+\item{x2}{The test sample}
+
 \item{monitoring_statistic_type}{Either "npc" or "simple_statistic"}
 
 \item{monitoring_statistic_parameters}{Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-the only parameter is "statistic" which should be set to a valid statistic key (see package doc). For the "npc" type the three
-(required) parameters are "statistics", "permutation_distributions" and "tails".}
-
-\item{m}{The dimension used for the reference sample.}
-
-\item{n}{The dimension used for the test samples.}
+the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
+(required) parameters are "statistics", "permutation_distributions" and "tails"}
 }
 \description{
 Compute the observed value of the monitoring statistic
