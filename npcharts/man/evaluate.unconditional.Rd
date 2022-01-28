@@ -23,13 +23,19 @@ evaluate.unconditional(
 
 \item{n}{The dimension used for the test samples}
 
-\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution}
+\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination
+with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+the available distributions and the respective keys.}
 
 \item{distribution_parameters}{A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)}
 
 \item{monitoring_statistic_type}{Either "npc" or "simple_statistic"}
 
-\item{monitoring_statistic_parameters}{Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+\item{monitoring_statistic_parameters}{A list with type-specific parameters of the monitoring statistic. For the
+"simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+which should be three lists of the same length. See details for consulting the available statistics and the keys
+to be used.
 the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
 (required) parameters are "statistics", "permutation_distributions" and "tails"}
 
@@ -37,6 +43,25 @@ the only parameter is "statistic" which should be set to a valid statistic key. 
 
 \item{run_length_cap}{A limit for the run length in the simulations used to guarantee convergence of the algorithm}
 }
+\value{
+A data frame whose columns are "run_lengths", "reference_sample_means" and "reference_sample_sds"
+}
 \description{
 Unconditional evaluation for Stehwart-type charts
+}
+\details{
+The supported distributions and the respective parameters are:
+\itemize{
+ \item{Normal - key:"norm", params:"mean" and "sd"}
+ \item{Laplace - key:"laplace", params:"location" and "scale"}
+ \item{Student's T - key:"t", params:"df"}
+ \item{Cauchy - key:"laplace", params:"location" and "scale"}
+}
+The supported statistics and the respective keys to be used are:
+\itemize{
+ \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+ \item{Mann-Whitney - "mann_whitney"}
+ \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+}
+The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
 }

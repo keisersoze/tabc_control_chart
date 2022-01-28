@@ -18,10 +18,23 @@ compute_monitoring_statistic(
 
 \item{monitoring_statistic_type}{Either "npc" or "simple_statistic"}
 
-\item{monitoring_statistic_parameters}{Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
-(required) parameters are "statistics", "permutation_distributions" and "tails"}
+\item{monitoring_statistic_parameters}{A list with type-specific parameters of the monitoring statistic. For the
+"simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+which should be three lists of the same length. See details for consulting the available statistics and the keys
+to be used.}
+}
+\value{
+the monitoring statistic value
 }
 \description{
 Compute the observed value of the monitoring statistic
+}
+\details{
+The supported statistics and the respective keys to be used are:
+\itemize{
+ \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+ \item{Mann-Whitney - "mann_whitney"}
+ \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+}
 }

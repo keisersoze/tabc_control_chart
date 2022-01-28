@@ -22,15 +22,19 @@ calibrate.unconditional(
 
 \item{n}{The dimension used for the test samples}
 
-\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.}
+\item{distribution_key}{A string which identifies a distribution or a distribution family. Used in combination
+with the "distribution_parameters" parameter in order to select the IC distribution. See details for consulting
+the available distributions and the respective keys.}
 
 \item{distribution_parameters}{A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)}
 
 \item{monitoring_statistic_type}{Either "npc" or "simple_statistic"}
 
-\item{monitoring_statistic_parameters}{Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
-(required) parameters are "statistics", "permutation_distributions" and "tails"}
+\item{monitoring_statistic_parameters}{A list with type-specific parameters of the monitoring statistic. For the
+"simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
+For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
+which should be three lists of the same length. See details for consulting the available statistics and the keys
+to be used.}
 
 \item{limits_seq}{The numeric vector of limits for which the run length should be recorded at each simulation}
 
