@@ -11,7 +11,7 @@
 
 //' Set the seed used by this R packet
 //'
-//' @param s The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
+//' @param seed The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
 //' @export
 // [[Rcpp::export(npcharts.setseed)]]
 void set_seed(Rcpp::IntegerVector seed) {
