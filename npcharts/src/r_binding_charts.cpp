@@ -191,11 +191,11 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
 //'
 //' Compute the observed value of the monitoring statistic
 //'
-//' @param m The dimension used for the reference sample.
-//' @param n The dimension used for the test samples.
+//' @param x1 The reference sample
+//' @param x2 The test sample
 //' @param monitoring_statistic_type Either "npc" or "simple_statistic"
 //' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
-//' the only parameter is "statistic" which should be set to a valid statistic key (see package doc). For the "npc" type the three
+//' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
 //' (required) parameters are "statistics", "permutation_distributions" and "tails".
 //' @export
 // [[Rcpp::export(compute_monitoring_statistic)]]
@@ -211,12 +211,14 @@ double compute_monitoring_statistic(const std::vector<double> &x1,
 //'
 //' Unconditional calibration for the Stehwart-type charts implemented by this package
 //'
-//' @param m The dimension used for the reference sample.
-//' @param n The dimension used for the test samples.
-//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
-//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
-//' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
-//' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
+//' @param m The dimension used for the reference sample
+//' @param n The dimension used for the test samples
+//' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution
+//' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters)
+//' @param monitoring_statistic_type Either "npc" or "simple_statistic"
+//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+//' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
+//' (required) parameters are "statistics", "permutation_distributions" and "tails".
 //' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation.
 //' @param is_upper_limit A boolean parameter used to select the direction of the OOC alternative.
 //' @param nsim The number of simulations
@@ -228,14 +230,14 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             unsigned n,
                                             const std::string &distribution_key,
                                             Rcpp::List distribution_parameters,
-                                            const std::string &monitoring_statistic_key,
+                                            const std::string &monitoring_statistic_type,
                                             Rcpp::List monitoring_statistic_parameters,
                                             const std::vector<double> &limits_seq,
                                             bool is_upper_limit,
                                             unsigned nsim,
                                             unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_type, monitoring_statistic_parameters);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
                                                                                         ic_distribution,
@@ -264,8 +266,10 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 //' @param n The dimension used for the test samples.
 //' @param distribution_key A string which identifies a distribution or a distribution family. Used in combination with the "distribution_parameters" parameter in order to select the IC distribution.
 //' @param distribution_parameters A list with the distribution parameters (an empty list should be supplied if the distribution has not parameters).
-//' @param monitoring_statistic_key A string used to select the monitoring statistic of the chart to be calibrated.
-//' @param monitoring_statistic_parameters A list with the parameters to be supplied for the selected monitoring statistic.
+//' @param monitoring_statistic_type Either "npc" or "simple_statistic"
+//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+//' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
+//' (required) parameters are "statistics", "permutation_distributions" and "tails".
 //' @param nsim The number of simulations
 //' @param run_length_cap A limit for the run length in the simulations used to guarantee convergence of the algorithm.
 //' @export
@@ -277,7 +281,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
                                        double scale_multiplier,
                                        const std::string &distribution_key,
                                        Rcpp::List distribution_parameters,
-                                       const std::string &monitoring_statistic_key,
+                                       const std::string &monitoring_statistic_type,
                                        Rcpp::List monitoring_statistic_parameters,
                                        unsigned nsim,
                                        unsigned run_length_cap) {
@@ -290,7 +294,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
         ucl = limits["ucl"];
     }
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_type, monitoring_statistic_parameters);
     uncoditional_evaluation_result res = unconditional_evaluation(m,n,
                                                                   lcl,ucl,
                                                                   location_shift,scale_multiplier,

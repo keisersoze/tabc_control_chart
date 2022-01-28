@@ -1,10 +1,12 @@
 Package: npcharts
 Type: Package
 Title: NPC control charts
-Version: 0.3.0
+Version: 0.8.0
 Author: Filippo Maganza
 Maintainer: Filippo Maganza <filippomaganza@gmail.com>
-Description: TODO
+Description:
+The npcharts R package have been designed with the specific goal of making 
+calibration and evaluation of multi-aspects NPC charts possible in practice.
 License: Apache-2.0
 Encoding: UTF-8
 LazyData: true
