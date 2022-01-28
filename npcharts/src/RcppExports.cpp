@@ -10,9 +10,23 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// compute_monitoring_statistic
+double compute_monitoring_statistic(const std::vector<double>& x1, const std::vector<double>& x2, const std::string& monitoring_statistic_type, Rcpp::List monitoring_statistic_parameters);
+RcppExport SEXP _npcharts_compute_monitoring_statistic(SEXP x1SEXP, SEXP x2SEXP, SEXP monitoring_statistic_typeSEXP, SEXP monitoring_statistic_parametersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type monitoring_statistic_type(monitoring_statistic_typeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type monitoring_statistic_parameters(monitoring_statistic_parametersSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_monitoring_statistic(x1, x2, monitoring_statistic_type, monitoring_statistic_parameters));
+    return rcpp_result_gen;
+END_RCPP
+}
 // calibrate_unconditional
 Rcpp::NumericMatrix calibrate_unconditional(unsigned m, unsigned n, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, const std::vector<double>& limits_seq, bool is_upper_limit, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _turbostat_calibrate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP limits_seqSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+RcppExport SEXP _npcharts_calibrate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP limits_seqSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +46,7 @@ END_RCPP
 }
 // evaluate_unconditional
 Rcpp::DataFrame evaluate_unconditional(unsigned m, unsigned n, Rcpp::List limits, double location_shift, double scale_multiplier, const std::string& distribution_key, Rcpp::List distribution_parameters, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _turbostat_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitsSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+RcppExport SEXP _npcharts_evaluate_unconditional(SEXP mSEXP, SEXP nSEXP, SEXP limitsSEXP, SEXP location_shiftSEXP, SEXP scale_multiplierSEXP, SEXP distribution_keySEXP, SEXP distribution_parametersSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,7 +67,7 @@ END_RCPP
 }
 // calibrate_conditional
 double calibrate_conditional(const std::vector<double>& reference_sample, unsigned n, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned target_ARL, bool is_upper_limit, unsigned nsim);
-RcppExport SEXP _turbostat_calibrate_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP target_ARLSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP) {
+RcppExport SEXP _npcharts_calibrate_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP target_ARLSEXP, SEXP is_upper_limitSEXP, SEXP nsimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -70,7 +84,7 @@ END_RCPP
 }
 // evaluate_conditional
 Rcpp::DataFrame evaluate_conditional(const std::vector<double>& reference_sample, unsigned n, double limit, bool is_upper_limit, const std::vector<double>& shifts, const std::string& monitoring_statistic_key, Rcpp::List monitoring_statistic_parameters, unsigned nsim, unsigned run_length_cap);
-RcppExport SEXP _turbostat_evaluate_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP limitSEXP, SEXP is_upper_limitSEXP, SEXP shiftsSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
+RcppExport SEXP _npcharts_evaluate_conditional(SEXP reference_sampleSEXP, SEXP nSEXP, SEXP limitSEXP, SEXP is_upper_limitSEXP, SEXP shiftsSEXP, SEXP monitoring_statistic_keySEXP, SEXP monitoring_statistic_parametersSEXP, SEXP nsimSEXP, SEXP run_length_capSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -89,7 +103,7 @@ END_RCPP
 }
 // compute_permutation_distribution_r
 std::vector<double> compute_permutation_distribution_r(std::string statistic, unsigned m, unsigned n, unsigned n_perm);
-RcppExport SEXP _turbostat_compute_permutation_distribution_r(SEXP statisticSEXP, SEXP mSEXP, SEXP nSEXP, SEXP n_permSEXP) {
+RcppExport SEXP _npcharts_compute_permutation_distribution_r(SEXP statisticSEXP, SEXP mSEXP, SEXP nSEXP, SEXP n_permSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -103,7 +117,7 @@ END_RCPP
 }
 // set_seed
 void set_seed(Rcpp::IntegerVector seed);
-RcppExport SEXP _turbostat_set_seed(SEXP seedSEXP) {
+RcppExport SEXP _npcharts_set_seed(SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type seed(seedSEXP);
@@ -113,7 +127,7 @@ END_RCPP
 }
 // t_a_binding
 Rcpp::DataFrame t_a_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_a_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_a_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -126,7 +140,7 @@ END_RCPP
 }
 // t_b_binding
 Rcpp::DataFrame t_b_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_b_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_b_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -139,7 +153,7 @@ END_RCPP
 }
 // t_c_binding
 Rcpp::DataFrame t_c_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_c_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_c_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -152,7 +166,7 @@ END_RCPP
 }
 // t_abc_binding
 Rcpp::DataFrame t_abc_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_abc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_abc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -165,7 +179,7 @@ END_RCPP
 }
 // t_ab_binding
 Rcpp::DataFrame t_ab_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_ab_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_ab_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -178,7 +192,7 @@ END_RCPP
 }
 // t_bc_binding
 Rcpp::DataFrame t_bc_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_bc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_bc_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -191,7 +205,7 @@ END_RCPP
 }
 // t_ac_binding
 Rcpp::DataFrame t_ac_binding(const std::vector<double>& x1, const std::vector<double>& x2, unsigned B);
-RcppExport SEXP _turbostat_t_ac_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
+RcppExport SEXP _npcharts_t_ac_binding(SEXP x1SEXP, SEXP x2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -204,7 +218,7 @@ END_RCPP
 }
 // centered_gamma_with_shape_equal_four_r_test
 std::vector<double> centered_gamma_with_shape_equal_four_r_test(unsigned n);
-RcppExport SEXP _turbostat_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
+RcppExport SEXP _npcharts_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -215,7 +229,7 @@ END_RCPP
 }
 // mirrored_centered_gamma_with_shape_equal_four_r_test
 std::vector<double> mirrored_centered_gamma_with_shape_equal_four_r_test(unsigned n);
-RcppExport SEXP _turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
+RcppExport SEXP _npcharts_mirrored_centered_gamma_with_shape_equal_four_r_test(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -226,7 +240,7 @@ END_RCPP
 }
 // test_exp
 std::vector<double> test_exp(unsigned n);
-RcppExport SEXP _turbostat_test_exp(SEXP nSEXP) {
+RcppExport SEXP _npcharts_test_exp(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -237,7 +251,7 @@ END_RCPP
 }
 // test_t_due_e_mezzo
 std::vector<double> test_t_due_e_mezzo(unsigned n);
-RcppExport SEXP _turbostat_test_t_due_e_mezzo(SEXP nSEXP) {
+RcppExport SEXP _npcharts_test_t_due_e_mezzo(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -248,7 +262,7 @@ END_RCPP
 }
 // test_laplace
 std::vector<double> test_laplace(unsigned n, double location, double scale);
-RcppExport SEXP _turbostat_test_laplace(SEXP nSEXP, SEXP locationSEXP, SEXP scaleSEXP) {
+RcppExport SEXP _npcharts_test_laplace(SEXP nSEXP, SEXP locationSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -261,7 +275,7 @@ END_RCPP
 }
 // test_cauchy
 std::vector<double> test_cauchy(unsigned n, double location, double scale);
-RcppExport SEXP _turbostat_test_cauchy(SEXP nSEXP, SEXP locationSEXP, SEXP scaleSEXP) {
+RcppExport SEXP _npcharts_test_cauchy(SEXP nSEXP, SEXP locationSEXP, SEXP scaleSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -274,7 +288,7 @@ END_RCPP
 }
 // test_standard_half_cauchy
 std::vector<double> test_standard_half_cauchy(unsigned n);
-RcppExport SEXP _turbostat_test_standard_half_cauchy(SEXP nSEXP) {
+RcppExport SEXP _npcharts_test_standard_half_cauchy(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -285,7 +299,7 @@ END_RCPP
 }
 // test1
 std::vector<double> test1(unsigned n);
-RcppExport SEXP _turbostat_test1(SEXP nSEXP) {
+RcppExport SEXP _npcharts_test1(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -296,7 +310,7 @@ END_RCPP
 }
 // test_ansari_bradley
 double test_ansari_bradley(const std::vector<double>& x1, const std::vector<double>& x2);
-RcppExport SEXP _turbostat_test_ansari_bradley(SEXP x1SEXP, SEXP x2SEXP) {
+RcppExport SEXP _npcharts_test_ansari_bradley(SEXP x1SEXP, SEXP x2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -308,7 +322,7 @@ END_RCPP
 }
 // test_difference_of_means_klotz
 double test_difference_of_means_klotz(const std::vector<double>& x1, const std::vector<double>& x2);
-RcppExport SEXP _turbostat_test_difference_of_means_klotz(SEXP x1SEXP, SEXP x2SEXP) {
+RcppExport SEXP _npcharts_test_difference_of_means_klotz(SEXP x1SEXP, SEXP x2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -320,7 +334,7 @@ END_RCPP
 }
 // test_lepage
 double test_lepage(const std::vector<double>& x1, const std::vector<double>& x2);
-RcppExport SEXP _turbostat_test_lepage(SEXP x1SEXP, SEXP x2SEXP) {
+RcppExport SEXP _npcharts_test_lepage(SEXP x1SEXP, SEXP x2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -332,7 +346,7 @@ END_RCPP
 }
 // test_cucconi
 double test_cucconi(const std::vector<double>& x1, const std::vector<double>& x2);
-RcppExport SEXP _turbostat_test_cucconi(SEXP x1SEXP, SEXP x2SEXP) {
+RcppExport SEXP _npcharts_test_cucconi(SEXP x1SEXP, SEXP x2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -344,7 +358,7 @@ END_RCPP
 }
 // test_percentiles
 double test_percentiles(const std::vector<double>& x1, const std::vector<double>& x2, double r, double s);
-RcppExport SEXP _turbostat_test_percentiles(SEXP x1SEXP, SEXP x2SEXP, SEXP rSEXP, SEXP sSEXP) {
+RcppExport SEXP _npcharts_test_percentiles(SEXP x1SEXP, SEXP x2SEXP, SEXP rSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -358,7 +372,7 @@ END_RCPP
 }
 // test_centered_percentiles
 double test_centered_percentiles(const std::vector<double>& x1, const std::vector<double>& x2, double r, double s);
-RcppExport SEXP _turbostat_test_centered_percentiles(SEXP x1SEXP, SEXP x2SEXP, SEXP rSEXP, SEXP sSEXP) {
+RcppExport SEXP _npcharts_test_centered_percentiles(SEXP x1SEXP, SEXP x2SEXP, SEXP rSEXP, SEXP sSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -372,7 +386,7 @@ END_RCPP
 }
 // hello
 double hello();
-RcppExport SEXP _turbostat_hello() {
+RcppExport SEXP _npcharts_hello() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -382,38 +396,39 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_turbostat_calibrate_unconditional", (DL_FUNC) &_turbostat_calibrate_unconditional, 10},
-    {"_turbostat_evaluate_unconditional", (DL_FUNC) &_turbostat_evaluate_unconditional, 11},
-    {"_turbostat_calibrate_conditional", (DL_FUNC) &_turbostat_calibrate_conditional, 7},
-    {"_turbostat_evaluate_conditional", (DL_FUNC) &_turbostat_evaluate_conditional, 9},
-    {"_turbostat_compute_permutation_distribution_r", (DL_FUNC) &_turbostat_compute_permutation_distribution_r, 4},
-    {"_turbostat_set_seed", (DL_FUNC) &_turbostat_set_seed, 1},
-    {"_turbostat_t_a_binding", (DL_FUNC) &_turbostat_t_a_binding, 3},
-    {"_turbostat_t_b_binding", (DL_FUNC) &_turbostat_t_b_binding, 3},
-    {"_turbostat_t_c_binding", (DL_FUNC) &_turbostat_t_c_binding, 3},
-    {"_turbostat_t_abc_binding", (DL_FUNC) &_turbostat_t_abc_binding, 3},
-    {"_turbostat_t_ab_binding", (DL_FUNC) &_turbostat_t_ab_binding, 3},
-    {"_turbostat_t_bc_binding", (DL_FUNC) &_turbostat_t_bc_binding, 3},
-    {"_turbostat_t_ac_binding", (DL_FUNC) &_turbostat_t_ac_binding, 3},
-    {"_turbostat_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_turbostat_centered_gamma_with_shape_equal_four_r_test, 1},
-    {"_turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_turbostat_mirrored_centered_gamma_with_shape_equal_four_r_test, 1},
-    {"_turbostat_test_exp", (DL_FUNC) &_turbostat_test_exp, 1},
-    {"_turbostat_test_t_due_e_mezzo", (DL_FUNC) &_turbostat_test_t_due_e_mezzo, 1},
-    {"_turbostat_test_laplace", (DL_FUNC) &_turbostat_test_laplace, 3},
-    {"_turbostat_test_cauchy", (DL_FUNC) &_turbostat_test_cauchy, 3},
-    {"_turbostat_test_standard_half_cauchy", (DL_FUNC) &_turbostat_test_standard_half_cauchy, 1},
-    {"_turbostat_test1", (DL_FUNC) &_turbostat_test1, 1},
-    {"_turbostat_test_ansari_bradley", (DL_FUNC) &_turbostat_test_ansari_bradley, 2},
-    {"_turbostat_test_difference_of_means_klotz", (DL_FUNC) &_turbostat_test_difference_of_means_klotz, 2},
-    {"_turbostat_test_lepage", (DL_FUNC) &_turbostat_test_lepage, 2},
-    {"_turbostat_test_cucconi", (DL_FUNC) &_turbostat_test_cucconi, 2},
-    {"_turbostat_test_percentiles", (DL_FUNC) &_turbostat_test_percentiles, 4},
-    {"_turbostat_test_centered_percentiles", (DL_FUNC) &_turbostat_test_centered_percentiles, 4},
-    {"_turbostat_hello", (DL_FUNC) &_turbostat_hello, 0},
+    {"_npcharts_compute_monitoring_statistic", (DL_FUNC) &_npcharts_compute_monitoring_statistic, 4},
+    {"_npcharts_calibrate_unconditional", (DL_FUNC) &_npcharts_calibrate_unconditional, 10},
+    {"_npcharts_evaluate_unconditional", (DL_FUNC) &_npcharts_evaluate_unconditional, 11},
+    {"_npcharts_calibrate_conditional", (DL_FUNC) &_npcharts_calibrate_conditional, 7},
+    {"_npcharts_evaluate_conditional", (DL_FUNC) &_npcharts_evaluate_conditional, 9},
+    {"_npcharts_compute_permutation_distribution_r", (DL_FUNC) &_npcharts_compute_permutation_distribution_r, 4},
+    {"_npcharts_set_seed", (DL_FUNC) &_npcharts_set_seed, 1},
+    {"_npcharts_t_a_binding", (DL_FUNC) &_npcharts_t_a_binding, 3},
+    {"_npcharts_t_b_binding", (DL_FUNC) &_npcharts_t_b_binding, 3},
+    {"_npcharts_t_c_binding", (DL_FUNC) &_npcharts_t_c_binding, 3},
+    {"_npcharts_t_abc_binding", (DL_FUNC) &_npcharts_t_abc_binding, 3},
+    {"_npcharts_t_ab_binding", (DL_FUNC) &_npcharts_t_ab_binding, 3},
+    {"_npcharts_t_bc_binding", (DL_FUNC) &_npcharts_t_bc_binding, 3},
+    {"_npcharts_t_ac_binding", (DL_FUNC) &_npcharts_t_ac_binding, 3},
+    {"_npcharts_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_npcharts_centered_gamma_with_shape_equal_four_r_test, 1},
+    {"_npcharts_mirrored_centered_gamma_with_shape_equal_four_r_test", (DL_FUNC) &_npcharts_mirrored_centered_gamma_with_shape_equal_four_r_test, 1},
+    {"_npcharts_test_exp", (DL_FUNC) &_npcharts_test_exp, 1},
+    {"_npcharts_test_t_due_e_mezzo", (DL_FUNC) &_npcharts_test_t_due_e_mezzo, 1},
+    {"_npcharts_test_laplace", (DL_FUNC) &_npcharts_test_laplace, 3},
+    {"_npcharts_test_cauchy", (DL_FUNC) &_npcharts_test_cauchy, 3},
+    {"_npcharts_test_standard_half_cauchy", (DL_FUNC) &_npcharts_test_standard_half_cauchy, 1},
+    {"_npcharts_test1", (DL_FUNC) &_npcharts_test1, 1},
+    {"_npcharts_test_ansari_bradley", (DL_FUNC) &_npcharts_test_ansari_bradley, 2},
+    {"_npcharts_test_difference_of_means_klotz", (DL_FUNC) &_npcharts_test_difference_of_means_klotz, 2},
+    {"_npcharts_test_lepage", (DL_FUNC) &_npcharts_test_lepage, 2},
+    {"_npcharts_test_cucconi", (DL_FUNC) &_npcharts_test_cucconi, 2},
+    {"_npcharts_test_percentiles", (DL_FUNC) &_npcharts_test_percentiles, 4},
+    {"_npcharts_test_centered_percentiles", (DL_FUNC) &_npcharts_test_centered_percentiles, 4},
+    {"_npcharts_hello", (DL_FUNC) &_npcharts_hello, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_turbostat(DllInfo *dll) {
+RcppExport void R_init_npcharts(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

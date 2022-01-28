@@ -7,5 +7,5 @@
 compute_permutation_distribution(statistic, m, n, n_perm)
 }
 \description{
-Used for precomputing permutation distribution of distribution free statistics
+Used for precomputing permutation distribution of linear rank statistics
 }

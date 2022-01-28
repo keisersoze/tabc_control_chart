@@ -130,9 +130,7 @@ std::map<std::string, combining_function> combining_function_map = {
 
 
 monitoring_statistic build_monitoring_statistic(const std::string &monitoring_stat_s,
-                                                Rcpp::List monitoring_stat_params,
-                                                unsigned m,
-                                                unsigned n){
+                                                Rcpp::List monitoring_stat_params){
     if (permutation_pvalue_monitoring_stat_map.find(monitoring_stat_s) != permutation_pvalue_monitoring_stat_map.end()){
         permutation_test pt = permutation_pvalue_monitoring_stat_map[monitoring_stat_s];
         unsigned n_permutations = monitoring_stat_params["n_permutations"];
@@ -189,6 +187,26 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
     }
 }
 
+//' Phase II monitoring
+//'
+//' Compute the observed value of the monitoring statistic
+//'
+//' @param m The dimension used for the reference sample.
+//' @param n The dimension used for the test samples.
+//' @param monitoring_statistic_type Either "npc" or "simple_statistic"
+//' @param monitoring_statistic_parameters Type-specific parameters of the monitoring statistic. For the "simple_statistic" type
+//' the only parameter is "statistic" which should be set to a valid statistic key (see package doc). For the "npc" type the three
+//' (required) parameters are "statistics", "permutation_distributions" and "tails".
+//' @export
+// [[Rcpp::export(compute_monitoring_statistic)]]
+double compute_monitoring_statistic(const std::vector<double> &x1,
+                                    const std::vector<double> &x2,
+                                    const std::string &monitoring_statistic_type,
+                                    Rcpp::List monitoring_statistic_parameters) {
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_type, monitoring_statistic_parameters);
+    return ms(x1, x2, global_rng::instance);
+}
+
 //' Unconditional calibration
 //'
 //' Unconditional calibration for the Stehwart-type charts implemented by this package
@@ -217,7 +235,7 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
                                             unsigned nsim,
                                             unsigned run_length_cap) {
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<int>> res_matrix = unconditional_unidirectional_calibration(m,
                                                                                         n,
                                                                                         ic_distribution,
@@ -240,7 +258,7 @@ Rcpp::NumericMatrix calibrate_unconditional(unsigned m,
 
 //' Unconditional evaluation
 //'
-//' Unconditional evaluation for the Stehwart-type charts implemented by this package
+//' Unconditional evaluation for Stehwart-type charts
 //'
 //' @param m The dimension used for the reference sample.
 //' @param n The dimension used for the test samples.
@@ -272,7 +290,7 @@ Rcpp::DataFrame evaluate_unconditional(unsigned m,
         ucl = limits["ucl"];
     }
     distribution ic_distribution = build_distribution(distribution_key, distribution_parameters);
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters, m, n);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     uncoditional_evaluation_result res = unconditional_evaluation(m,n,
                                                                   lcl,ucl,
                                                                   location_shift,scale_multiplier,
@@ -295,7 +313,7 @@ double calibrate_conditional(const std::vector<double> &reference_sample,
                                           unsigned target_ARL,
                                           bool is_upper_limit,
                                           unsigned nsim) {
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters,reference_sample.size(),n);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     double limit = conditional_unidirectional_calibration(reference_sample,
                                                           n,
                                                           ms,
@@ -316,7 +334,7 @@ Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample
                                      Rcpp::List monitoring_statistic_parameters,
                                      unsigned nsim,
                                      unsigned run_length_cap) {
-    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters,reference_sample.size(),n);
+    monitoring_statistic ms = build_monitoring_statistic(monitoring_statistic_key, monitoring_statistic_parameters);
     std::vector<std::vector<unsigned>> run_lengths_matrix = conditional_unidirectional_evaluation(reference_sample,
                                                                                                   n,
                                                                                                   limit,
@@ -340,7 +358,7 @@ Rcpp::DataFrame evaluate_conditional(const std::vector<double> &reference_sample
 
 //' Compute permutation distribution
 //'
-//' Used for precomputing permutation distribution of distribution free statistics
+//' Used for precomputing permutation distribution of linear rank statistics
 //'
 //' @export
 // [[Rcpp::export(compute_permutation_distribution)]]

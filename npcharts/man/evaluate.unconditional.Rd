@@ -7,8 +7,7 @@
 evaluate.unconditional(
   m,
   n,
-  limit,
-  is_upper_limit,
+  limits,
   location_shift,
   scale_multiplier,
   distribution_key,
@@ -37,5 +36,5 @@ evaluate.unconditional(
 \item{run_length_cap}{A limit for the run length in the simulations used to guarantee convergence of the algorithm.}
 }
 \description{
-Unconditional evaluation for the Stehwart-type charts implemented by this package
+Unconditional evaluation for Stehwart-type charts
 }

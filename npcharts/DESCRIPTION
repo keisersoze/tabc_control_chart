@@ -1,6 +1,6 @@
-Package: turbostat
+Package: npcharts
 Type: Package
-Title: Tabc charts
+Title: NPC control charts
 Version: 0.3.0
 Author: Filippo Maganza
 Maintainer: Filippo Maganza <filippomaganza@gmail.com>
