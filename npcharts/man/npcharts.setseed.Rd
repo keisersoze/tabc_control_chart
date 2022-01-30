@@ -7,7 +7,7 @@
 npcharts.setseed(seed)
 }
 \arguments{
-\item{s}{The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.}
+\item{seed}{The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.}
 }
 \description{
 Set the seed used by this R packet

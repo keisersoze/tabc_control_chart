@@ -6,6 +6,30 @@
 \usage{
 compute_permutation_distribution(statistic, m, n, n_perm)
 }
+\arguments{
+\item{statistic}{should be set to a valid statistic key. See details for consulting the available statistics
+and corresponding keys}
+
+\item{m}{The dimension used for the reference sample}
+
+\item{n}{The dimension used for the test samples}
+
+\item{nperm}{the number of random permutations}
+}
 \description{
 Used for precomputing permutation distribution of linear rank statistics
+}
+\details{
+The supported statistics and the respective keys to be used are:
+\itemize{
+ \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+ \item{Mann-Whitney - "mann_whitney"}
+ \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+ \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+ \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+ \item{Klotz - "klotz_statistic"}
+ \item{Ansari Bradely - "ab_statistic"}
+ \item{Lepage - "lepage"}
+ \item{Cucconi - "cucconi"}
+}
 }

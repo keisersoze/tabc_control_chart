@@ -10,16 +10,26 @@
 #' @param monitoring_statistic_type Either "npc" or "simple_statistic"
 #' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
 #' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
-#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
-#' which should be three lists of the same length. See details for consulting the available statistics and the keys
-#' to be used.
+#' For the "npc" type the four (required) parameters are "statistics", "permutation_distributions", "tails" and
+#' "combining_function". The "statistics", "permutation_distributions" and "tails" parameters should be three lists of the
+#' same length. The "combining_function" parameters should be a string. See details for consulting the available statistics and combining
+#' functions and the keys to be used.
 #' @returns the monitoring statistic value
-#' @details The supported statistics and the respective keys to be used are:
+#' @details
+#' The supported statistics and the respective keys to be used are:
 #' \itemize{
 #'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
 #'  \item{Mann-Whitney - "mann_whitney"}
 #'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#'  \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+#'  \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+#'  \item{Klotz - "klotz_statistic"}
+#'  \item{Ansari Bradely - "ab_statistic"}
+#'  \item{Lepage - "lepage"}
+#'  \item{Cucconi - "cucconi"}
 #' }
+#' The three options for the values of the "tails" list parameter of npc monitoring statistics are: "two_sided", "left" and "right"
+#' The three options for the "combining_function" parameter of npc monitoring statistics are: "fisher", "liptak" and "tippet"
 #' @export
 compute_monitoring_statistic <- function(x1, x2, monitoring_statistic_type, monitoring_statistic_parameters) {
     .Call(`_npcharts_compute_monitoring_statistic`, x1, x2, monitoring_statistic_type, monitoring_statistic_parameters)
@@ -38,9 +48,10 @@ compute_monitoring_statistic <- function(x1, x2, monitoring_statistic_type, moni
 #' @param monitoring_statistic_type Either "npc" or "simple_statistic"
 #' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
 #' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
-#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
-#' which should be three lists of the same length. See details for consulting the available statistics and the keys
-#' to be used.
+#' For the "npc" type the four (required) parameters are "statistics", "permutation_distributions", "tails" and
+#' "combining_function". The "statistics", "permutation_distributions" and "tails" parameters should be three lists of the
+#' same length. The "combining_function" parameters should be a string. See details for consulting the available statistics and combining
+#' functions and the keys to be used.
 #' @param limits_seq The numeric vector of limits for which the run length should be recorded at each simulation
 #' @param is_upper_limit A boolean parameter used to select whether the chart uses an upper limit or a lower limit
 #' @param nsim The number of simulations
@@ -52,14 +63,24 @@ compute_monitoring_statistic <- function(x1, x2, monitoring_statistic_type, moni
 #'  \item{Laplace - key:"laplace", params:"location" and "scale"}
 #'  \item{Student's T - key:"t", params:"df"}
 #'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+#'  \item{Chi squared - key:"chi_squared", params:"df"}
+#'  \item{Exp(lambda=1) shifted by -1 - key:"normalized_rate_one_exponential"}
+#'  \item{Gamma(scale=4,shape=2) shifted by -2 - key:"centered_gamma_with_shape_equal_four"}
 #' }
 #' The supported statistics and the respective keys to be used are:
 #' \itemize{
 #'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
 #'  \item{Mann-Whitney - "mann_whitney"}
 #'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#'  \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+#'  \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+#'  \item{Klotz - "klotz_statistic"}
+#'  \item{Ansari Bradely - "ab_statistic"}
+#'  \item{Lepage - "lepage"}
+#'  \item{Cucconi - "cucconi"}
 #' }
-#' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
+#' The three options for the values of the "tails" list parameter of npc monitoring statistics are: "two_sided", "left" and "right".
+#' The three options for the "combining_function" parameter of npc monitoring statistics are: "fisher", "liptak" and "tippet"
 #' @export
 calibrate.unconditional <- function(m, n, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap) {
     .Call(`_npcharts_calibrate_unconditional`, m, n, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, limits_seq, is_upper_limit, nsim, run_length_cap)
@@ -78,9 +99,10 @@ calibrate.unconditional <- function(m, n, distribution_key, distribution_paramet
 #' @param monitoring_statistic_type Either "npc" or "simple_statistic"
 #' @param monitoring_statistic_parameters A list with type-specific parameters of the monitoring statistic. For the
 #' "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
-#' For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
-#' which should be three lists of the same length. See details for consulting the available statistics and the keys
-#' to be used.
+#' For the "npc" type the four (required) parameters are "statistics", "permutation_distributions", "tails" and
+#' "combining_function". The "statistics", "permutation_distributions" and "tails" parameters should be three lists of the
+#' same length. The "combining_function" parameters should be a string. See details for consulting the available statistics and combining
+#' functions and the keys to be used.
 #' the only parameter is "statistic" which should be set to a valid statistic key. For the "npc" type the three
 #' (required) parameters are "statistics", "permutation_distributions" and "tails"
 #' @param nsim The number of simulations
@@ -92,14 +114,24 @@ calibrate.unconditional <- function(m, n, distribution_key, distribution_paramet
 #'  \item{Laplace - key:"laplace", params:"location" and "scale"}
 #'  \item{Student's T - key:"t", params:"df"}
 #'  \item{Cauchy - key:"laplace", params:"location" and "scale"}
+#'  \item{Chi squared - key:"chi_squared", params:"df"}
+#'  \item{Exp(lambda=1) shifted by -1 - key:"normalized_rate_one_exponential"}
+#'  \item{Gamma(scale=4,shape=2) shifted by -2 - key:"centered_gamma_with_shape_equal_four"}
 #' }
 #' The supported statistics and the respective keys to be used are:
 #' \itemize{
 #'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
 #'  \item{Mann-Whitney - "mann_whitney"}
 #'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#'  \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+#'  \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+#'  \item{Klotz - "klotz_statistic"}
+#'  \item{Ansari Bradely - "ab_statistic"}
+#'  \item{Lepage - "lepage"}
+#'  \item{Cucconi - "cucconi"}
 #' }
-#' The three options for the "tails" parameter of npc monitoring statistics are: "two_sided", "left" and "right"
+#' The three options for the values of the "tails" list parameter of npc monitoring statistics are: "two_sided", "left" and "right".
+#' The three options for the "combining_function" parameter of npc monitoring statistics are: "fisher", "liptak" and "tippet"
 #' @export
 evaluate.unconditional <- function(m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, nsim, run_length_cap) {
     .Call(`_npcharts_evaluate_unconditional`, m, n, limits, location_shift, scale_multiplier, distribution_key, distribution_parameters, monitoring_statistic_type, monitoring_statistic_parameters, nsim, run_length_cap)
@@ -117,6 +149,24 @@ evaluate.conditional <- function(reference_sample, n, limit, is_upper_limit, shi
 #'
 #' Used for precomputing permutation distribution of linear rank statistics
 #'
+#' @param m The dimension used for the reference sample
+#' @param n The dimension used for the test samples
+#' @param statistic should be set to a valid statistic key. See details for consulting the available statistics
+#' and corresponding keys
+#' @param nperm the number of random permutations
+#' @details
+#' The supported statistics and the respective keys to be used are:
+#' \itemize{
+#'  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
+#'  \item{Mann-Whitney - "mann_whitney"}
+#'  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+#'  \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+#'  \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+#'  \item{Klotz - "klotz_statistic"}
+#'  \item{Ansari Bradely - "ab_statistic"}
+#'  \item{Lepage - "lepage"}
+#'  \item{Cucconi - "cucconi"}
+#' }
 #' @export
 compute_permutation_distribution <- function(statistic, m, n, n_perm) {
     .Call(`_npcharts_compute_permutation_distribution_r`, statistic, m, n, n_perm)
@@ -124,7 +174,7 @@ compute_permutation_distribution <- function(statistic, m, n, n_perm) {
 
 #' Set the seed used by this R packet
 #'
-#' @param s The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
+#' @param seed The seed. Either an integer scalar or an integer vector of length 2 representing a 64-bit seed.
 #' @export
 npcharts.setseed <- function(seed) {
     invisible(.Call(`_npcharts_set_seed`, seed))

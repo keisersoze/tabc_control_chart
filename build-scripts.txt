@@ -21,6 +21,8 @@ RCMD:
 
 - R CMD Rd2pdf --title='Test of foo' -o ../tmp/foo.pdf man/*.Rd //outputs doc as PDF
 
+- R CMD Rd2pdf --title='npcharts package' -o ../tmp/foo7.pdf man/npcharts.setseed.Rd man/compute_permutation_distribution.Rd man/compute_monitoring_statistic.Rd man/evaluate.unconditional.Rd man/calibrate.unconditional.Rd
+
 Rstudio:
 
 - Install and restart = Rcpp::compileAttributes()  -> Rcmd.exe INSTALL --no-multiarch --with-keep.source turbostat

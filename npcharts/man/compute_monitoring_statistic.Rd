@@ -20,9 +20,10 @@ compute_monitoring_statistic(
 
 \item{monitoring_statistic_parameters}{A list with type-specific parameters of the monitoring statistic. For the
 "simple_statistic" type the only parameter is "statistic" which should be set to a valid statistic key.
-For the "npc" type the three (required) parameters are "statistics", "permutation_distributions" and "tails",
-which should be three lists of the same length. See details for consulting the available statistics and the keys
-to be used.}
+For the "npc" type the four (required) parameters are "statistics", "permutation_distributions", "tails" and
+"combining_function". The "statistics", "permutation_distributions" and "tails" parameters should be three lists of the
+same length. The "combining_function" parameters should be a string. See details for consulting the available statistics and combining
+functions and the keys to be used.}
 }
 \value{
 the monitoring statistic value
@@ -36,5 +37,13 @@ The supported statistics and the respective keys to be used are:
  \item{Wilcoxon rank sum - "wilcoxon_rank_sum"}
  \item{Mann-Whitney - "mann_whitney"}
  \item{Mean-normalized wilcoxon rank sum  - "centered_wilcoxon_rank_sum"}
+ \item{ Percentile modified rank test with s=r=0.42 - "percentiles_42_42"}
+ \item{ Percentile modified rank test with s=r=0.46 - "percentiles_46_46"}
+ \item{Klotz - "klotz_statistic"}
+ \item{Ansari Bradely - "ab_statistic"}
+ \item{Lepage - "lepage"}
+ \item{Cucconi - "cucconi"}
 }
+The three options for the values of the "tails" list parameter of npc monitoring statistics are: "two_sided", "left" and "right"
+The three options for the "combining_function" parameter of npc monitoring statistics are: "fisher", "liptak" and "tippet"
 }

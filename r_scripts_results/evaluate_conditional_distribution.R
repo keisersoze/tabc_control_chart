@@ -1,4 +1,4 @@
-library(turbostat)
+library(npcharts)
 
 # Evaluation parameters
 
@@ -12,19 +12,19 @@ library(turbostat)
 #                       "results_new/calibration/normal/npc_lepage_cucconi_norm_500_100_5_50000_45.RData",
 #                       "results_new/calibration/normal/npc_wilcoxon_klotz_norm_500_100_5_50000_8989.RData")
 
-eval.calibration = c("results_new/calibration/normal/wilcoxon_pvalue_norm_370_100_5_10000_45.RData")
+eval.calibration = c("results_new/calibration/normal/van_de_warden_pvalue_norm_370_100_5_10000_45.RData")
 
 eval.nsim = 50000
 eval.dist = "laplace"
-eval.dist.params = list("location"=0, "scale"=1/sqrt(2))
+eval.dist.params = list(location=0, scale=1/sqrt(2))
 eval.m = 100
 eval.n = 5
 eval.ARL0.target = 370
-eval.seed = 3546
+eval.seed = 32
 
 # Evaluation script
 
-turbostat.setseed(eval.seed)
+npcharts.setseed(eval.seed)
 
 crl_table <- as.list(numeric(7*7))
 dim(crl_table) <- c(7,7)
@@ -134,7 +134,7 @@ filename =  paste(c(calib.chart_id,
                     format(eval.nsim, nsmall = 0),
                     format(eval.seed, nsmall = 0)), collapse = "_")
 
-# basepath = paste(c("results_new/evaluation/location_scale/crl/laplace/", filename, ".RData"), collapse = "")
+# basepath = paste(c("results_new/evaluation/location/crl/laplace_v2/", filename, ".RData"), collapse = "")
 #
 # save(calib.chart_id,
 #      eval.calibration,
