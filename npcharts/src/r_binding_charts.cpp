@@ -85,7 +85,7 @@ std::map<std::string, simple_statistic> stat_map = {
         {"wilcoxon_rank_sum", wilcoxon_rank_sum},
         {"centered_wilcoxon_rank_sum", centered_wilcoxon_rank_sum},
         {"mann_whitney", mann_whitney},
-        {"sum_of_sings", sum_of_signs},
+        {"sum_of_signs", sum_of_signs},
         {"van_de_warden", van_de_warden},
         {"difference_of_rank_means", difference_of_rank_means},
 
@@ -143,6 +143,9 @@ monitoring_statistic build_monitoring_statistic(const std::string &monitoring_st
         return monitoring_stat;
     } else if (monitoring_stat_s == "simple_statistic"){
         std::string statistic_key = monitoring_stat_params["statistic"];
+        if (stat_map.find(statistic_key) == stat_map.end()){
+            Rcpp::stop("\"statistic\" not recognized");
+        }
         simple_statistic s = stat_map[statistic_key];
         return simple_monitoring_statistic(s);
     } else if (monitoring_stat_s == "fast_pvalue"){
