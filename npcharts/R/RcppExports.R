@@ -285,6 +285,7 @@ test.exp <- function(n) {
     .Call(`_npcharts_test_exp`, n)
 }
 
+#' @export
 test.t_due_e_mezzo <- function(n) {
     .Call(`_npcharts_test_t_due_e_mezzo`, n)
 }

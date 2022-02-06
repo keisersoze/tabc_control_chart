@@ -13,7 +13,7 @@
 #include <xoshiro.h>
 
 #include <stdexcept>
-#include <cmath>        // std::abs
+#include <cmath>        // std::abs std::sqrt
 #include <vector>
 
 typedef std::function<double (dqrng::xoshiro256plus &)> distribution;
@@ -36,7 +36,7 @@ public:
     normalized_t_with_two_pont_five_degrees();
     template<class Engine>
     double operator () (Engine &rng) {
-        return t_dist_boost(rng) / 2.0;
+        return t_dist_boost(rng) / std::sqrt(5);
     }
 };
 

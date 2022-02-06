@@ -53,6 +53,7 @@ std::vector<double> test_exp(unsigned n) {
     return v;
 }
 
+//' @export
 // [[Rcpp::export(test.t_due_e_mezzo)]]
 std::vector<double> test_t_due_e_mezzo(unsigned n) {
     normalized_t_with_two_pont_five_degrees d;
