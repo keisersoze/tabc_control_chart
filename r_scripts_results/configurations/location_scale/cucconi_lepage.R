@@ -1,7 +1,7 @@
 # Start parameters
 
-calib.seed = 45
-turbostat.setseed(calib.seed)
+calib.seed = 466888
+npcharts.setseed(calib.seed)
 calib.m = 100
 calib.n = 5
 
@@ -13,7 +13,7 @@ calib.nsim = 50000
 
 # npc fisher
 # calib.limits_seq = seq(-2, -5, -0.001)
-calib.limits_seq = seq(-11, -12, -0.001)
+calib.limits_seq = seq(-11, -12, -0.0005)
 # calib.limits_seq = seq(-2, -13.2, -0.0005)
 
 # npc liptak
@@ -43,12 +43,12 @@ calib.monitor_stat.params = list(
     "lepage"
   ),
   "permutation_distributions"=list(
-    compute_permutation_distribution("cucconi", calib.m, calib.n, 10000),
-    compute_permutation_distribution("lepage", calib.m, calib.n, 10000)
+    compute_permutation_distribution("cucconi", calib.m, calib.n, 15000),
+    compute_permutation_distribution("lepage", calib.m, calib.n, 15000)
   ),
   "tails"=list(
-    "two_sided",
-    "two_sided"
+    "right",
+    "right"
   ),
   "combining_function"="fisher"
 )
